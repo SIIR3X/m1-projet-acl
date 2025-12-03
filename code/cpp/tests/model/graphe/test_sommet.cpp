@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "model/graphe/sommet.h"
+#include "modele/graphe/sommet.h"
 
 TEST(SommetTest, ConstructeurPrincipalDouble)
 {

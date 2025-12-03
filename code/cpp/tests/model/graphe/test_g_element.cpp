@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "model/graphe/g_element.h"
+#include "modele/graphe/g_element.h"
 
 TEST(GElementTest, ConstructeurPrincipal)
 {

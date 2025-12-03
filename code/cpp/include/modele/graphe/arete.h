@@ -5,8 +5,8 @@
 #include <sstream>
 #include <string>
 
-#include "model/graphe/g_element.h"
-#include "model/graphe/sommet.h"
+#include "modele/graphe/g_element.h"
+#include "modele/graphe/sommet.h"
 
 template <typename S, typename T>
 class Arete : public GElement<S>

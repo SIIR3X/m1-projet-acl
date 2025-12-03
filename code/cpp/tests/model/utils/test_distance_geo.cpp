@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "model/ville.h"
+#include "modele/geo/ville.h"
 #include "utils/distance_geo.h"
 
 TEST(DistanceGeoTest, DistanceLyonGrenoble)

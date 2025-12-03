@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-#include "model/ville.h"
+#include "modele/geo/ville.h"
 
 /**
  * @brief DistanceGeo
