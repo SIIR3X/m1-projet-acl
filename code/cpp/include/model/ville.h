@@ -83,9 +83,9 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Ville& v);
 
 private:
-    std::string _nom;              ///< Nom de la ville.
-    double      _latitude  = 0.0;  ///< Latitude en degrés.
-    double      _longitude = 0.0;  ///< Longitude en degrés.
+    std::string _nom;         ///< Nom de la ville.
+    double _latitude = 0.0;   ///< Latitude en degrés.
+    double _longitude = 0.0;  ///< Longitude en degrés.
 };
 
 inline Ville::Ville(const std::string& nom, double latitude, double longitude)
