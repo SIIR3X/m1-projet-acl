@@ -1,17 +1,17 @@
-#ifndef DISTANCE_GEO_H
-#define DISTANCE_GEO_H
+#ifndef DISTANCE_GEODESIQUE_H
+#define DISTANCE_GEODESIQUE_H
 
 #include <cmath>
 
-#include "modele/geo/ville.h"
-#include "utils/geo_math_utils.h"
+#include "modele/geographie/ville.h"
+#include "utils/geodesique_math_utils.h"
 
 /**
- * @brief DistanceGeo
+ * @brief DistanceGeodesique
  * @brief Stratégie générique pour calculer la distance géodésique entre deux objets T.
  */
 template <typename T>
-class DistanceGeo
+class DistanceGeodesique
 {
 public:
     /**
@@ -29,7 +29,7 @@ public:
      * @param getLat Fonction permettant d'extraire la latitude d'un objet T.
      * @param getLon Fonction permettant d'extraire la longitude d'un objet T.
      */
-    DistanceGeo(GetLat getLat, GetLon getLon) : _getLat(getLat), _getLon(getLon) {}
+    DistanceGeodesique(GetLat getLat, GetLon getLon) : _getLat(getLat), _getLon(getLon) {}
 
     /**
      * @brief Calcule la distance géodésique entre deux villes.
@@ -52,11 +52,11 @@ private:
 };
 
 template <typename T>
-inline double DistanceGeo<T>::operator()(const T& a, const T& b) const
+inline double DistanceGeodesique<T>::operator()(const T& a, const T& b) const
 {
-    CoordGeo ca{_getLat(a), _getLon(a)};
-    CoordGeo cb{_getLat(b), _getLon(b)};
-    return GeoMathUtils::distanceGeodesique(ca, cb);
+    CoordGeographique ca{_getLat(a), _getLon(a)};
+    CoordGeographique cb{_getLat(b), _getLon(b)};
+    return GeodesiqueMathUtils::distanceGeodesique(ca, cb);
 }
 
-#endif  // DISTANCE_GEO_H
+#endif  // DISTANCE_GEODESIQUE_H

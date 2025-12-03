@@ -1,13 +1,13 @@
-#ifndef COORDGEO_H
-#define COORDGEO_H
+#ifndef COORD_GEOGRAPHIQUE_H
+#define COORD_GEOGRAPHIQUE_H
 
 #include <stdexcept>
 
 /**
- * @struct CoordGeo
+ * @struct CoordGeographique
  * @brief Structure contenant une latitude et une longitude (position géographique).
  */
-struct CoordGeo
+struct CoordGeographique
 {
     double _latitude;
     double _longitude;
@@ -15,14 +15,14 @@ struct CoordGeo
     /**
      * @brief Constructeur par défaut.
      */
-    CoordGeo() : CoordGeo(0.0, 0.0) {}
+    CoordGeographique() : CoordGeographique(0.0, 0.0) {}
 
     /**
      * @brief Constructeur principal.
      * @param latitude La latitude en degrés.
      * @param longitude La longitude en degrés.
      */
-    CoordGeo(double latitude, double longitude) : _latitude(latitude), _longitude(longitude)
+    CoordGeographique(double latitude, double longitude) : _latitude(latitude), _longitude(longitude)
     {
         if (!latitudeEstValide(latitude))
             throw std::out_of_range("Latitude invalide : doit être dans [-90, 90].");
@@ -52,4 +52,4 @@ struct CoordGeo
     }
 };
 
-#endif  // COORDGEO_H
+#endif  // COORD_GEOGRAPHIQUE_H

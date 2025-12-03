@@ -1,6 +1,6 @@
-#include "utils/geo_math_utils.h"
+#include "utils/geodesique_math_utils.h"
 
-double GeoMathUtils::haversine(double lat1, double lon1, double lat2, double lon2)
+double GeodesiqueMathUtils::haversine(double lat1, double lon1, double lat2, double lon2)
 {
     // Calcul de la différences d'angles
     const double dLat = lat2 - lat1;

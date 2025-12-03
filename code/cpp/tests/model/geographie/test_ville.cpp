@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "modele/geo/ville.h"
+#include "modele/geographie/ville.h"
 
 TEST(VilleTest, ConstructeurPrincipal)
 {
@@ -11,9 +11,9 @@ TEST(VilleTest, ConstructeurPrincipal)
     EXPECT_DOUBLE_EQ(v.longitude(), 51.5);
 }
 
-TEST(VilleTest, ConstructeurAlternatifCoordGeo)
+TEST(VilleTest, ConstructeurAlternatifCoordGeographique)
 {
-    CoordGeo c(50.5, 51.5);
+    CoordGeographique c(50.5, 51.5);
 
     Ville v("Paris", c);
 

@@ -1,18 +1,18 @@
 #include <gtest/gtest.h>
 
-#include "utils/geo_math_utils.h"
+#include "utils/geodesique_math_utils.h"
 
-TEST(GeoMathUtilsTest, HaversineZeroDistance)
+TEST(GeodesiqueMathUtilsTest, HaversineZeroDistance)
 {
     double lat = MathUtils::toRad(50.0);
     double lon = MathUtils::toRad(5.0);
 
-    double d = GeoMathUtils::haversine(lat, lon, lat, lon);
+    double d = GeodesiqueMathUtils::haversine(lat, lon, lat, lon);
 
     EXPECT_DOUBLE_EQ(d, 0.0);
 }
 
-TEST(GeoMathUtilsTest, HaversineLyonGrenoble)
+TEST(GeodesiqueMathUtilsTest, HaversineLyonGrenoble)
 {
     // Lyon
     double lat1 = 45.76;
@@ -29,28 +29,28 @@ TEST(GeoMathUtilsTest, HaversineLyonGrenoble)
     lon2 = MathUtils::toRad(lon2);
 
     // Calcul de distance
-    double d = GeoMathUtils::haversine(lat1, lon1, lat2, lon2);
+    double d = GeodesiqueMathUtils::haversine(lat1, lon1, lat2, lon2);
 
     // Distance réelle 94 km (selon Haversine)
     EXPECT_NEAR(d, 94.0, 1.0);  // marge de plus ou moins 1 km
 }
 
-TEST(GeoMathUtilsTest, DistanceGeodesiqueZero)
+TEST(GeodesiqueMathUtilsTest, DistanceGeodesiqueZero)
 {
-    CoordGeo a{48.85, 2.35};
-    CoordGeo b{48.85, 2.35};
+    CoordGeographique a{48.85, 2.35};
+    CoordGeographique b{48.85, 2.35};
 
-    double d = GeoMathUtils::distanceGeodesique(a, b);
+    double d = GeodesiqueMathUtils::distanceGeodesique(a, b);
 
     EXPECT_DOUBLE_EQ(d, 0.0);
 }
 
-TEST(GeoMathUtilsTest, DistanceGeodesiqueLyonGrenoble)
+TEST(GeodesiqueMathUtilsTest, DistanceGeodesiqueLyonGrenoble)
 {
-    CoordGeo lyon{45.76, 4.84};
-    CoordGeo grenoble{45.19, 5.74};
+    CoordGeographique lyon{45.76, 4.84};
+    CoordGeographique grenoble{45.19, 5.74};
 
-    double d = GeoMathUtils::distanceGeodesique(lyon, grenoble);
+    double d = GeodesiqueMathUtils::distanceGeodesique(lyon, grenoble);
 
     // Distance réelle 94 km (selon Haversine)
     EXPECT_NEAR(d, 94.0, 1.0);  // marge de plus ou moins 1 km
