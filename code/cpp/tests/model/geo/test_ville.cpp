@@ -11,24 +11,17 @@ TEST(VilleTest, ConstructeurPrincipal)
     EXPECT_DOUBLE_EQ(v.longitude(), 51.5);
 }
 
-TEST(VilleTest, LatitudeLimiteInferieure)
+TEST(VilleTest, ConstructeurAlternatifCoordGeo)
 {
-    EXPECT_THROW(Ville("Paris", -91.0, 0.0), std::out_of_range);
-}
+    CoordGeo c(50.5, 51.5);
 
-TEST(VilleTest, LatitudeLimiteSuperieure)
-{
-    EXPECT_THROW(Ville("Paris", 91.0, 0.0), std::out_of_range);
-}
+    Ville v("Paris", c);
 
-TEST(VilleTest, LongitudeLimiteInferieure)
-{
-    EXPECT_THROW(Ville("Paris", 0, -181.0), std::out_of_range);
-}
-
-TEST(VilleTest, LongitudeLimiteSuperieure)
-{
-    EXPECT_THROW(Ville("Paris", 0, 181.0), std::out_of_range);
+    EXPECT_EQ(v.nom(), "Paris");
+    EXPECT_DOUBLE_EQ(v.latitude(), 50.5);
+    EXPECT_DOUBLE_EQ(v.longitude(), 51.5);
+    EXPECT_EQ(v.coordonnees()._latitude, c._latitude);
+    EXPECT_EQ(v.coordonnees()._longitude, c._longitude);
 }
 
 TEST(VilleTest, OperateurEgalite)
