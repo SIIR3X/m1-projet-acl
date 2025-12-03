@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "modele/geo/coordonne/coord_geo.h"
+
 /**
  * @class Ville
  * @brief Représente une ville géographique définie par un nom, une latitude et une longitude.
@@ -25,7 +27,14 @@ public:
      * @param latitude Latitude de la ville (en degrés).
      * @param longitude Longitude de la ville (en degrés).
      */
-    Ville(const std::string& nom, double latitude, double longitude);
+    Ville(const std::string& nom, double latitude, double longitude) : _nom(nom), _coord(latitude, longitude) {}
+
+    /**
+     * @brief Constructeur alternatif pour construction à partir de coordonnées géographiques.
+     * @param nom Nom de la ville.
+     * @param coord Les coordonnées.
+     */
+    Ville(const std::string& nom, const CoordGeo& coord) : _nom(nom), _coord(coord) {}
 
     /**
      * @brief Getter pour le nom de la ville.
@@ -42,7 +51,7 @@ public:
      */
     double latitude() const
     {
-        return _latitude;
+        return _coord._latitude;
     }
 
     /**
@@ -51,7 +60,16 @@ public:
      */
     double longitude() const
     {
-        return _longitude;
+        return _coord._longitude;
+    }
+
+    /**
+     * @brief Getter pour les coordonnées de la ville.
+     * @return Les coordonnées en degrés.
+     */
+    const CoordGeo& coordonnees() const
+    {
+        return _coord;
     }
 
     /**
@@ -83,24 +101,14 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Ville& v);
 
 private:
-    std::string _nom;         ///< Nom de la ville.
-    double _latitude = 0.0;   ///< Latitude en degrés.
-    double _longitude = 0.0;  ///< Longitude en degrés.
+    std::string _nom;  ///< Nom de la ville.
+    CoordGeo _coord;   ///< Coordonnées géographiques de la ville (latitude/longitude en degrés).
 };
-
-inline Ville::Ville(const std::string& nom, double latitude, double longitude)
-    : _nom(nom), _latitude(latitude), _longitude(longitude)
-{
-    if (latitude < -90.0 || latitude > 90.0)
-        throw std::out_of_range("Latitude invalide : doit être dans [-90, 90].");
-
-    if (longitude < -180.0 || longitude > 180.0)
-        throw std::out_of_range("Longitude invalide : doit être dans [-180, 180].");
-}
 
 inline bool Ville::operator==(const Ville& other) const
 {
-    return _nom == other._nom && _latitude == other._latitude && _longitude == other._longitude;
+    return _nom == other._nom && _coord._latitude == other._coord._latitude &&
+           _coord._longitude == other._coord._longitude;
 }
 
 inline bool Ville::operator!=(const Ville& other) const
@@ -110,7 +118,7 @@ inline bool Ville::operator!=(const Ville& other) const
 
 inline Ville::operator std::string() const
 {
-    return _nom + " (" + std::to_string(_latitude) + ", " + std::to_string(_longitude) + ")";
+    return _nom + " (" + std::to_string(_coord._latitude) + ", " + std::to_string(_coord._longitude) + ")";
 }
 
 inline std::ostream& operator<<(std::ostream& os, const Ville& v)
