@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-#include "model/graphe/a_element.h"
+#include "modele/graphe/a_element.h"
 
 /**
  * @class GElement

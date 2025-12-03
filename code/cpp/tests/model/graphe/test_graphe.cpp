@@ -2,9 +2,9 @@
 
 #include <sstream>
 
-#include "model/graphe/arete.h"
-#include "model/graphe/graphe.h"
-#include "model/graphe/sommet.h"
+#include "modele/graphe/arete.h"
+#include "modele/graphe/graphe.h"
+#include "modele/graphe/sommet.h"
 
 TEST(GrapheTest, ConstructeurParDefaut)
 {

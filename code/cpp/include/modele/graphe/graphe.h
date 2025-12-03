@@ -5,9 +5,9 @@
 #include <sstream>
 #include <string>
 
-#include "model/graphe/arete.h"
-#include "model/graphe/p_element.h"
-#include "model/graphe/sommet.h"
+#include "modele/graphe/arete.h"
+#include "modele/graphe/p_element.h"
+#include "modele/graphe/sommet.h"
 
 /**
  * @class Graphe

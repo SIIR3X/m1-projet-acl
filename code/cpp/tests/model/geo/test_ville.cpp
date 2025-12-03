@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "model/ville.h"
+#include "modele/geo/ville.h"
 
 TEST(VilleTest, ConstructeurPrincipal)
 {
