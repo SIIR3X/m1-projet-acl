@@ -6,6 +6,20 @@
 #include "modele/graphe/graphe.h"
 #include "modele/graphe/sommet.h"
 
+//
+// Fonction pour libérer les listes.
+//
+template <typename T>
+void libererListe(PElement<T>* liste)
+{
+    while (liste)
+    {
+        PElement<T>* tmp = liste;
+        liste = liste->_suivant;
+        delete tmp;
+    }
+}
+
 TEST(GrapheTest, ConstructeurParDefaut)
 {
     Graphe<std::string, std::string> g;
@@ -73,6 +87,8 @@ TEST(GrapheTest, AretesAdjacentes)
     EXPECT_EQ(count, 2);
     EXPECT_TRUE(hasA1);
     EXPECT_TRUE(hasA2);
+
+    libererListe(list);
 }
 
 TEST(GrapheTest, Voisins)
@@ -102,6 +118,8 @@ TEST(GrapheTest, Voisins)
     EXPECT_EQ(count, 2);
     EXPECT_TRUE(hasS2);
     EXPECT_TRUE(hasS3);
+
+    libererListe(list);
 }
 
 TEST(GrapheTest, Adjacences)
@@ -118,6 +136,8 @@ TEST(GrapheTest, Adjacences)
     ASSERT_NE(list, nullptr);
     EXPECT_EQ(list->_info.first, s2);
     EXPECT_EQ(list->_info.second, a);
+
+    libererListe(list);
 }
 
 TEST(GrapheTest, GetAreteParSommets)
@@ -135,6 +155,8 @@ TEST(GrapheTest, GetAreteParSommets)
     EXPECT_EQ(g.getAreteParSommets(s1, s2), a);
     EXPECT_EQ(g.getAreteParSommets(s2, s1), a);
     EXPECT_EQ(g.getAreteParSommets(s1, s3), nullptr);
+
+    libererListe(list);
 }
 
 TEST(GrapheTest, OperateurString)
