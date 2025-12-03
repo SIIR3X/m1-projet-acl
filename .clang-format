@@ -1,0 +1,26 @@
+BasedOnStyle: Google
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+# Allman style (accolades sur la ligne suivante)
+BreakBeforeBraces: Allman
+
+ColumnLimit: 120
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+
+# Gestion des espaces
+SpaceBeforeParens: ControlStatements
+
+# Alignement et organisation
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+
+# Tri automatique des includes
+SortIncludes: true
+
+# Indentation des namespaces
+NamespaceIndentation: All
+
+AccessModifierOffset: -4
