@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "modele/geo/coordonne/coord_geo.h"
+#include "modele/geographie/coordonne/coord_geographique.h"
 
 /**
  * @class Ville
@@ -34,7 +34,7 @@ public:
      * @param nom Nom de la ville.
      * @param coord Les coordonnées.
      */
-    Ville(const std::string& nom, const CoordGeo& coord) : _nom(nom), _coord(coord) {}
+    Ville(const std::string& nom, const CoordGeographique& coord) : _nom(nom), _coord(coord) {}
 
     /**
      * @brief Getter pour le nom de la ville.
@@ -67,7 +67,7 @@ public:
      * @brief Getter pour les coordonnées de la ville.
      * @return Les coordonnées en degrés.
      */
-    const CoordGeo& coordonnees() const
+    const CoordGeographique& coordonnees() const
     {
         return _coord;
     }
@@ -101,8 +101,8 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Ville& v);
 
 private:
-    std::string _nom;  ///< Nom de la ville.
-    CoordGeo _coord;   ///< Coordonnées géographiques de la ville (latitude/longitude en degrés).
+    std::string _nom;          ///< Nom de la ville.
+    CoordGeographique _coord;  ///< Coordonnées géographiques de la ville (latitude/longitude en degrés).
 };
 
 inline bool Ville::operator==(const Ville& other) const
