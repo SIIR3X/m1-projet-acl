@@ -14,8 +14,8 @@ AllowShortIfStatementsOnASingleLine: false
 SpaceBeforeParens: ControlStatements
 
 # Alignement et organisation
-AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
 
 # Tri automatique des includes
 SortIncludes: true
