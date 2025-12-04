@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #                               SOURCES LIB                                   #
 ###############################################################################
 file(GLOB_RECURSE LIB_SOURCES
-  src/model/*.cpp
+  src/modele/*.cpp
   src/utils/*.cpp
 )
 
