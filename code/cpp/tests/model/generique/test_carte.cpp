@@ -17,7 +17,7 @@ TEST(CarteTest, ConstructeurPrincipal)
 {
     std::vector<Ville> villes = {{"Paris", 48.85, 2.35}, {"Lyon", 45.76, 4.84}};
 
-    Carte<Ville> c(villes, distanceTest);
+    Carte<Ville, double> c(villes, distanceTest);
 
     ASSERT_EQ(c.elements().size(), 2);
     EXPECT_EQ(c.elements()[0].nom(), "Paris");
@@ -26,7 +26,7 @@ TEST(CarteTest, ConstructeurPrincipal)
 
 TEST(CarteTest, AjouterElement)
 {
-    Carte<Ville> c({}, distanceTest);
+    Carte<Ville, double> c({}, distanceTest);
 
     c.ajouter(Ville("Grenoble", 45.19, 5.72));
 
@@ -38,7 +38,7 @@ TEST(CarteTest, ConstruireGrapheCreeBonNombreSommetsEtAretes)
 {
     std::vector<Ville> villes = {{"Paris", 48.85, 2.35}, {"Lyon", 45.76, 4.84}, {"Marseille", 43.30, 5.37}};
 
-    Carte<Ville> c(villes, distanceTest);
+    Carte<Ville, double> c(villes, distanceTest);
     auto g = c.construireGraphe();
 
     EXPECT_EQ(g.nombreSommets(), 3);
@@ -47,7 +47,7 @@ TEST(CarteTest, ConstruireGrapheCreeBonNombreSommetsEtAretes)
 
 TEST(CarteTest, OperateurString)
 {
-    Carte<Ville> c({{"Paris", 48.85, 2.35}, {"Lyon", 45.76, 4.84}}, distanceTest);
+    Carte<Ville, double> c({{"Paris", 48.85, 2.35}, {"Lyon", 45.76, 4.84}}, distanceTest);
 
     std::string s = static_cast<std::string>(c);
 
@@ -58,7 +58,7 @@ TEST(CarteTest, OperateurString)
 
 TEST(CarteTest, OperateurStream)
 {
-    Carte<Ville> c({{"Paris", 48.85, 2.35}}, distanceTest);
+    Carte<Ville, double> c({{"Paris", 48.85, 2.35}}, distanceTest);
 
     std::stringstream ss;
     ss << c;
