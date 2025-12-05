@@ -4,6 +4,7 @@
 #include <any>
 
 #include "modele/generique/carte.h"
+#include "modele/generique/distance.h"
 #include "serveur/requetes/parser/entite/i_entite_parser_base.h"
 #include "serveur/requetes/parser/i_parser_base.h"
 
@@ -36,7 +37,7 @@ inline std::any IEntiteParser<T>::construireCarte(const std::any& entites, const
     auto strategieDistance = std::any_cast<std::shared_ptr<Distance<T>>>(distance);
 
     // Construction de la carte : la distance est injectée via un fonctor.
-    Carte<T> carte(vecteurEntites, [strategieDistance](const T& a, const T& b) { return (*dist)(a, b); });
+    Carte<T> carte(vecteurEntites, [strategieDistance](const T& a, const T& b) { return (*strategieDistance)(a, b); });
 
     return std::any{carte};
 }
