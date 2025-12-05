@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB_RECURSE LIB_SOURCES
   src/modele/*.cpp
   src/utils/*.cpp
+  src/serveur/*.cpp
 )
 
 add_library(projet-lib ${LIB_SOURCES})
