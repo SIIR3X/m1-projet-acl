@@ -1,5 +1,5 @@
-#ifndef GEODESIQUE_MATH_UTILS
-#define GEODESIQUE_MATH_UTILS
+#ifndef GEODESIQUE_MATH_UTILS_H
+#define GEODESIQUE_MATH_UTILS_H
 
 #include "modele/geographie/coordonne/coord_geographique.h"
 #include "utils/math_utils.h"
@@ -45,4 +45,4 @@ inline double GeodesiqueMathUtils::distanceGeodesique(const CoordGeographique& a
     return GeodesiqueMathUtils::haversine(lat1, lon1, lat2, lon2);
 }
 
-#endif  // GEODESIQUE_MATH_UTILS
+#endif  // GEODESIQUE_MATH_UTILS_H

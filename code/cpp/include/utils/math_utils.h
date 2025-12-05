@@ -1,5 +1,5 @@
-#ifndef MATH_UTILS
-#define MATH_UTILS
+#ifndef MATH_UTILS_H
+#define MATH_UTILMATH_UTILS_HS
 
 #include <cmath>
 
@@ -27,4 +27,4 @@ inline double MathUtils::toRad(double degree)
     return degree * DEG_TO_RAD;
 }
 
-#endif  // MATH_UTILS
+#endif  // MATH_UTILS_H
