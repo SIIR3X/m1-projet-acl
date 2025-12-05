@@ -29,6 +29,14 @@ public:
      * @return Un std::any contenant une instance de Carte<T>.
      */
     virtual std::any construireCarte(const std::any& entites, const std::any& distance) const override;
+
+    /**
+     * @brief Lance la résolution du TSP sur les entités fournies.
+     * @param entites Un std::any contenant std::vector<T>.
+     * @param distance Un std::any contenant std::shared_ptr<Distance<T>>.
+     * @return std::any contenant un TSPData<T,R>.
+     */
+    virtual std::any lancerTSP(const std::any& entites, const std::any& distance) const override;
 };
 
 template <typename T>
@@ -45,6 +53,34 @@ inline std::any IEntiteParser<T>::construireCarte(const std::any& entites, const
                       [strategieDistance](const T& a, const T& b) { return (*strategieDistance)(a, b); });
 
     return std::any{carte};
+}
+
+template <typename T>
+inline std::any IEntiteParser<T>::lancerTSP(const std::any& entites, const std::any& distance) const
+{
+    // Récupération des véritables types des paramètres
+    auto vecteurEntites = std::any_cast<std::vector<T>>(entites);
+    auto strategieDistance = std::any_cast<std::shared_ptr<Distance<T>>>(distance);
+
+    // Déduction automatique du type R (type des distances)
+    using R = decltype((*strategieDistance)(std::declval<T>(), std::declval<T>()));
+
+    // Construction de la carte
+    Carte<T, R> carte(vecteurEntites,
+                      [strategieDistance](const T& a, const T& b) { return (*strategieDistance)(a, b); });
+
+    // Construction du graphe associé à la carte
+    auto graphe = carte.construireGraphe();
+
+    // Appel du solveur générique
+    // auto solution = SolveurTSP<R, T>::resoudre(graphe);
+
+    // return std::any{solution};
+
+    return std::any
+    {
+        carte
+    }
 }
 
 #endif  // I_ENTITE_PARSER_H

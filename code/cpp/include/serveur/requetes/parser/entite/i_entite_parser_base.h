@@ -30,6 +30,14 @@ public:
      * @return Un std::any contenant une instance de Carte<T>.
      */
     virtual std::any construireCarte(const std::any& entites, const std::any& distance) const = 0;
+
+    /**
+     * @brief Lance la résolution du TSP sur les entités fournies.
+     * @param entites Un std::any contenant std::vector<T>.
+     * @param distance Un std::any contenant std::shared_ptr<Distance<T>>.
+     * @return std::any contenant un TSPData<T,R>.
+     */
+    virtual std::any lancerTSP(const std::any& entites, const std::any& distance) const = 0;
 };
 
 #endif  // I_ENTITE_PARSER_BASE_H
