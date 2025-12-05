@@ -1,0 +1,1 @@
+#include "serveur/requetes/parser/entite/i_entite_parser_base.h"

@@ -2,6 +2,8 @@
 #define CARTE_H
 
 #include <functional>
+#include <ostream>
+#include <sstream>
 #include <vector>
 
 #include "modele/graphe/graphe.h"
@@ -10,14 +12,14 @@
  * @class Carte
  * @brief Carte générique contenant des éléments de type T.
  */
-template <typename T>
+template <typename T, typename R>
 class Carte
 {
 public:
     /**
-     * @brief Type représentant une fonction de distance entre deux éléments.
+     * @brief Type représentant une fonction de distance entre deux éléments renvoyant un type R.
      */
-    using DistanceFunc = std::function<double(const T&, const T&)>;
+    using DistanceFunc = std::function<R(const T&, const T&)>;
 
     /**
      * @brief Constructeur principal.
@@ -48,7 +50,7 @@ public:
      * @brief Construit un graphe complte en utilisant la fonction de distance.
      * @return Le graphe construit.
      */
-    Graphe<double, T> construireGraphe() const;
+    Graphe<R, T> construireGraphe() const;
 
     /**
      * @brief Conversion implicite vers une chaîne de caractères.
@@ -62,18 +64,18 @@ public:
      * @param c Carte à afficher.
      * @return Le flux après insertion.
      */
-    template <typename U>
-    friend std::ostream& operator<<(std::ostream& os, const Carte<U>& v);
+    template <typename U, typename S>
+    friend std::ostream& operator<<(std::ostream& os, const Carte<U, S>& v);
 
 private:
     std::vector<T> _elements;  ///< Liste d'éléments de type T stockées dans la carte.
     DistanceFunc _distance;    ///< Fonction permettant de calculer la distance entre les éléments.
 };
 
-template <typename T>
-inline Graphe<double, T> Carte<T>::construireGraphe() const
+template <typename T, typename R>
+inline Graphe<R, T> Carte<T, R>::construireGraphe() const
 {
-    Graphe<double, T> g;
+    Graphe<R, T> g;
     std::vector<Sommet<T>*> sommets;
     sommets.reserve(_elements.size());
 
@@ -86,7 +88,7 @@ inline Graphe<double, T> Carte<T>::construireGraphe() const
     {
         for (int j = i + 1; j < n; ++j)
         {
-            double d = _distance(sommets[i]->_v, sommets[j]->_v);
+            R d = _distance(sommets[i]->_v, sommets[j]->_v);
             g.creeArete(d, sommets[i], sommets[j]);
             g.creeArete(d, sommets[j], sommets[i]);
         }
@@ -95,8 +97,8 @@ inline Graphe<double, T> Carte<T>::construireGraphe() const
     return g;
 }
 
-template <typename T>
-inline Carte<T>::operator std::string() const
+template <typename T, typename R>
+inline Carte<T, R>::operator std::string() const
 {
     std::stringstream ss;
     ss << "Carte (" << _elements.size() << " elements):\n";
@@ -106,8 +108,8 @@ inline Carte<T>::operator std::string() const
     return ss.str();
 }
 
-template <typename U>
-inline std::ostream& operator<<(std::ostream& os, const Carte<U>& c)
+template <typename U, typename S>
+inline std::ostream& operator<<(std::ostream& os, const Carte<U, S>& c)
 {
     os << static_cast<std::string>(c);
     return os;
