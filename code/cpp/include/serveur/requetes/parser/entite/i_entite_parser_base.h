@@ -2,6 +2,7 @@
 #define I_ENTITE_PARSER_BASE_H
 
 #include <any>
+#include <memory>
 
 /**
  * @class IEntiteParserBase
