@@ -8,6 +8,10 @@
 #include "modele/graphe/g_element.h"
 #include "modele/graphe/sommet.h"
 
+/**
+ * @class Arete
+ * @brief Arête d'un graphe.
+ */
 template <typename S, typename T>
 class Arete : public GElement<S>
 {
