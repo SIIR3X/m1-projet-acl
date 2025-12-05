@@ -36,6 +36,16 @@ std::string TSPRequeteHandler::traiter(const std::string& requete)
 
         // Construction de la carte
         std::any carte = entiteParser->construireCarte(resultatEntites, strategieDistance);
+
+        // TODO : appel du solveur TSP
+        // TspResult<T, R>
+
+        // TODO : sérialisation du résultat TSP
+        // TspData
+
+        // TODO : passage au COR des réponses
+
+        // TODO : retourner le json final
     }
     catch (const std::exception& e)
     {
