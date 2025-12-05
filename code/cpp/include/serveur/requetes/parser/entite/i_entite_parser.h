@@ -2,6 +2,7 @@
 #define I_ENTITE_PARSER_H
 
 #include <any>
+#include <utility>
 
 #include "modele/generique/carte.h"
 #include "modele/generique/distance.h"
@@ -36,8 +37,12 @@ inline std::any IEntiteParser<T>::construireCarte(const std::any& entites, const
     auto vecteurEntites = std::any_cast<std::vector<T>>(entites);
     auto strategieDistance = std::any_cast<std::shared_ptr<Distance<T>>>(distance);
 
+    // Déduction automatique du type R retourné par la stratégie de distance
+    using R = decltype((*strategieDistance)(std::declval<T>(), std::declval<T>()));
+
     // Construction de la carte : la distance est injectée via un fonctor.
-    Carte<T> carte(vecteurEntites, [strategieDistance](const T& a, const T& b) { return (*strategieDistance)(a, b); });
+    Carte<T, R> carte(vecteurEntites,
+                      [strategieDistance](const T& a, const T& b) { return (*strategieDistance)(a, b); });
 
     return std::any{carte};
 }
