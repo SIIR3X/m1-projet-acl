@@ -4,6 +4,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "algorithmes/distance/data/algo_distance_data.h"
+#include "algorithmes/gestionnaires/solveur_handler_factory.h"
 #include "serveur/reponses/gestionnaires/i_reponse_handler.h"
 #include "serveur/reponses/gestionnaires/reponse_handler_factory.h"
 #include "serveur/requetes/parser/distance/i_distance_parser_base.h"
@@ -36,14 +38,23 @@ std::string AlgoDistanceRequeteHandler::genererReponse(const std::string& comman
             distanceParser->creerStrategieDistance();  // La stratégie de calcul de distance (dans notre projet, sera
                                                        // toujours la distance géodésique)
 
-        // Lancement de l'algorithme choisi sur les données
-        std::any resultat = entiteParser->executerAlgorithme(algo, entites, strategieDistance);
+        // Construction des données de l'algorithme via le parseur d'entités
+        std::any donneesAlgo = entiteParser->construireDonnees(entites, strategieDistance);
+
+        // Création de la chaîne COR des handlers de solveurs
+        auto solveur = SolveurHandlerFactory::creer();
+
+        // Calcul de la solution grace au solveur adapté
+        std::any solution = solveur->resoudre(algo, donneesAlgo);
 
         // Création de la chaîne COR des handlers de réponses
         auto gestionnaire = ReponseHandlerFactory::creer();
 
+        // Récupération des labels
+        std::vector<std::string> labels = entiteParser->extraireLabels(donnees);
+
         // Création d'une réponse adaptée à la requête
-        auto reponse = gestionnaire->traiter(commande, resultat);
+        auto reponse = gestionnaire->traiter(commande, solution, labels, donneesAlgo);
 
         // Retour final de la réponse au format JSON
         return reponse->toJson();

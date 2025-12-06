@@ -4,14 +4,13 @@
 #include <any>
 #include <memory>
 
-#include "algorithmes/distance/algo_distance_data.h"
+#include "algorithmes/distance/data/algo_distance_data.h"
 #include "modele/graphe/graphe.h"
 
 /**
  * @class ISolveurHandler
  * @brief Interface abstraite représentant un maillon de la chaîne de gestion des solveurs.
  */
-template <typename S, typename T>
 class ISolveurHandler
 {
 public:
@@ -32,10 +31,10 @@ public:
     /**
      * @brief Tente de résoudre un algorithme de distance.
      * @param nomAlgo Le nom de l'algorithme demandé.
-     * @param graphe Le graphe sur lequel exécuter l'algorithme.
+     * @param donnees Les données sur lesquelles exécuter l'algorithme.
      * @return Le résultat de l'algorithme sous forme d'un std::any.
      */
-    std::any resoudre(const std::string& nomAlgo, const Graphe<S, T>& graphe);
+    std::any resoudre(const std::string& nomAlgo, const std::any& donnes);
 
 protected:
     /**
@@ -47,23 +46,22 @@ protected:
 
     /**
      * @brief Exécute l'algorithme.
-     * @param graphe Le graphe sur lequel exécuter l'algorithme.
+     * @param donnees Les données sur lesquelles exécuter l'algorithme.
      * @return Le résultat de l'algorithme sous forme d'un std::any.
      */
-    virtual std::any executer(const Graphe<S, T>& graphe) = 0;
+    virtual std::any executer(const std::any& donnees) = 0;
 
 private:
     std::shared_ptr<ISolveurHandler> _suivant;
 };
 
-template <typename S, typename T>
-inline std::any ISolveurHandler<S, T>::resoudre(const std::string& nomAlgo, const Graphe<S, T>& graphe)
+inline std::any ISolveurHandler::resoudre(const std::string& nomAlgo, const std::any& donnees)
 {
     if (peutResoudre(nomAlgo))
-        return executer(graphe);
+        return executer(donnees);
 
     if (_suivant)
-        return _suivant->resoudre(nomAlgo, graphe);
+        return _suivant->resoudre(nomAlgo, donnees);
 
     return std::any{};
 }

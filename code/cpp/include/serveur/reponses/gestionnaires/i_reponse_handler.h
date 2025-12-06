@@ -4,6 +4,7 @@
 #include <any>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "serveur/reponses/i_reponse.h"
 
@@ -31,10 +32,16 @@ public:
     /**
      * @brief Fonction principale pour tenter de générer une réponse.
      * @param commande La commande demandée.
-     * @param data Le contenu de la réponse.
+     * @tparam Args Types des objets reçus.
+     * @param args Objets passés au handler.
      * @return Une instance de IReponse ou nullptr.
      */
-    std::shared_ptr<IReponse> traiter(const std::string& typeRequete, const std::any& data);
+    template <typename... Args>
+    std::shared_ptr<IReponse> traiter(const std::string& commande, Args&&... args)
+    {
+        std::vector<std::any> packed = {std::forward<Args>(args)...};
+        return traiterImplementation(commande, packed);
+    }
 
 protected:
     /**
@@ -46,22 +53,33 @@ protected:
 
     /**
      * @brief Génère la réponse correspondant à ce handler.
-     * @param data Le contenu de la réponse.
+     * @tparam Args Types des objets reçus.
+     * @param args Objets passés au handler.
      * @return Un pointeur partagé var la réponse.
      */
-    virtual std::shared_ptr<IReponse> genererReponse(const std::any& data) = 0;
+    virtual std::shared_ptr<IReponse> genererReponse(const std::vector<std::any>& args) = 0;
 
 private:
     std::shared_ptr<IReponseHandler> _suivant;  ///< Pointeur partagé vers le prochain handler.
+
+    /**
+     * @brief Implémentation concrète de la méthode de traitement.
+     * @param commande La commande demandée.
+     * @tparam Args Types des objets reçus.
+     * @param args Objets passés au handler.
+     * @return Une instance de IReponse ou nullptr.
+     */
+    std::shared_ptr<IReponse> traiterImplementation(const std::string& commande, const std::vector<std::any>& args);
 };
 
-inline std::shared_ptr<IReponse> IReponseHandler::traiter(const std::string& commande, const std::any& data)
+inline std::shared_ptr<IReponse> IReponseHandler::traiterImplementation(const std::string& commande,
+                                                                        const std::vector<std::any>& args)
 {
     if (peutTraiter(commande))
-        return genererReponse(data);
+        return genererReponse(args);
 
     if (_suivant)
-        return _suivant->traiter(commande, data);
+        return _suivant->traiterImplementation(commande, args);
 
     return nullptr;
 }
