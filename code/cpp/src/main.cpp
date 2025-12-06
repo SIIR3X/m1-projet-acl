@@ -1,13 +1,15 @@
 #include <iostream>
 
-#include "serveur/requetes/gestionnaires/tsp_requete_handler.h"
+#include "serveur/requetes/gestionnaires/algo_distance_requete_handler.h"
+#include "serveur/requetes/gestionnaires/requete_handler_factory.h"
 #include "serveur/requetes/parser/distance/distance_geodesique_parser.h"
 #include "serveur/requetes/parser/entite/ville_parser.h"
 #include "serveur/requetes/parser/parser_registry.h"
-#include "serveur/requetes/requete_handler_factory.h"
 
 static const std::string REQUETE_TSP = R"json(
 {
+    "commande": "calcul",
+    "algo": "tsp",
     "entite": "ville",
     "distance": "geodesique",
     "donnees": [
@@ -33,7 +35,7 @@ static const std::string REQUETE_TSP = R"json(
 int main(int argc, char *argv[])
 {
     // Enregistrement du TSPrequeteHandler
-    RequeteHandlerFactory::enregistrerHandler("TSP", [] { return std::make_unique<TSPRequeteHandler>(); });
+    RequeteHandlerFactory::enregistrerHandler("TSP", [] { return std::make_unique<AlgoDistanceRequeteHandler>(); });
 
     auto handler = RequeteHandlerFactory::creerHandler("TSP");
 

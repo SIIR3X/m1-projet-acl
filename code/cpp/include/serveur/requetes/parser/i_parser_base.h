@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "serveur/requetes/parser/nom_type.h"
+#include "types/nom_type.h"
 
 /**
  * @class IParserBase

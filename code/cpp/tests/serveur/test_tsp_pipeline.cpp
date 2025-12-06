@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 
-#include "algorithmes/tsp/tsp_solution.h"
+#include "algorithmes/distance/algo_distance_solution.h"
 #include "modele/geographie/ville.h"
-#include "serveur/requetes/gestionnaires/tsp_requete_handler.h"
+#include "serveur/requetes/gestionnaires/algo_distance_requete_handler.h"
+#include "serveur/requetes/gestionnaires/requete_handler_factory.h"
 #include "serveur/requetes/parser/distance/distance_geodesique_parser.h"
 #include "serveur/requetes/parser/entite/ville_parser.h"
 #include "serveur/requetes/parser/parser_registry.h"
-#include "serveur/requetes/requete_handler_factory.h"
 
 static const std::string REQUETE_TSP = R"json(
 {
@@ -35,7 +35,7 @@ static const std::string REQUETE_TSP = R"json(
 TEST(TSPPipelineTest, PipelineComplet)
 {
     // Enregistrement du TSPrequeteHandler
-    RequeteHandlerFactory::enregistrerHandler("TSP", [] { return std::make_unique<TSPRequeteHandler>(); });
+    RequeteHandlerFactory::enregistrerHandler("TSP", [] { return std::make_unique<AlgoDistanceRequeteHandler>(); });
 
     // Récupération du bon handler via la factory
     auto handler = RequeteHandlerFactory::creerHandler("TSP");
