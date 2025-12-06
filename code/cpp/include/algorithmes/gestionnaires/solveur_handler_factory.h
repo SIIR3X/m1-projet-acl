@@ -21,7 +21,7 @@ public:
     /**
      * @brief Type fonctionnel pour créer dynamiquement un gestionnaire de réponse.
      */
-    using CreateFunc = std::function < std::shared_ptr<ISolveurHandler<S, T>()>;
+    using CreateFunc = std::function<std::shared_ptr<ISolveurHandler<S, T>>()>;
 
     /**
      * @brief Crée la chaîne de responsabilité des handlers de réponse.
@@ -57,7 +57,7 @@ inline std::shared_ptr<ISolveurHandler<S, T>> SolveurHandlerFactory<S, T>::creer
     static std::shared_ptr<ISolveurHandler<S, T>> instance = []
     {
         // Création des handlers
-        auto h1 = std::make_shared<TspSolveurHandler>();
+        auto h1 = std::make_shared<TspSolveurHandler<S, T>>();
 
         // Retourne la tête de la chaîne
         return h1;

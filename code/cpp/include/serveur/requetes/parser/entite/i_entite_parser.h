@@ -31,12 +31,12 @@ public:
      * @param distance Un std::any contenant std::shared_ptr<Distance<T>>.
      * @return std::any contenant les données de résolution.
      */
-    virtual std::any executerAlgortihme(const std::string& nomAlgo, const std::any& entites,
+    virtual std::any executerAlgorithme(const std::string& nomAlgo, const std::any& entites,
                                         const std::any& distance) const override;
 };
 
 template <typename T>
-inline std::any IEntiteParser<T>::executerAlgortihme(const std::string& nomAlgo, const std::any& entites,
+inline std::any IEntiteParser<T>::executerAlgorithme(const std::string& nomAlgo, const std::any& entites,
                                                      const std::any& distance) const
 {
     // Récupération des véritables types des paramètres
@@ -54,13 +54,13 @@ inline std::any IEntiteParser<T>::executerAlgortihme(const std::string& nomAlgo,
     auto graphe = carte.construireGraphe();
 
     // Création de la chaîne COR des handlers de solveurs
-    auto gestionnaire = SolveurHandlerFactory::creer();
+    auto gestionnaire = SolveurHandlerFactory<R, T>::creer();
 
     // Résolution via l'algorithme sur le graphe générique
-    auto resultat = gestionnaire->resoudre(nomAlgo, graphe)
+    auto resultat = std::any_cast<AlgoDistanceSolution>(gestionnaire->resoudre(nomAlgo, graphe));
 
-                    // Sérialisation de la solution (dans notre projet, AlgoDistanceSolution vers AlgoDistanceData)
-                    auto resultatSerialise = AlgoDistanceSerializer::lancerSerialisation(solution);
+    // Sérialisation de la solution (dans notre projet, AlgoDistanceSolution vers AlgoDistanceData)
+    auto resultatSerialise = AlgoDistanceSerializer::lancerSerialisation(resultat);
 
     return std::any{resultatSerialise};
 }

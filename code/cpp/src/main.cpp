@@ -35,20 +35,6 @@ static const std::string REQUETE_TSP = R"json(
 int main(int argc, char *argv[])
 {
     // Enregistrement du TSPrequeteHandler
-    RequeteHandlerFactory::enregistrerHandler("TSP", [] { return std::make_unique<AlgoDistanceRequeteHandler>(); });
-
-    auto handler = RequeteHandlerFactory::creerHandler("TSP");
-
-    // Enregistrement du parseur de ville
-    ParserRegistry<IEntiteParserBase>::enregistrerParser("ville", std::make_shared<VilleParser>());
-
-    // Enregistrement du parseur de distance pour les villes
-    ParserRegistry<IDistanceParserBase>::enregistrerParser("geodesique",
-                                                           std::make_shared<DistanceGeodesiqueParser<Ville>>());
-
-    std::string test = handler->traiter(REQUETE_TSP);
-
-    std::cout << test << std::endl;
 
     return 0;
 }
