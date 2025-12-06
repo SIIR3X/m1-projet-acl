@@ -4,6 +4,7 @@
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "modele/graphe/arete.h"
 #include "modele/graphe/p_element.h"
@@ -45,6 +46,8 @@ public:
     {
         detruire();
     }
+
+    std::vector<Sommet<T>*> sommets() const;
 
     /**
      * @brief Nombre total de sommets du graphe.
@@ -134,6 +137,16 @@ inline Graphe<S, T>& Graphe<S, T>::operator=(const Graphe<S, T>& other)
         copieDepuis(other);
     }
     return *this;
+}
+
+template <typename S, typename T>
+inline std::vector<Sommet<T>*> Graphe<S, T>::sommets() const
+{
+    std::vector<Sommet<T>*> res;
+
+    for (auto p = _lSommets; p; p = p->_suivant) res.push_back(p->_info);
+
+    return res;
 }
 
 template <typename S, typename T>

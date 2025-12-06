@@ -15,7 +15,7 @@ private:
     static std::vector<int> _cheminFictif(int n);
 };
 
-TSPSolution SolveurTSP::resoudre(const TSPData& data)
+inline TSPSolution SolveurTSP::resoudre(const TSPData& data)
 {
     TSPSolution solution;
 
@@ -28,7 +28,7 @@ TSPSolution SolveurTSP::resoudre(const TSPData& data)
     return solution;
 }
 
-std::vector<int> SolveurTSP::_cheminFictif(int n)
+inline std::vector<int> SolveurTSP::_cheminFictif(int n)
 {
     std::vector<int> chemin(n);
 

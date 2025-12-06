@@ -1,7 +1,9 @@
 #ifndef REPONSE_TSP_H
 #define REPONSE_TSP_H
 
-#include "serveur/reponses/data/tsp_data.h"
+#include <string>
+#include <vector>
+
 #include "serveur/reponses/i_reponse.h"
 
 /**
