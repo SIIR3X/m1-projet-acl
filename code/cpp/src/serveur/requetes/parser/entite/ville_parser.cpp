@@ -31,3 +31,20 @@ std::any VilleParser::parser(const std::string& json) const
 
     return std::any{villes};
 }
+
+std::vector<std::string> VilleParser::extraireLabels(const std::string& json) const
+{
+    std::vector<std::string> labels;
+
+    auto objets = JsonParserUtils::extraireListeObjets(json);
+    labels.reserve(objets.size());
+
+    for (const auto& obj : objets)
+    {
+        std::string nom = JsonParserUtils::recupererObligatoire(obj, "nom", JsonParserUtils::extraireChampObjet);
+
+        labels.push_back(nom);
+    }
+
+    return labels;
+}

@@ -1,7 +1,11 @@
 #ifndef TSP_SOLVEUR_HANDLER_H
 #define TSP_SOLVEUR_HANDLER_H
 
-#include "algorithmes/distance/algo_distance_data_builder.h"
+#include <algorithm>
+#include <random>
+
+#include "algorithmes/distance/builder/algo_distance_data_builder.h"
+#include "algorithmes/distance/data/algo_distance_solution.h"
 #include "algorithmes/gestionnaires/i_solveur_handler.h"
 #include "modele/graphe/graphe.h"
 #include "types/algo_type.h"
@@ -10,8 +14,7 @@
  * @class TspSolveurHandler
  * @brief @brief Gestionnaire pour les algorithmes de type "tsp".
  */
-template <typename S, typename T>
-class TspSolveurHandler : public ISolveurHandler<S, T>
+class TspSolveurHandler : public ISolveurHandler
 {
 protected:
     /**
@@ -26,23 +29,29 @@ protected:
 
     /**
      * @brief Exécute l'algorithme.
-     * @param graphe Le graphe sur lequel exécuter l'algorithme.
+     * @param donnees Les données sur lesquelles exécuter l'algorithme.
      * @return Le résultat de l'algorithme sous forme d'un std::any.
      */
-    virtual std::any executer(const Graphe<S, T>& graphe) override;
+    virtual std::any executer(const std::any& donnees) override;
 };
 
-template <typename S, typename T>
-inline std::any TspSolveurHandler<S, T>::executer(const Graphe<S, T>& graphe)
+inline std::any TspSolveurHandler::executer(const std::any& donnees)
 {
-    // Construction des données à partir du graphe
-    AlgoDistanceData data = AlgoDistanceDataBuilder::construireData(graphe);
+    // Cast des données
+    const auto& donneesAlgo = std::any_cast<const AlgoDistanceData&>(donnees);
 
-    // TODO : Exécuter l'algorithme
-    // AlgoDistanceData resultat =
+    AlgoDistanceSolution solution;
 
-    // return std::any{resultat};
-    return std::any{};
+    // TODO : TSP
+    int n = donneesAlgo._nombreSommets;
+    solution._chemin.reserve(n);
+    for (int i = 0; i < n; ++i) solution._chemin.push_back(i);
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::shuffle(solution._chemin.begin(), solution._chemin.end(), gen);
+    solution._distanceTotale = 123.456;
+
+    return std::any{solution};
 }
 
 #endif  // TSP_SOLVEUR_HANDLER_H

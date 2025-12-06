@@ -1,14 +1,12 @@
 #include <iostream>
 
-#include "serveur/requetes/gestionnaires/algo_distance_requete_handler.h"
 #include "serveur/requetes/gestionnaires/requete_handler_factory.h"
 #include "serveur/requetes/parser/distance/distance_geodesique_parser.h"
 #include "serveur/requetes/parser/entite/ville_parser.h"
-#include "serveur/requetes/parser/parser_registry.h"
 
-static const std::string REQUETE_TSP = R"json(
+static const std::string REQUETE = R"json(
 {
-    "commande": "calcul",
+    "commande": "algo_distance",
     "algo": "tsp",
     "entite": "ville",
     "distance": "geodesique",
@@ -34,7 +32,22 @@ static const std::string REQUETE_TSP = R"json(
 
 int main(int argc, char *argv[])
 {
-    // Enregistrement du TSPrequeteHandler
+    std::shared_ptr<IRequeteHandler> requeteHandler = RequeteHandlerFactory::creer();
+
+    ParserRegistry<IEntiteParserBase>::enregistrerParser("ville", std::make_shared<VilleParser>());
+    ParserRegistry<IDistanceParserBase>::enregistrerParser("geodesique",
+                                                           std::make_shared<DistanceGeodesiqueParser<Ville>>());
+
+    if (!requeteHandler)
+        return 1;
+
+    std::string commande =
+        JsonParserUtils::recupererObligatoire(REQUETE, "commande", JsonParserUtils::extraireChampString);
+
+    std::string reponse = requeteHandler->traiter(commande, REQUETE);
+
+    std::cout << "Commande : " << commande << std::endl;
+    std::cout << reponse << std::endl;
 
     return 0;
 }

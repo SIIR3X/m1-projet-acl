@@ -1,1 +1,0 @@
-#include "serveur/reponses/serializers/algo_distance_serializer.h"
