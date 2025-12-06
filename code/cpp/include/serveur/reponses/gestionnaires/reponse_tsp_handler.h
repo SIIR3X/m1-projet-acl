@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "serveur/reponses/data/tsp_reponse_data.h"
 #include "serveur/reponses/i_reponse_handler.h"
 #include "serveur/reponses/types/reponse_tsp.h"
 
@@ -35,7 +36,7 @@ protected:
 
 inline std::shared_ptr<IReponse> ReponseTSPHandler::genererReponse(const std::any& data)
 {
-    const auto& tsp = std::any_cast<const TSPData&>(data);
+    const auto& tsp = std::any_cast<const TSPReponseData&>(data);
 
     return std::make_shared<ReponseTSP>(tsp._chemin, tsp._distances, tsp._distanceTotale);
 }
