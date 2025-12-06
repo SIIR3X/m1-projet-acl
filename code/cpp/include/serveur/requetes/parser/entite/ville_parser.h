@@ -34,6 +34,13 @@ public:
      * @return std::any contenant un std::vector<T>
      */
     std::any parser(const std::string& json) const override;
+
+    /**
+     * @brief Extrait une liste de labels directement depuis le JSON fourni.
+     * @param json Le bloc JSON contenant les entités.
+     * @return Un vecteur de labels.
+     */
+    std::vector<std::string> extraireLabels(const std::string& json) const override;
 };
 
 #endif  // VILLE_PARSER_H

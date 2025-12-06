@@ -4,10 +4,10 @@
 #include <any>
 #include <utility>
 
+#include "algorithmes/distance/builder/algo_distance_data_builder.h"
 #include "algorithmes/gestionnaires/solveur_handler_factory.h"
 #include "modele/generique/carte.h"
 #include "modele/generique/distance.h"
-#include "serveur/reponses/serializers/algo_distance_serializer.h"
 #include "serveur/requetes/parser/entite/i_entite_parser_base.h"
 #include "serveur/requetes/parser/i_parser_base.h"
 
@@ -25,44 +25,38 @@ public:
     virtual ~IEntiteParser() = default;
 
     /**
-     * @brief Lance la résolution via un algortihme sur les entités fournies.
-     * @param nomAlgo Le nom de l'algorithme à utiliser.
-     * @param entites Un std::any contenant std::vector<T>.
-     * @param distance Un std::any contenant std::shared_ptr<Distance<T>>.
-     * @return std::any contenant les données de résolution.
+     * @brief Construit un graphe à partir d'un ensemble d'entités et d'une stratégie de distance.
+     * @param entites Un std::any contenant un std::vector<T>, où T est le type concret des entités.
+     * @param strategieDistance Un std::any contenant un std::shared_ptr<Distance<T>>.
+     * @return std::any contenant le graphe.
+     * @throws std::bad_any_cast si les types contenus dans les std::any ne correspondent pas.
      */
-    virtual std::any executerAlgorithme(const std::string& nomAlgo, const std::any& entites,
-                                        const std::any& distance) const override;
+    std::any construireDonnees(const std::any& entites, const std::any& strategieDistance) const override;
 };
 
 template <typename T>
-inline std::any IEntiteParser<T>::executerAlgorithme(const std::string& nomAlgo, const std::any& entites,
-                                                     const std::any& distance) const
+inline std::any IEntiteParser<T>::construireDonnees(const std::any& entites, const std::any& strategieDistance) const
 {
-    // Récupération des véritables types des paramètres
-    auto vecteurEntites = std::any_cast<std::vector<T>>(entites);
-    auto strategieDistance = std::any_cast<std::shared_ptr<Distance<T>>>(distance);
+    // Cast des entités en vecteur
+    const auto& vecteurEntites = std::any_cast<const std::vector<T>&>(entites);
 
-    // Déduction automatique du type R (type des distances)
-    using R = decltype((*strategieDistance)(std::declval<T>(), std::declval<T>()));
+    // Cest de la stratégie en stratégie de distance
+    const auto& strategie = std::any_cast<const std::shared_ptr<Distance<T>>&>(strategieDistance);
+
+    // Récupération du type de retour de la fonction de distance (R)
+    using R = decltype((*strategie)(std::declval<T>(), std::declval<T>()));
 
     // Construction de la carte
-    Carte<T, R> carte(vecteurEntites,
-                      [strategieDistance](const T& a, const T& b) { return (*strategieDistance)(a, b); });
+    Carte<T, R> carte(vecteurEntites, [strategie](const T& a, const T& b) { return (*strategie)(a, b); });
 
-    // Construction du graphe associé à la carte
+    // Construction du graphe générique
     auto graphe = carte.construireGraphe();
 
-    // Création de la chaîne COR des handlers de solveurs
-    auto gestionnaire = SolveurHandlerFactory<R, T>::creer();
+    // Construction des données nécessaires aux algos de distance
+    AlgoDistanceData data = AlgoDistanceDataBuilder::construireDonnees(graphe);
 
-    // Résolution via l'algorithme sur le graphe générique
-    auto resultat = std::any_cast<AlgoDistanceSolution>(gestionnaire->resoudre(nomAlgo, graphe));
-
-    // Sérialisation de la solution (dans notre projet, AlgoDistanceSolution vers AlgoDistanceData)
-    auto resultatSerialise = AlgoDistanceSerializer::lancerSerialisation(resultat);
-
-    return std::any{resultatSerialise};
+    // Retour encapsulé dans std::any
+    return std::any{data};
 }
 
 #endif  // I_ENTITE_PARSER_H

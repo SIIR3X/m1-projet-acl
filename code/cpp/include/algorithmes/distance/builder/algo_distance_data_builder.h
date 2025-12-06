@@ -1,26 +1,31 @@
 #ifndef ALGO_DISTANCE_DATA_BUILDER_H
 #define ALGO_DISTANCE_DATA_BUILDER_H
 
+#include <any>
 #include <limits>
+#include <memory>
 #include <vector>
 
-#include "algorithmes/distance/algo_distance_data.h"
+#include "algorithmes/commun/i_data_builder.h"
+#include "algorithmes/distance/data/algo_distance_data.h"
+#include "modele/generique/carte.h"
+#include "modele/generique/distance.h"
 #include "modele/graphe/graphe.h"
 
 /**
  * @class AlgoDistanceDataBuilder
  * @brief Classe utilitaire permettant de transformer un Graphe<T> en données exploitables.
  */
-class AlgoDistanceDataBuilder
+class AlgoDistanceDataBuilder : public IDataBuilder<AlgoDistanceDataBuilder>
 {
 public:
     /**
-     * @brief Construit une structure AlgoDistanceData à partir d'un graphe.
+     * @brief Construit une structure AlgoDistanceData à partir d'un graphe déjà construit.
      * @param graphe Graphe à convertir en données exploitables.
      * @return Une structure AlgoDistanceData.
      */
     template <typename S, typename T>
-    static AlgoDistanceData construireData(const Graphe<S, T>& graphe);
+    static AlgoDistanceData construireDonnees(const Graphe<S, T>& graphe);
 
 private:
     /**
@@ -43,7 +48,7 @@ private:
 };
 
 template <typename S, typename T>
-inline AlgoDistanceData AlgoDistanceDataBuilder::construireData(const Graphe<S, T>& graphe)
+inline AlgoDistanceData AlgoDistanceDataBuilder::construireDonnees(const Graphe<S, T>& graphe)
 {
     AlgoDistanceData data;
 

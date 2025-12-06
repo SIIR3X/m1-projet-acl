@@ -21,7 +21,7 @@ enum class AlgoType
  */
 inline AlgoType algoFromString(const std::string& str)
 {
-    static const std::unordered_map<std::string, AlgoType> map = {{"TSP", AlgoType::TSP}};
+    static const std::unordered_map<std::string, AlgoType> map = {{"tsp", AlgoType::TSP}};
 
     auto iterateur = map.find(str);
     if (iterateur != map.end())
@@ -40,9 +40,9 @@ inline std::string algoToString(AlgoType algo)
     switch (algo)
     {
         case AlgoType::TSP:
-            return "TSP";
+            return "tsp";
         default:
-            return "INCONNU";
+            return "inconnu";
     }
 }
 

@@ -14,27 +14,26 @@
  * @class SolveurHandlerFactory
  * @brief Fabrique de gestionnaires de solveurs.
  */
-template <typename S, typename T>
 class SolveurHandlerFactory
 {
 public:
     /**
      * @brief Type fonctionnel pour créer dynamiquement un gestionnaire de réponse.
      */
-    using CreateFunc = std::function<std::shared_ptr<ISolveurHandler<S, T>>()>;
+    using CreateFunc = std::function<std::shared_ptr<ISolveurHandler>()>;
 
     /**
      * @brief Crée la chaîne de responsabilité des handlers de réponse.
      * @return Le premir handler de la chaîne COR.
      */
-    static std::shared_ptr<ISolveurHandler<S, T>> creer();
+    static std::shared_ptr<ISolveurHandler> creer();
 
     /**
      * @brief Renvoie un gestionnaire correspondant au type demandé.
      * @param type Type de réponse (ex : "TSP").
      * @return Le bon handler.
      */
-    static std::shared_ptr<ISolveurHandler<S, T>> creerHandler(const std::string& type);
+    static std::shared_ptr<ISolveurHandler> creerHandler(const std::string& type);
 
     /**
      * @brief Enregistre un créateur de gestionnaire dans la factory.
@@ -50,14 +49,13 @@ private:
     static std::unordered_map<std::string, CreateFunc>& obtenirRegistre();
 };
 
-template <typename S, typename T>
-inline std::shared_ptr<ISolveurHandler<S, T>> SolveurHandlerFactory<S, T>::creer()
+inline std::shared_ptr<ISolveurHandler> SolveurHandlerFactory::creer()
 {
     // Création d'une instance (singleton créer au premier appel)
-    static std::shared_ptr<ISolveurHandler<S, T>> instance = []
+    static std::shared_ptr<ISolveurHandler> instance = []
     {
         // Création des handlers
-        auto h1 = std::make_shared<TspSolveurHandler<S, T>>();
+        auto h1 = std::make_shared<TspSolveurHandler>();
 
         // Retourne la tête de la chaîne
         return h1;
@@ -66,8 +64,7 @@ inline std::shared_ptr<ISolveurHandler<S, T>> SolveurHandlerFactory<S, T>::creer
     return instance;
 }
 
-template <typename S, typename T>
-inline std::shared_ptr<ISolveurHandler<S, T>> SolveurHandlerFactory<S, T>::creerHandler(const std::string& type)
+inline std::shared_ptr<ISolveurHandler> SolveurHandlerFactory::creerHandler(const std::string& type)
 {
     auto& registre = obtenirRegistre();
 
@@ -80,15 +77,13 @@ inline std::shared_ptr<ISolveurHandler<S, T>> SolveurHandlerFactory<S, T>::creer
     return it->second();
 }
 
-template <typename S, typename T>
-inline void SolveurHandlerFactory<S, T>::enregistrerHandler(const std::string& type, CreateFunc func)
+inline void SolveurHandlerFactory::enregistrerHandler(const std::string& type, CreateFunc func)
 {
     obtenirRegistre()[type] = func;
 }
 
-template <typename S, typename T>
-inline std::unordered_map<std::string, typename SolveurHandlerFactory<S, T>::CreateFunc>&
-SolveurHandlerFactory<S, T>::obtenirRegistre()
+inline std::unordered_map<std::string, typename SolveurHandlerFactory::CreateFunc>&
+SolveurHandlerFactory::obtenirRegistre()
 {
     static std::unordered_map<std::string, CreateFunc> registre;
     return registre;
