@@ -16,9 +16,9 @@ class DistanceGeodesiqueParser : public IDistanceParser<T>
 {
 public:
     /**
-     * @brief Constructeur principal. Se charge d'enregistrer le parseur dans le registry.
+     * @brief Constructeur principal.
      */
-    DistanceGeodesiqueParser();
+    DistanceGeodesiqueParser() = default;
 
     /**
      * @brief Nom associé à ce parseur (ex : "ville").
@@ -36,19 +36,17 @@ public:
 };
 
 template <typename T>
-inline DistanceGeodesiqueParser<T>::DistanceGeodesiqueParser()
-{
-    ParserRegistry<IDistanceParserBase>::enregistrerParser("geodesique",
-                                                           std::make_shared<DistanceGeodesiqueParser<T>>());
-}
-
-template <typename T>
 inline std::any DistanceGeodesiqueParser<T>::creerStrategieDistance() const
 {
-    auto ptr = std::make_shared<DistanceGeodesique<T>>([](const T& x) { return x.latitude(); },
-                                                       [](const T& x) { return x.longitude(); });
+    // Pointeur typé sur la classe DERIVÉE
+    auto ptrDerive = std::make_shared<DistanceGeodesique<T>>([](const T& x) { return x.latitude(); },
+                                                             [](const T& x) { return x.longitude(); });
 
-    return std::any{ptr};
+    // Cast vers la classe de BASE
+    std::shared_ptr<Distance<T>> ptrBase = ptrDerive;
+
+    // Stocker le pointeur DE BASE dans le any
+    return std::any{ptrBase};
 }
 
 #endif  // DISTANCE_GEODESIQUE_PARSER_H
