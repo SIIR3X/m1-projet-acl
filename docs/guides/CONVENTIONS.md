@@ -6,15 +6,6 @@
 
 Ce document définit les règles de style, de structure et d'organisation utilisées dans ce projet.
 
-Il vise à :
-
-- garantir la cohérence du code entre les différents langages (C, C++ et Java),
-- faciliter la lisibilité et la maintenance,
-- simplifier la navigation dans l'arborescence du projet,
-- assurer une documentation uniforme.
-
-Ces conventions doivent être respectées par **tout contributeur** lors de l'écriture ou de la modification du code.
-
 ## Conventions d'écriture
 
 ### Style commun (tous les langages)
@@ -23,7 +14,6 @@ Ces conventions doivent être respectées par **tout contributeur** lors de l'é
 - Les **types**, **classes**, **structures** et **énumérations sont nommés en **`PascalCase`**.
 - Les **constantes** sont écrites en **`UPPER_SNAKE_CASE`**.
 - Les **champs privés** d'une classe sont préfixés par **`_`**.
-- Tous les identifiants (variables, fonctions/méthodes, classes, paramètres, champs…) doivent être **nommés en français**.
 
 ## C++
 
