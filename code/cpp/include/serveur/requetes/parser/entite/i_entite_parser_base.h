@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "serveur/requetes/parser/distance/i_distance_parser_base.h"
+
 /**
  * @class IEntiteParserBase
  * @brief Interface polymorphe de base pour les parseurs d'entités.
@@ -17,6 +19,16 @@ public:
      * @brief Destructeur.
      */
     virtual ~IEntiteParserBase() = default;
+
+    /**
+     * @brief Parse le JSON, créer la stratégie de distance et construit les données prêtes pour utilisation dans un
+     * algorithme.
+     * @param json Chaîne JSON représentant un tableau d'entités.
+     * @param distanceParser Le parseur de distance permettant de créer la stratégie.
+     * @return std::any contenant les données prêtes pour les algorithmes de distance.
+     */
+    virtual std::any construireDonneesAlgorithmesDistance(
+        const std::string& json, const std::shared_ptr<IDistanceParserBase>& distanceParser) const = 0;
 
     /**
      * @brief Parse un tableau JSON en collection typée de T.
@@ -31,15 +43,6 @@ public:
      * @return Un vecteur de labels.
      */
     virtual std::vector<std::string> extraireLabels(const std::string& json) const = 0;
-
-    /**
-     * @brief Construit un graphe à partir d'un ensemble d'entités et d'une stratégie de distance.
-     * @param entites Un std::any contenant un std::vector<T>, où T est le type concret des entités.
-     * @param strategieDistance Un std::any contenant un std::shared_ptr<Distance<T>>.
-     * @return std::any contenant le graphe.
-     * @throws std::bad_any_cast si les types contenus dans les std::any ne correspondent pas.
-     */
-    virtual std::any construireDonnees(const std::any& entites, const std::any& strategieDistance) const = 0;
 };
 
 #endif  // I_ENTITE_PARSER_BASE_H

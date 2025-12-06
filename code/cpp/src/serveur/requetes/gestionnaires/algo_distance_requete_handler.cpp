@@ -31,15 +31,8 @@ std::string AlgoDistanceRequeteHandler::genererReponse(const std::string& comman
         auto distanceParser =
             ParserRegistry<IDistanceParserBase>::get(distance);  // Récupération du parseur de distance correspondant
 
-        // Récupération des informations de la requête
-        std::any entites = entiteParser->parser(
-            donnees);  // Les entités (un std::vector<T>, dans notre projet, sera toujours un std::vector<Ville>)
-        std::any strategieDistance =
-            distanceParser->creerStrategieDistance();  // La stratégie de calcul de distance (dans notre projet, sera
-                                                       // toujours la distance géodésique)
-
         // Construction des données de l'algorithme via le parseur d'entités
-        std::any donneesAlgo = entiteParser->construireDonnees(entites, strategieDistance);
+        std::any donneesAlgo = entiteParser->construireDonneesAlgorithmesDistance(requete, distanceParser);
 
         // Création de la chaîne COR des handlers de solveurs
         auto solveur = SolveurHandlerFactory::creer();
