@@ -70,5 +70,5 @@ desktop.ini
 #   Documentation
 # ==========================================
 
-docs/cpp
-docs/java
+docs/cpp/code
+docs/java/code

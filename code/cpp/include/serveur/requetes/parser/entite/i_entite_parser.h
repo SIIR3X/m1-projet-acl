@@ -2,12 +2,11 @@
 #define I_ENTITE_PARSER_H
 
 #include <any>
-#include <utility>
 
 #include "algorithmes/distance/builder/algo_distance_data_builder.h"
-#include "algorithmes/gestionnaires/solveur_handler_factory.h"
 #include "modele/generique/carte.h"
 #include "modele/generique/distance.h"
+#include "serveur/requetes/parser/distance/i_distance_parser_base.h"
 #include "serveur/requetes/parser/entite/i_entite_parser_base.h"
 #include "serveur/requetes/parser/i_parser_base.h"
 
@@ -25,29 +24,40 @@ public:
     virtual ~IEntiteParser() = default;
 
     /**
-     * @brief Construit un graphe à partir d'un ensemble d'entités et d'une stratégie de distance.
-     * @param entites Un std::any contenant un std::vector<T>, où T est le type concret des entités.
-     * @param strategieDistance Un std::any contenant un std::shared_ptr<Distance<T>>.
-     * @return std::any contenant le graphe.
-     * @throws std::bad_any_cast si les types contenus dans les std::any ne correspondent pas.
+     * @brief Parse le JSON, créer la stratégie de distance et construit les données prêtes pour utilisation dans un
+     * algorithme.
+     * @param json Chaîne JSON représentant un tableau d'entités.
+     * @param distanceParser Le parseur de distance permettant de créer la stratégie.
+     * @return std::any contenant les données prêtes pour les algorithmes de distance.
      */
-    std::any construireDonnees(const std::any& entites, const std::any& strategieDistance) const override;
+    std::any construireDonneesAlgorithmesDistance(
+        const std::string& json, const std::shared_ptr<IDistanceParserBase>& distanceParser) const override;
 };
 
 template <typename T>
-inline std::any IEntiteParser<T>::construireDonnees(const std::any& entites, const std::any& strategieDistance) const
+inline std::any IEntiteParser<T>::construireDonneesAlgorithmesDistance(
+    const std::string& json, const std::shared_ptr<IDistanceParserBase>& distanceParser) const
 {
+    // Récupération de entités depuis le JSON
+    std::any entites =
+        parser(json);  // Les entités (un std::vector<T>, dans notre projet, sera toujours un std::vector<Ville>)
+
+    // Création de la stratégie de distance
+    std::any strategie = distanceParser->creerStrategieDistance();  // La stratégie de calcul de distance (dans notre
+                                                                    // projet, sera toujours la distance géodésique)
+
     // Cast des entités en vecteur
     const auto& vecteurEntites = std::any_cast<const std::vector<T>&>(entites);
 
-    // Cest de la stratégie en stratégie de distance
-    const auto& strategie = std::any_cast<const std::shared_ptr<Distance<T>>&>(strategieDistance);
+    // Cast de la stratégie en stratégie de distance
+    const auto& strategieDistance = std::any_cast<const std::shared_ptr<Distance<T>>&>(strategie);
 
     // Récupération du type de retour de la fonction de distance (R)
-    using R = decltype((*strategie)(std::declval<T>(), std::declval<T>()));
+    using R = decltype((*strategieDistance)(std::declval<T>(), std::declval<T>()));
 
     // Construction de la carte
-    Carte<T, R> carte(vecteurEntites, [strategie](const T& a, const T& b) { return (*strategie)(a, b); });
+    Carte<T, R> carte(vecteurEntites,
+                      [strategieDistance](const T& a, const T& b) { return (*strategieDistance)(a, b); });
 
     // Construction du graphe générique
     auto graphe = carte.construireGraphe();
