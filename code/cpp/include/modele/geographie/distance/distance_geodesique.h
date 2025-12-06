@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+#include "modele/generique/distance.h"
 #include "modele/geographie/ville.h"
 #include "utils/geodesique_math_utils.h"
 
@@ -11,7 +12,7 @@
  * @brief Stratégie générique pour calculer la distance géodésique entre deux objets T.
  */
 template <typename T>
-class DistanceGeodesique
+class DistanceGeodesique : public Distance<T>
 {
 public:
     /**

@@ -1,8 +1,11 @@
 #include "serveur/requetes/gestionnaires/tsp_requete_handler.h"
 
 #include <any>
+#include <iostream>
 #include <stdexcept>
 
+#include "serveur/reponses/i_reponse_handler.h"
+#include "serveur/reponses/reponse_handler_factory.h"
 #include "serveur/requetes/parser/distance/i_distance_parser_base.h"
 #include "serveur/requetes/parser/entite/i_entite_parser_base.h"
 #include "serveur/requetes/parser/parser_registry.h"
@@ -34,18 +37,15 @@ std::string TSPRequeteHandler::traiter(const std::string& requete)
             distanceParser->creerStrategieDistance();  // La stratégie de calcul de distance (dans notre projet, sera
                                                        // toujours la distance géodésique)
 
-        // Construction de la carte
-        std::any carte = entiteParser->construireCarte(resultatEntites, strategieDistance);
+        // Lancement du TSP
+        std::any resultatTSP = entiteParser->lancerTSP(resultatEntites, strategieDistance);
 
-        // TODO : appel du solveur TSP
-        // TspResult<T, R>
+        // Lancement du DP COR pour trouver le bon handler de réponse et créer la réponse
+        auto gestionnaire = ReponseHandlerFactory::creer();
+        std::shared_ptr<IReponse> reponse = gestionnaire->traiter("TSP", resultatTSP);
 
-        // TODO : sérialisation du résultat TSP
-        // TspData
-
-        // TODO : passage au COR des réponses
-
-        // TODO : retourner le json final
+        // Retour final de la réponse au format JSON
+        return reponse->toJson();
     }
     catch (const std::exception& e)
     {

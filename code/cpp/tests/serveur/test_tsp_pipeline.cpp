@@ -1,5 +1,7 @@
-#include <iostream>
+#include <gtest/gtest.h>
 
+#include "algorithmes/tsp/tsp_solution.h"
+#include "modele/geographie/ville.h"
 #include "serveur/requetes/gestionnaires/tsp_requete_handler.h"
 #include "serveur/requetes/parser/distance/distance_geodesique_parser.h"
 #include "serveur/requetes/parser/entite/ville_parser.h"
@@ -12,17 +14,17 @@ static const std::string REQUETE_TSP = R"json(
     "distance": "geodesique",
     "donnees": [
         {
-            "nom": "Strasbourg",
+            "ville": "Strasbourg",
             "latitude": 48.58,
             "longitude": 7.75
         },
         {
-            "nom": "Metz",
+            "ville": "Metz",
             "latitude": 49.12,
             "longitude": 6.17
         },
         {
-            "nom": "Nancy",
+            "ville": "Nancy",
             "latitude": 48.69,
             "longitude": 6.18
         }
@@ -30,23 +32,17 @@ static const std::string REQUETE_TSP = R"json(
 }
 )json";
 
-int main(int argc, char *argv[])
+TEST(TSPPipelineTest, PipelineComplet)
 {
     // Enregistrement du TSPrequeteHandler
     RequeteHandlerFactory::enregistrerHandler("TSP", [] { return std::make_unique<TSPRequeteHandler>(); });
 
+    // Récupération du bon handler via la factory
     auto handler = RequeteHandlerFactory::creerHandler("TSP");
+    ASSERT_TRUE(handler);
 
-    // Enregistrement du parseur de ville
     ParserRegistry<IEntiteParserBase>::enregistrerParser("ville", std::make_shared<VilleParser>());
 
-    // Enregistrement du parseur de distance pour les villes
-    ParserRegistry<IDistanceParserBase>::enregistrerParser("geodesique",
-                                                           std::make_shared<DistanceGeodesiqueParser<Ville>>());
-
     std::string test = handler->traiter(REQUETE_TSP);
-
-    std::cout << test << std::endl;
-
-    return 0;
+    // EXPECT_EQ(test, "");
 }
