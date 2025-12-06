@@ -1,0 +1,1 @@
+#include "serveur/reponses/data/algo_distance_reponse_data.h"

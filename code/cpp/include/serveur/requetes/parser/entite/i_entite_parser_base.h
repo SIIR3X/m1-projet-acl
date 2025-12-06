@@ -24,20 +24,14 @@ public:
     virtual std::any parser(const std::string& json) const = 0;
 
     /**
-     * @brief Construit dynamiquement une carte.
+     * @brief Lance la résolution via un algortihme sur les entités fournies.
+     * @param nomAlgo Le nom de l'algorithme à utiliser.
      * @param entites Un std::any contenant std::vector<T>.
      * @param distance Un std::any contenant std::shared_ptr<Distance<T>>.
-     * @return Un std::any contenant une instance de Carte<T>.
+     * @return std::any contenant les données de résolution.
      */
-    virtual std::any construireCarte(const std::any& entites, const std::any& distance) const = 0;
-
-    /**
-     * @brief Lance la résolution du TSP sur les entités fournies.
-     * @param entites Un std::any contenant std::vector<T>.
-     * @param distance Un std::any contenant std::shared_ptr<Distance<T>>.
-     * @return std::any contenant un TSPData<T,R>.
-     */
-    virtual std::any lancerTSP(const std::any& entites, const std::any& distance) const = 0;
+    virtual std::any executerAlgorithme(const std::string& nomAlgo, const std::any& entites,
+                                        const std::any& distance) const = 0;
 };
 
 #endif  // I_ENTITE_PARSER_BASE_H
