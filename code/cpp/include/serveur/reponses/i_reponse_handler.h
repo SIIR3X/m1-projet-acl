@@ -15,6 +15,11 @@ public:
      */
     virtual ~IReponseHandler() = default;
 
+    void setSuivant(std::shared_ptr<IReponseHandler> suivant)
+    {
+        _suivant = suivant;
+    }
+
     /**
      * @brief Fonction principale pour tenter de générer une réponse.
      * @param type Type de réponse.

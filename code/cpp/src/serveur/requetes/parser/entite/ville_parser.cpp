@@ -17,8 +17,10 @@ std::any VilleParser::parser(const std::string& json) const
     {
         // Récupération des champs obligatoires
         std::string nom = JsonParserUtils::recupererObligatoire(obj, "nom", JsonParserUtils::extraireChampObjet);
-        std::string latStr = JsonParserUtils::recupererObligatoire(obj, "lat", JsonParserUtils::extraireChampObjet);
-        std::string lonStr = JsonParserUtils::recupererObligatoire(obj, "lon", JsonParserUtils::extraireChampObjet);
+        std::string latStr =
+            JsonParserUtils::recupererObligatoire(obj, "latitude", JsonParserUtils::extraireChampObjet);
+        std::string lonStr =
+            JsonParserUtils::recupererObligatoire(obj, "longitude", JsonParserUtils::extraireChampObjet);
 
         // Conversion des données
         double lat = std::stod(latStr);

@@ -16,9 +16,9 @@ class VilleParser : public IEntiteParser<Ville>
 {
 public:
     /**
-     * @brief Constructeur principal. Se charge d'enregistrer le parseur dans le registry.
+     * @brief Constructeur principal.
      */
-    VilleParser();
+    VilleParser() = default;
 
     /**
      * @brief Nom associé à ce parseur (ex : "ville").
@@ -35,10 +35,5 @@ public:
      */
     std::any parser(const std::string& json) const override;
 };
-
-inline VilleParser::VilleParser()
-{
-    ParserRegistry<IEntiteParser<Ville>>::enregistrerParser("ville", std::make_shared<VilleParser>());
-}
 
 #endif  // VILLE_PARSER_H
