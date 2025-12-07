@@ -1,12 +1,9 @@
 #include "serveur/requetes/handlers/algo_distance_requete_handler.h"
 
 #include <any>
-#include <iostream>
 #include <stdexcept>
 
-#include "algorithmes/distance/data/algo_distance_data.h"
 #include "algorithmes/handlers/solveur_handler_factory.h"
-#include "serveur/reponses/handlers/i_reponse_handler.h"
 #include "serveur/reponses/handlers/reponse_handler_factory.h"
 #include "serveur/reponses/types/algo_distance_reponse.h"
 #include "serveur/requetes/parsers/distance/i_distance_parser_base.h"

@@ -4,10 +4,9 @@
 #include <algorithm>
 #include <random>
 
-#include "algorithmes/distance/builder/algo_distance_data_builder.h"
+#include "algorithmes/distance//data//algo_distance_data.h"
 #include "algorithmes/distance/data/algo_distance_solution.h"
 #include "algorithmes/handlers/i_solveur_handler.h"
-#include "modele/graphe/graphe.h"
 #include "types/algo_type.h"
 
 /**
