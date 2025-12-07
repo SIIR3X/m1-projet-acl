@@ -25,10 +25,12 @@ public:
      * algorithme.
      * @param json Chaîne JSON représentant un tableau d'entités.
      * @param distanceParser Le parseur de distance permettant de créer la stratégie.
+     * @param machines Le nombre de machines.
      * @return std::any contenant les données prêtes pour les algorithmes de distance.
      */
-    virtual std::any construireDonneesAlgorithmesDistance(
-        const std::string& json, const std::shared_ptr<IDistanceParserBase>& distanceParser) const = 0;
+    virtual std::any construireDonneesAlgorithmesDistance(const std::string& json,
+                                                          const std::shared_ptr<IDistanceParserBase>& distanceParser,
+                                                          int machines) const = 0;
 
     /**
      * @brief Parse un tableau JSON en collection typée de T.

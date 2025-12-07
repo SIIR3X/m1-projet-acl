@@ -22,10 +22,11 @@ public:
     /**
      * @brief Construit une structure AlgoDistanceData à partir d'un graphe déjà construit.
      * @param graphe Graphe à convertir en données exploitables.
+     * @param machines Le nombre de machines.
      * @return Une structure AlgoDistanceData.
      */
     template <typename S, typename T>
-    static AlgoDistanceData construireDonnees(const Graphe<S, T>& graphe);
+    static AlgoDistanceData construireDonnees(const Graphe<S, T>& graphe, int machines);
 
 private:
     /**
@@ -48,7 +49,7 @@ private:
 };
 
 template <typename S, typename T>
-inline AlgoDistanceData AlgoDistanceDataBuilder::construireDonnees(const Graphe<S, T>& graphe)
+inline AlgoDistanceData AlgoDistanceDataBuilder::construireDonnees(const Graphe<S, T>& graphe, int machines)
 {
     AlgoDistanceData data;
 
@@ -60,6 +61,9 @@ inline AlgoDistanceData AlgoDistanceDataBuilder::construireDonnees(const Graphe<
 
     // Construction de la matrice des distances à partir du graphe et des sommets
     data._distances = construireMatriceDistances(graphe, sommets);
+
+    // Définition du nombre de machines à utiliser
+    data._machines = machines;
 
     return data;
 }

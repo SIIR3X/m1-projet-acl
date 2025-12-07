@@ -6,15 +6,22 @@
 
 #include "serveur/reponses/i_reponse.h"
 
+struct EnsembleData
+{
+    std::vector<std::string> _chemin;
+    std::vector<std::string> _distances;
+    std::string _distanceTotale;
+};
+
 /**
  * @class AlgoDistanceReponse
- * @brief Représente une réponse JSON cotnenant le résultat du TSP.
+ * @brief Représente une réponse JSON contenant le résultat d'un algorithme de distance.
  */
 class AlgoDistanceReponse : public IReponse
 {
 public:
     /**
-     * @brief Constructeur principal.
+     * @brief Constructeur pour une réponse simple.
      * @param chemin Liste des entités du chemin optimal.
      * @param distances Liste des distances entre entités successives.
      * @param distanceTotal Distance totale du chemin.
@@ -25,15 +32,23 @@ public:
     }
 
     /**
-     * @brief Construit la réponse.
-     * @return La réponse sous forme d'une chaîne.
+     * @brief Constructeur pour une réponse composée.
+     * @param liste La liste des réponse.
+     * @
      */
-    std::string toJson() const override;
+    AlgoDistanceReponse(std::vector<std::shared_ptr<IReponse>> enfants) : IReponse(std::move(enfants)) {}
+
+protected:
+    /**
+     * @brief Construit le JSON d'une réponse simple.
+     * @return La réponse en JSON.
+     */
+    std::string toJsonSeul() const override;
 
 private:
-    std::vector<std::string> _chemin;     ///< Le chemin.
-    std::vector<std::string> _distances;  ///< Les distances entre les entités.
-    std::string _distanceTotale;          ///< La distance totale du chemin.
+    std::vector<std::string> _chemin;     ///< Chemin optimal
+    std::vector<std::string> _distances;  ///< Distances intermédiaires
+    std::string _distanceTotale;          ///< Distance totale du trajet
 };
 
 #endif  // ALGO_DISTANCE_REPONSE_H

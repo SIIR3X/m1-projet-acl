@@ -40,7 +40,7 @@ public:
      * @brief Débute un tableau JSON associé à une clé.
      * @param key Nom du tableau.
      */
-    void beginArray(const std::string& key);
+    void beginArray(const std::string& key = "");
 
     /**
      * @brief Termine le tableau JSON courant.
@@ -110,7 +110,12 @@ inline void JsonBuilder::endObject()
 inline void JsonBuilder::beginArray(const std::string& key)
 {
     _addComma();
-    _out << "\"" << key << "\": [";
+
+    if (key.empty())
+        _out << "[";
+    else
+        _out << "\"" << key << "\": [";
+
     _first = true;
 }
 

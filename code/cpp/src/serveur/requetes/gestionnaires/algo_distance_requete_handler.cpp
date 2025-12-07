@@ -8,6 +8,7 @@
 #include "algorithmes/gestionnaires/solveur_handler_factory.h"
 #include "serveur/reponses/gestionnaires/i_reponse_handler.h"
 #include "serveur/reponses/gestionnaires/reponse_handler_factory.h"
+#include "serveur/reponses/types/algo_distance_reponse.h"
 #include "serveur/requetes/parser/distance/i_distance_parser_base.h"
 #include "serveur/requetes/parser/entite/i_entite_parser_base.h"
 #include "serveur/requetes/parser/parser_registry.h"
@@ -23,7 +24,8 @@ std::string AlgoDistanceRequeteHandler::genererReponse(const std::string& comman
             JsonParserUtils::recupererObligatoire(requete, "entite", JsonParserUtils::extraireChampString);
         std::string distance =
             JsonParserUtils::recupererObligatoire(requete, "distance", JsonParserUtils::extraireChampString);
-        std::string donnees = JsonParserUtils::recupererObligatoire(requete, "donnees", JsonParserUtils::extraireBloc);
+        std::vector<std::string> ensembles =
+            JsonParserUtils::extraireListeObjets(JsonParserUtils::extraireBloc(requete, "ensembles"));
 
         // Récupération des parseurs correspondant à l'entité et au type de distance demandée
         auto entiteParser =
@@ -31,26 +33,53 @@ std::string AlgoDistanceRequeteHandler::genererReponse(const std::string& comman
         auto distanceParser =
             ParserRegistry<IDistanceParserBase>::get(distance);  // Récupération du parseur de distance correspondant
 
-        // Construction des données de l'algorithme via le parseur d'entités
-        std::any donneesAlgo = entiteParser->construireDonneesAlgorithmesDistance(requete, distanceParser);
-
         // Création de la chaîne COR des handlers de solveurs
         auto solveur = SolveurHandlerFactory::creer();
-
-        // Calcul de la solution grace au solveur adapté
-        std::any solution = solveur->resoudre(algo, donneesAlgo);
 
         // Création de la chaîne COR des handlers de réponses
         auto gestionnaire = ReponseHandlerFactory::creer();
 
-        // Récupération des labels
-        std::vector<std::string> labels = entiteParser->extraireLabels(donnees);
+        // Création d'un vecteur contenant les réponses simples
+        std::vector<std::shared_ptr<IReponse>> reponsesSimple;
 
-        // Création d'une réponse adaptée à la requête
-        auto reponse = gestionnaire->traiter(commande, solution, labels, donneesAlgo);
+        // Itération sur les ensembles de la requête
+        for (const std::string& ensembleJson : ensembles)
+        {
+            // Récupération des champs obligatoires
+            std::string donneesEnsemble =
+                JsonParserUtils::recupererObligatoire(ensembleJson, "donnees", JsonParserUtils::extraireBloc);
+            std::string machinesStr =
+                JsonParserUtils::recupererObligatoire(ensembleJson, "machines", JsonParserUtils::extraireChampObjet);
+            int machines = std::stoi(machinesStr);
 
-        // Retour final de la réponse au format JSON
-        return reponse->toJson();
+            // Construction des données de l'algorithme via le parseur d'entités
+            std::any donneesAlgoEnsemble =
+                entiteParser->construireDonneesAlgorithmesDistance(donneesEnsemble, distanceParser, machines);
+
+            // Calcul de la solution grace au solveur adapté
+            std::any solutionEnsemble = solveur->resoudre(algo, donneesAlgoEnsemble);
+
+            // Récupération des labels
+            std::vector<std::string> labelsEnsemble = entiteParser->extraireLabels(donneesEnsemble);
+
+            // Création de la réponse à l'ensemble en quesiton
+            auto reponseEnsemble =
+                gestionnaire->traiter(commande, solutionEnsemble, labelsEnsemble, donneesAlgoEnsemble);
+
+            // Ajout de la réponse à la liste des réponses
+            reponsesSimple.push_back(reponseEnsemble);
+        }
+
+        if (reponsesSimple.empty())
+            throw std::runtime_error("Aucun ensemble n'a pu être traité.");
+
+        // Cas : une seule réponse
+        if (reponsesSimple.size() == 1)
+            return reponsesSimple[0]->toJson();
+
+        // Cas : plusieurs réponses
+        auto reponseFinale = std::make_shared<AlgoDistanceReponse>(reponsesSimple);
+        return reponseFinale->toJson();
     }
     catch (const std::exception& e)
     {
