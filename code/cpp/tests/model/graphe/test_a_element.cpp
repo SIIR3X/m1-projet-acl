@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-
 #include <sstream>
 
 #include "modele/graphe/a_element.h"

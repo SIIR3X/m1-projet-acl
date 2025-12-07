@@ -2,7 +2,6 @@
 #define VILLE_H
 
 #include <ostream>
-#include <stdexcept>
 #include <string>
 
 #include "modele/geographie/coordonne/coord_geographique.h"
