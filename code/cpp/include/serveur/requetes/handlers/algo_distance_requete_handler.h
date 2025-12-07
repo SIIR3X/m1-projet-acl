@@ -2,6 +2,7 @@
 #define ALGO_DISTANCE_REQUETE_HANDLER_H
 
 #include "serveur/requetes/handlers/i_requete_handler.h"
+
 #include "types/commande_type.h"
 
 /**

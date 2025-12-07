@@ -3,12 +3,14 @@
 
 #include <any>
 
-#include "algorithmes/distance/builder/algo_distance_data_builder.h"
-#include "modele/generique/carte.h"
-#include "modele/generique/distance.h"
 #include "serveur/requetes/parsers/distance/i_distance_parser_base.h"
 #include "serveur/requetes/parsers/entite/i_entite_parser_base.h"
 #include "serveur/requetes/parsers/i_parser_base.h"
+
+#include "algorithmes/distance/builder/algo_distance_data_builder.h"
+
+#include "modele/generique/carte.h"
+#include "modele/generique/distance.h"
 
 /**
  * @class IEntiteParser

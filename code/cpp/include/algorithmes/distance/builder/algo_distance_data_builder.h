@@ -6,6 +6,7 @@
 
 #include "algorithmes/commun/i_data_builder.h"
 #include "algorithmes/distance/data/algo_distance_data.h"
+
 #include "modele/graphe/graphe.h"
 
 /**

@@ -3,12 +3,14 @@
 #include <any>
 #include <stdexcept>
 
-#include "algorithmes/handlers/solveur_handler_factory.h"
 #include "serveur/reponses/handlers/reponse_handler_factory.h"
 #include "serveur/reponses/types/algo_distance_reponse.h"
 #include "serveur/requetes/parsers/distance/i_distance_parser_base.h"
 #include "serveur/requetes/parsers/entite/i_entite_parser_base.h"
 #include "serveur/requetes/parsers/parser_registry.h"
+
+#include "algorithmes/handlers/solveur_handler_factory.h"
+
 #include "utils/json_parser_utils.h"
 
 std::string AlgoDistanceRequeteHandler::genererReponse(const std::string& commande, const std::string& requete)
