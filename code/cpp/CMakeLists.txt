@@ -1,31 +1,41 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(projet-acl VERSION 1.0 LANGUAGES CXX)
+project(projet-acl-cpp LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ###############################################################################
-#                               SOURCES LIB                                   #
+#                               Paths
 ###############################################################################
+
+set(CPP_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+
+###############################################################################
+#                               Library sources
+###############################################################################
+
 file(GLOB_RECURSE LIB_SOURCES
-  src/algorithmes/*.cpp
-  src/modele/*.cpp
-  src/utils/*.cpp
-  src/serveur/*.cpp
+    ${CPP_ROOT}/src/algorithmes/*.cpp
+    ${CPP_ROOT}/src/modele/*.cpp
+    ${CPP_ROOT}/src/utils/*.cpp
+    ${CPP_ROOT}/src/serveur/*.cpp
 )
 
 add_library(projet-lib ${LIB_SOURCES})
-target_include_directories(projet-lib PUBLIC include)
+target_include_directories(projet-lib PUBLIC ${CPP_ROOT}/include)
 
 ###############################################################################
-#                           EXECUTABLE PRINCIPAL                              #
+#                               Main executable
 ###############################################################################
-add_executable(projet-acl src/main.cpp)
+
+add_executable(projet-acl ${CPP_ROOT}/src/main.cpp)
 target_link_libraries(projet-acl PRIVATE projet-lib)
 
 ###############################################################################
-#                                   TESTS                                     #
+#                               Tests
 ###############################################################################
 include(FetchContent)
 
@@ -40,11 +50,10 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
+file(GLOB_RECURSE TEST_SOURCES ${CPP_ROOT}/tests/*.cpp)
 
 add_executable(tests ${TEST_SOURCES})
-include(GoogleTest)
-gtest_discover_tests(tests)
 target_link_libraries(tests PRIVATE projet-lib gtest gtest_main)
 
-add_test(NAME allTests COMMAND tests)
+include(GoogleTest)
+gtest_discover_tests(tests)

@@ -1,0 +1,5 @@
+CompileFlags:
+  Add: [-Icode/cpp/include]
+
+Diagnostics:
+  UnusedIncludes: Strict

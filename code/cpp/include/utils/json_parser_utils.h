@@ -56,6 +56,15 @@ public:
         const std::string& json, const std::string& champ,
         std::function<std::string(const std::string&, const std::string&)> extraction);
 
+    /**
+     * @brief Récupère une liste JSON obligatoire (champ devant contenir un tableau d'objets).
+     * @param json Chaîne JSON.
+     * @param champ Nom du champ recherché.
+     * @return La liste des objets JSON contenus dans le tableau.
+     * @throws std::runtime_error si l'ensemble est manquant ou vide.
+     */
+    static std::vector<std::string> recupererObligatoireVecteur(const std::string& json, const std::string& champ);
+
 private:
     /**
      * @brief Supprime les espaces au début et à la fin d'une chaîne.
@@ -139,22 +148,44 @@ inline std::vector<std::string> JsonParserUtils::extraireListeObjets(const std::
 {
     std::vector<std::string> res;
 
-    size_t pos = 0;
-    pos = bloc.find("[");
+    size_t pos = bloc.find('[');
     if (pos == std::string::npos)
         return res;
 
     pos++;
 
+    int depth = 0;
+
     while (pos < bloc.size())
     {
-        pos = _skipSpaces(bloc, pos);
-        if (bloc[pos] == '{')
+        while (pos < bloc.size() && std::isspace(static_cast<unsigned char>(bloc[pos]))) pos++;
+
+        if (pos >= bloc.size())
+            break;
+
+        if (bloc[pos] == '{' && depth == 0)
         {
-            size_t save = pos;
-            std::string obj = _extractBracketBlock(bloc, pos);
-            res.push_back(obj);
+            size_t start = pos;
+            int braceCount = 0;
+
+            do
+            {
+                if (bloc[pos] == '{')
+                    braceCount++;
+                else if (bloc[pos] == '}')
+                    braceCount--;
+                pos++;
+            } while (pos < bloc.size() && braceCount > 0);
+
+            res.push_back(bloc.substr(start, pos - start));
+            continue;
         }
+
+        if (bloc[pos] == '[')
+            depth++;
+        else if (bloc[pos] == ']')
+            depth--;
+
         pos++;
     }
 
@@ -186,6 +217,22 @@ inline std::string JsonParserUtils::recupererObligatoire(
         throw std::runtime_error("Champ JSON obligatoire manquant : '" + champ + "'");
 
     return val;
+}
+
+inline std::vector<std::string> JsonParserUtils::recupererObligatoireVecteur(const std::string& json,
+                                                                             const std::string& champ)
+{
+    std::string bloc = extraireBloc(json, champ);
+
+    if (bloc.empty())
+        throw std::runtime_error("Champ JSON obligatoire manquant ou vide : '" + champ + "'");
+
+    std::vector<std::string> liste = extraireListeObjets(bloc);
+
+    if (liste.empty())
+        throw std::runtime_error("Le champ JSON '" + champ + "' doit contenir au moins un objet.");
+
+    return liste;
 }
 
 inline std::string JsonParserUtils::_trim(const std::string& s)
