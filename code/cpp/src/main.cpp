@@ -10,21 +10,47 @@ static const std::string REQUETE = R"json(
     "algo": "tsp",
     "entite": "ville",
     "distance": "geodesique",
-    "donnees": [
+
+    "ensembles": [
         {
-            "nom": "Strasbourg",
-            "latitude": 48.58,
-            "longitude": 7.75
+            "machines": 1,
+            "donnees": [
+                {
+                    "nom": "Strasbourg",
+                    "latitude": 48.58,
+                    "longitude": 7.75
+                },
+                {
+                    "nom": "Metz",
+                    "latitude": 49.12,
+                    "longitude": 6.17
+                },
+                {
+                    "nom": "Nancy",
+                    "latitude": 48.69,
+                    "longitude": 6.18
+                }
+            ]
         },
         {
-            "nom": "Metz",
-            "latitude": 49.12,
-            "longitude": 6.17
-        },
-        {
-            "nom": "Nancy",
-            "latitude": 48.69,
-            "longitude": 6.18
+            "machines": 3,
+            "donnees": [
+                {
+                    "nom": "Paris",
+                    "latitude": 48.85,
+                    "longitude": 2.35
+                },
+                {
+                    "nom": "Lyon",
+                    "latitude": 45.75,
+                    "longitude": 4.85
+                },
+                {
+                    "nom": "Dijon",
+                    "latitude": 47.32,
+                    "longitude": 5.04
+                }
+            ]
         }
     ]
 }

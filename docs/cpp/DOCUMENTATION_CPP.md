@@ -123,27 +123,32 @@ Le seul champ **obligatoire** est :
 
 #### Structure complète d'une requête pour exécuter un algorithme TSP
 
+Une requête permettant d'exécuter un algorithme de distance (ex : TSP) peut contenir **un ou plusieurs ensembles** :
+
+
 ```json
 {
     "commande": "algo_distance",
     "algo": "tsp",
     "entite": "ville",
     "distance": "geodesique",
-    "donnees": [
+
+    "ensembles": [
         {
-            "nom": "Strasbourg",
-            "latitude": 48.58,
-            "longitude": 7.75
+            "machines": 1,
+            "donnees": [
+                { "nom": "Strasbourg", "latitude": 48.58, "longitude": 7.75 },
+                { "nom": "Metz", "latitude": 49.12, "longitude": 6.17 },
+                { "nom": "Nancy", "latitude": 48.69, "longitude": 6.18 }
+            ]
         },
         {
-            "nom": "Metz",
-            "latitude": 49.12,
-            "longitude": 6.17
-        },
-        {
-            "nom": "Nancy",
-            "latitude": 48.69,
-            "longitude": 6.18
+            "machines": 3,
+            "donnees": [
+                { "nom": "Paris", "latitude": 48.85, "longitude": 2.35 },
+                { "nom": "Lyon", "latitude": 45.75, "longitude": 4.85 },
+                { "nom": "Dijon", "latitude": 47.32, "longitude": 5.04 }
+            ]
         }
     ]
 }
@@ -155,13 +160,18 @@ Le seul champ **obligatoire** est :
 
 Le `RequeteHandler` responsable de la commande effectue les actions suivantes :
 
-1. Extraction des champs JSON obligatoires (`algo`, `entite`, `distance`, `donnees`).
+1. Extraction des champs JSON obligatoires (`algo`, `entite`, `distance`, `ensembles`).
 2. Sélection du parseur d'entité et du parseur de distance via *ParserRegistry*.
-3. Construction des données nécessaires à l'algorithme via le parseur d'entités.
-4. Sélection du solveur via *SolutionHandler*.
-5. Envoi de ces données au solveur, qui exécute l'algorithme demandé.
-6. Transmission de la solution au *ReponseHandler*, qui formate le résultat en JSON.
-7. Le *RequeteHandler* retourne la réponse finale au serveur.
+3. Sélection du solveur via *SolutionHandler*.
+4. Pour chaque ensemble du tableau `ensembles` :
+    - extraction de `machines` et `donnees`.
+    - construction des données algorithmiques via le parseur d’entité.
+    - exécution du solveur correspondant (`algo`).
+    - génération d’une réponse simple via un *ReponseHandler*.
+5. Toutes les réponses simples sont ensuite :
+   - soit renvoyées telles quelles si une seule existe
+   - soit regroupées dans une réponse composée automatiquement gérée par `IReponse`
+6. Le *RequeteHandler* retourne la réponse finale au serveur.
 
 ---
 
@@ -174,12 +184,12 @@ Il calcule la solution en utilisant les données préparées.
 
 ### 3.4. Renvoie de la réponse
 
-Une fois la solution obtenue :
+Le serveur renvoie toujours un JSON contenant un tableau nommé `"reponse"`.
 
-- le *ReponseHandler* génère une instance d'un objet réponse qui peut être converti en JSON.
-- l'envoie au *RequeteHandler*
-- qui le transmet au serveur.
-- qui le renvoie au client.
+Ce tableau contient :
+
+- une seule entrée si la requête contient un seul ensemble
+- plusieurs entrées si plusieurs ensembles ont été fournis
 
 #### Structure de la réponse JSON (type TSP)
 
@@ -194,9 +204,18 @@ Voici un exemple de réponse renvoyée par le serveur :
 
 ```json
 {
-    "chemin": ["Strasbourg", "Nancy", "Metz"],
-    "distances": [116.013657, 130.268080],
-    "distanceTotale": 123.456000
+    "reponse": [
+        {
+            "chemin": ["Strasbourg", "Nancy", "Metz"],
+            "distances": ["116", "130"],
+            "distanceTotale": "246"
+        },
+        {
+            "chemin": ["Paris", "Lyon", "Dijon"],
+            "distances": ["392", "195"],
+            "distanceTotale": "588"
+        }
+    ]
 }
 ```
 

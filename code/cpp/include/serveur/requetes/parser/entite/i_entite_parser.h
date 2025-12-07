@@ -28,15 +28,17 @@ public:
      * algorithme.
      * @param json Chaîne JSON représentant un tableau d'entités.
      * @param distanceParser Le parseur de distance permettant de créer la stratégie.
+     * @param machines Le nombre de machines.
      * @return std::any contenant les données prêtes pour les algorithmes de distance.
      */
-    std::any construireDonneesAlgorithmesDistance(
-        const std::string& json, const std::shared_ptr<IDistanceParserBase>& distanceParser) const override;
+    std::any construireDonneesAlgorithmesDistance(const std::string& json,
+                                                  const std::shared_ptr<IDistanceParserBase>& distanceParser,
+                                                  int machines) const override;
 };
 
 template <typename T>
 inline std::any IEntiteParser<T>::construireDonneesAlgorithmesDistance(
-    const std::string& json, const std::shared_ptr<IDistanceParserBase>& distanceParser) const
+    const std::string& json, const std::shared_ptr<IDistanceParserBase>& distanceParser, int machines) const
 {
     // Récupération de entités depuis le JSON
     std::any entites =
@@ -63,7 +65,7 @@ inline std::any IEntiteParser<T>::construireDonneesAlgorithmesDistance(
     auto graphe = carte.construireGraphe();
 
     // Construction des données nécessaires aux algos de distance
-    AlgoDistanceData data = AlgoDistanceDataBuilder::construireDonnees(graphe);
+    AlgoDistanceData data = AlgoDistanceDataBuilder::construireDonnees(graphe, machines);
 
     // Retour encapsulé dans std::any
     return std::any{data};

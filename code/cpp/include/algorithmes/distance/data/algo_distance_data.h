@@ -11,6 +11,7 @@ struct AlgoDistanceData
 {
     std::vector<std::vector<double>> _distances;  ///< Matrice des distances (matrice carrée NxN).
     int _nombreSommets;                           ///< Nombre total de sommets dans le graphe.
+    int _machines;                                ///< Machines
 };
 
 #endif  // ALGO_DISTANCE_DATA_H
