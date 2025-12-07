@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "serveur/reponses/i_reponse.h"
+#include "serveur/reponses/types/i_reponse.h"
 
 struct EnsembleData
 {
