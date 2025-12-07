@@ -36,12 +36,7 @@ Voici la structure actuelle du dépôt :
 │   ├── cpp/                     → Documentation générée pour la partie C++
 │   ├── java/                    → Documentation générée pour la partie Java
 │   └── guides/                  → Documents internes
-│       ├── COMPILATION.md       → Guide de compilation (C++ / Java)
-│       ├── CONVENTIONS.md       → Conventions d’écriture et style
-│       └── PROJECT_STRUCTURE.md → Document décrivant la structure du projet
 │
 ├── sujet/                       → Documents d’énoncé et de présentation du projet
-│   ├── 25-26_Projet_commun_ACL_presentation_aux_etudiants.pdf
-│   ├── Sujet_projet_commun_algo_ACL_Minich.pdf
-│   └── Sujet_projet_commun_algo_partie_ACL_25_26.doc.pdf
+│
 ```
