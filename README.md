@@ -25,3 +25,8 @@ La documentation détaillée du serveur, du modèle, des algorithmes, des parseu
 
 - [`DOCUMENTATION_CPP.md`](docs/cpp/DOCUMENTATION_CPP.md)
 
+---
+
+## Documentation technique JAva (docs/java/)
+
+- [`DOCUMENTATION_JAVA.md`](docs/java/DOCUMENTATION_JAVA.md)
