@@ -2,7 +2,7 @@
 
 #include "utils/json_builder.h"
 
-std::string AlgoDistanceReponse::toJson() const
+std::string AlgoDistanceReponse::toJsonSeul() const
 {
     JsonBuilder jb;
 
