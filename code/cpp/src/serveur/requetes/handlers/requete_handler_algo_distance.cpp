@@ -3,16 +3,15 @@
 #include <any>
 #include <exception>
 
-#include "serveur/reponses/handlers/reponse_handler_factory.h"
 #include "serveur/reponses/types/algo_distance_reponse.h"
 #include "serveur/requetes/parsers/distance/i_distance_parser_base.h"
 #include "serveur/requetes/parsers/entite/i_entite_parser_base.h"
 #include "serveur/requetes/parsers/parser_registry.h"
 
-#include "algorithmes/handlers/solveur_handler_factory.h"
-
 #include "utils/json_parser_utils.h"
 
+#include "factories/reponse_handler_factory.h"
+#include "factories/solveur_handler_factory.h"
 #include "types/commande_type.h"
 
 std::optional<std::string> RequeteHandlerAlgoDistance::traiterRequete(const std::string& commande,
@@ -39,10 +38,10 @@ std::optional<std::string> RequeteHandlerAlgoDistance::traiterRequete(const std:
             ParserRegistry<IDistanceParserBase>::get(distance);  // Récupération du parseur de distance correspondant
 
         // Création de la chaîne COR des handlers de solveurs
-        auto solveur = SolveurHandlerFactory::creer();
+        auto solveur = SolveurHandlerFactory::chaine();
 
         // Création de la chaîne COR des handlers de réponses
-        auto gestionnaire = ReponseHandlerFactory::creer();
+        auto gestionnaire = ReponseHandlerFactory::chaine();
 
         // Création d'un vecteur contenant les réponses simples
         std::vector<std::shared_ptr<IReponse>> reponsesSimple;
@@ -67,9 +66,13 @@ std::optional<std::string> RequeteHandlerAlgoDistance::traiterRequete(const std:
             // Récupération des labels
             std::vector<std::string> labelsEnsemble = entiteParser->extraireLabels(donneesEnsemble);
 
+            std::vector<std::any> args;
+            args.emplace_back(solutionEnsemble);
+            args.emplace_back(labelsEnsemble);
+            args.emplace_back(donneesAlgoEnsemble);
+
             // Création de la réponse à l'ensemble en quesiton
-            auto reponseEnsemble =
-                gestionnaire->traiter(commande, solutionEnsemble, labelsEnsemble, donneesAlgoEnsemble);
+            auto reponseEnsemble = gestionnaire->construire(commande, args);
 
             // Ajout de la réponse à la liste des réponses
             reponsesSimple.push_back(reponseEnsemble);

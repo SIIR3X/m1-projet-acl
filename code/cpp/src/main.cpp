@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "serveur/requetes/handlers/requete_handler_factory.h"
 #include "serveur/requetes/parsers/distance/distance_geodesique_parser.h"
 #include "serveur/requetes/parsers/distance/i_distance_parser_base.h"
 #include "serveur/requetes/parsers/entite/i_entite_parser_base.h"
@@ -10,6 +9,8 @@
 #include "modele/geographie/ville.h"
 
 #include "utils/json_parser_utils.h"
+
+#include "factories/requete_handler_factory.h"
 
 static const std::string REQUETE = R"json(
 {
@@ -65,7 +66,7 @@ static const std::string REQUETE = R"json(
 
 int main(int argc, char *argv[])
 {
-    std::shared_ptr<IRequeteHandler> requeteHandler = RequeteHandlerFactory::creer();
+    std::shared_ptr<RequeteHandler> requeteHandler = RequeteHandlerFactory::chaine();
 
     ParserRegistry<IEntiteParserBase>::enregistrerParser("ville", std::make_shared<VilleParser>());
     ParserRegistry<IDistanceParserBase>::enregistrerParser("geodesique",
@@ -77,10 +78,10 @@ int main(int argc, char *argv[])
     std::string commande =
         JsonParserUtils::recupererObligatoire(REQUETE, "commande", JsonParserUtils::extraireChampString);
 
-    std::string reponse = requeteHandler->traiter(commande, REQUETE);
+    std::optional<std::string> reponse = requeteHandler->traiter(commande, REQUETE);
 
     std::cout << "Commande : " << commande << std::endl;
-    std::cout << reponse << std::endl;
+    std::cout << reponse.value() << std::endl;
 
     return 0;
 }
