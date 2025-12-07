@@ -27,6 +27,6 @@ La documentation détaillée du serveur, du modèle, des algorithmes, des parseu
 
 ---
 
-## Documentation technique JAva (docs/java/)
+## Documentation technique Java (docs/java/)
 
 - [`DOCUMENTATION_JAVA.md`](docs/java/DOCUMENTATION_JAVA.md)
