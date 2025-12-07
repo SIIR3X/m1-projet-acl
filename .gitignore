@@ -2,7 +2,6 @@
 #   Build / Compilation
 # ==========================================
 build/
-build*/ 
 out/
 dist/
 *.o
@@ -13,6 +12,7 @@ dist/
 *.a
 *.lib
 *.ninja
+.cache
 .rules.ninja
 
 # ==========================================
@@ -71,5 +71,5 @@ desktop.ini
 #   Documentation
 # ==========================================
 
-docs/cpp
-docs/java
+docs/cpp/code
+docs/java/code
