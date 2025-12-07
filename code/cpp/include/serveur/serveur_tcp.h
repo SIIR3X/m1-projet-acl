@@ -2,18 +2,18 @@
 #define SERVEUR_TCP_H
 
 #include <arpa/inet.h>
-#include <sys/socket.h>
-#include <unistd.h>
-
 #include <atomic>
 #include <iostream>
 #include <mutex>
 #include <string>
+#include <sys/socket.h>
 #include <thread>
+#include <unistd.h>
 #include <unordered_map>
 #include <vector>
 
 #include "serveur/requetes/handlers/requete_handler_factory.h"
+
 #include "utils/json_parser_utils.h"
 
 /**

@@ -7,6 +7,7 @@
 #include "algorithmes/distance//data//algo_distance_data.h"
 #include "algorithmes/distance/data/algo_distance_solution.h"
 #include "algorithmes/handlers/i_solveur_handler.h"
+
 #include "types/algo_type.h"
 
 /**

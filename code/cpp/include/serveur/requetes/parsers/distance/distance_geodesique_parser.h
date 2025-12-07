@@ -3,8 +3,9 @@
 
 #include <memory>
 
-#include "modele/geographie/distance/distance_geodesique.h"
 #include "serveur/requetes/parsers/distance/i_distance_parser.h"
+
+#include "modele/geographie/distance/distance_geodesique.h"
 
 /**
  * @class DistanceGeodesiqueParser

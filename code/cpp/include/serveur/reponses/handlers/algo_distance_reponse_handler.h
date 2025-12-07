@@ -5,10 +5,12 @@
 #include <string>
 #include <vector>
 
-#include "algorithmes/distance/data/algo_distance_data.h"
-#include "algorithmes/distance/data/algo_distance_solution.h"
 #include "serveur/reponses/handlers/i_reponse_handler.h"
 #include "serveur/reponses/types/algo_distance_reponse.h"
+
+#include "algorithmes/distance/data/algo_distance_data.h"
+#include "algorithmes/distance/data/algo_distance_solution.h"
+
 #include "types/commande_type.h"
 
 /**
