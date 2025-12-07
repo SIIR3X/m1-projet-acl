@@ -17,7 +17,7 @@ BUILD_DIR     = build
 # Cpp
 CPP_BUILD_DIR = $(BUILD_DIR)/cpp
 CPP_DIR       = code/cpp
-CPP_DOC_DIR   = docs/cpp
+CPP_DOC_DIR   = docs/cpp/code
 
 # Java
 JAVA_SRC_DIR    = code/java/src
@@ -25,7 +25,7 @@ JAVA_TEST_DIR   = code/java/tests
 JAVA_LIB 	 	= code/java/lib
 JAVA_BUILD_DIR  = build/java
 JAVA_MAIN       = Main
-JAVA_DOC_DIR    = docs/java
+JAVA_DOC_DIR    = docs/java/code
 JUNIT_JAR       = $(JAVA_LIB)/junit-platform-console-standalone-1.10.1.jar
 JAVA_FORMAT 	= $(JAVA_LIB)/google-java-format-1.20.0-all-deps.jar
 
@@ -47,8 +47,14 @@ build-cpp:
 run-cpp: build-cpp
 	@$(CPP_BUILD_DIR)/projet-acl
 
+run-cpp-mem: build-cpp
+	@valgrind --leak-check=full --show-leak-kinds=all $(CPP_BUILD_DIR)/projet-acl
+
 run-tests-cpp: build-cpp
 	@cd $(CPP_BUILD_DIR) && $(CTEST) --output-on-failure
+
+run-tests-cpp-mem: build-cpp
+	@cd $(CPP_BUILD_DIR) && valgrind --leak-check=full --show-leak-kinds=all ./tests
 
 doc-cpp:
 	@cd $(CPP_DIR) && $(DOXYGEN) Doxyfile
