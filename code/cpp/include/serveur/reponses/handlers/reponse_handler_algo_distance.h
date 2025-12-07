@@ -1,12 +1,14 @@
-#ifndef ALGO_DISTANCE_REPONSE_HANDLER_H
-#define ALGO_DISTANCE_REPONSE_HANDLER_H
+#ifndef REPONSE_HANDLER_ALGO_DISTANCE_H
+#define REPONSE_HANDLER_ALGO_DISTANCE_H
 
 #include <any>
+#include <memory>
 #include <string>
 #include <vector>
 
-#include "serveur/reponses/handlers/i_reponse_handler.h"
+#include "serveur/reponses/handlers/reponse_handler_cor.h"
 #include "serveur/reponses/types/algo_distance_reponse.h"
+#include "serveur/reponses/types/i_reponse.h"
 
 #include "algorithmes/distance/data/algo_distance_data.h"
 #include "algorithmes/distance/data/algo_distance_solution.h"
@@ -14,33 +16,28 @@
 #include "types/commande_type.h"
 
 /**
- * @class AlgoDistanceReponseHandler
- * @brief Gestionnaire pour les requêtes de type "algo_distance".
+ * @class ReponseHandlerAlgoDistance
+ * @brief Maillon chargé de gérer les réponses aux requêtes de types "algo_distance" dans la chaîne de responsabilité.
  */
-class AlgoDistanceReponseHandler : public IReponseHandler
+class ReponseHandlerAlgoDistance : public ReponseHandlerCOR
 {
 protected:
     /**
-     * @brief Indique si ce handler peut traiter ce type de réponse.
+     * @brief Tente de construire une réponse à la requête.
      * @param commande La commande demandée.
-     * @return true s'il peut traiter, false sinon.
+     * @param args Les arguments passés au handler.
+     * @return Une instance de IReponse ou nullptr.
      */
-    bool peutTraiter(const std::string& commande) const override
-    {
-        return commandeFromString(commande) == CommandeType::ALGO_DISTANCE;
-    }
-
-    /**
-     * @brief Génère la réponse correspondant à ce handler.
-     * @tparam Args Types des objets reçus.
-     * @param args Objets passés au handler.
-     * @return Un pointeur partagé var la réponse.
-     */
-    std::shared_ptr<IReponse> genererReponse(const std::vector<std::any>& args) override;
+    std::shared_ptr<IReponse> construireReponse(const std::string& commande,
+                                                const std::vector<std::any>& args) override;
 };
 
-inline std::shared_ptr<IReponse> AlgoDistanceReponseHandler::genererReponse(const std::vector<std::any>& args)
+inline std::shared_ptr<IReponse> ReponseHandlerAlgoDistance::construireReponse(const std::string& commande,
+                                                                               const std::vector<std::any>& args)
 {
+    if (commandeFromString(commande) != CommandeType::ALGO_DISTANCE)
+        return nullptr;
+
     // Cast des paramètres
     const auto& solution = std::any_cast<const AlgoDistanceSolution&>(args[0]);
     const auto& labels = std::any_cast<const std::vector<std::string>&>(args[1]);
@@ -64,4 +61,4 @@ inline std::shared_ptr<IReponse> AlgoDistanceReponseHandler::genererReponse(cons
                                                  std::to_string(solution._distanceTotale));
 }
 
-#endif  // ALGO_DISTANCE_REPONSE_HANDLER_H
+#endif  // REPONSE_HANDLER_ALGO_DISTANCE_H

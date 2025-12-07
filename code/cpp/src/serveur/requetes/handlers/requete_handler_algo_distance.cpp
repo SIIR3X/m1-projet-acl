@@ -1,7 +1,7 @@
-#include "serveur/requetes/handlers/algo_distance_requete_handler.h"
+#include "serveur/requetes/handlers/requete_handler_algo_distance.h"
 
 #include <any>
-#include <stdexcept>
+#include <exception>
 
 #include "serveur/reponses/handlers/reponse_handler_factory.h"
 #include "serveur/reponses/types/algo_distance_reponse.h"
@@ -13,8 +13,14 @@
 
 #include "utils/json_parser_utils.h"
 
-std::string AlgoDistanceRequeteHandler::genererReponse(const std::string& commande, const std::string& requete)
+#include "types/commande_type.h"
+
+std::optional<std::string> RequeteHandlerAlgoDistance::traiterRequete(const std::string& commande,
+                                                                      const std::string& requete)
 {
+    if (commandeFromString(commande) != CommandeType::ALGO_DISTANCE)
+        return std::nullopt;
+
     try
     {
         // Récupération des champs obligatoires
@@ -82,6 +88,6 @@ std::string AlgoDistanceRequeteHandler::genererReponse(const std::string& comman
     }
     catch (const std::exception& e)
     {
-        return "vide";
+        return "{\"erreur\":\"Impossible de traiter la requête\"}";
     }
 }
