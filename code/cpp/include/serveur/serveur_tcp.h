@@ -12,9 +12,11 @@
 #include <unordered_map>
 #include <vector>
 
-#include "serveur/requetes/handlers/requete_handler_factory.h"
+#include "serveur/requetes/handlers/requete_handler.h"
 
 #include "utils/json_parser_utils.h"
+
+#include "factories/requete_handler_factory.h"
 
 /**
  * @enum NiveauLog
@@ -42,7 +44,7 @@ public:
           _serveurEstActif(false),
           _compteurClients(0),
           _socketServeur(-1),
-          _requeteHandler(RequeteHandlerFactory::creer())
+          _requeteHandler(RequeteHandlerFactory::chaine())
     {
     }
 
@@ -65,14 +67,14 @@ public:
     void arreter();
 
 private:
-    std::string _ip;                                   ///< L'adresse IP d'écoute du serveur.
-    int _port;                                         ///< Le port d'écoute du serveur.
-    int _socketServeur;                                ///< Le socket principal du serveur.
-    std::atomic<bool> _serveurEstActif;                ///< État du serveur.
-    std::atomic<int> _compteurClients;                 ///< Le compteur de clients.
-    std::vector<std::thread> _threadsClients;          ///< Threads des différents clients
-    std::mutex _mutexCout;                             ///< Mutex (verrou)
-    std::shared_ptr<IRequeteHandler> _requeteHandler;  ///< La tête de la chaîne COR des handlers de requêtes.
+    std::string _ip;                                  ///< L'adresse IP d'écoute du serveur.
+    int _port;                                        ///< Le port d'écoute du serveur.
+    int _socketServeur;                               ///< Le socket principal du serveur.
+    std::atomic<bool> _serveurEstActif;               ///< État du serveur.
+    std::atomic<int> _compteurClients;                ///< Le compteur de clients.
+    std::vector<std::thread> _threadsClients;         ///< Threads des différents clients
+    std::mutex _mutexCout;                            ///< Mutex (verrou)
+    std::shared_ptr<RequeteHandler> _requeteHandler;  ///< La tête de la chaîne COR des handlers de requêtes.
 
     /**
      * @brief Boucle du serveur.
@@ -148,9 +150,9 @@ inline std::string ServeurTCP::traiterRequete(const std::string& requete)
             JsonParserUtils::recupererObligatoire(requete, "commande", JsonParserUtils::extraireChampString);
 
         // Traitement de la requête via les handlers
-        std::string reponse = _requeteHandler->traiter(commande, requete);
+        std::optional<std::string> reponse = _requeteHandler->traiter(commande, requete);
 
-        return reponse;
+        return reponse.value_or("{\"erreur\": \"Aucun handler n'a pu traiter la requête\"}");
     }
     catch (const std::exception& e)
     {
