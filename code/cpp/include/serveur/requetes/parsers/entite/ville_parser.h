@@ -4,8 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "modele/geographie/ville.h"
 #include "serveur/requetes/parsers/entite/i_entite_parser.h"
+
+#include "modele/geographie/ville.h"
 
 /**
  * @class VilleParser

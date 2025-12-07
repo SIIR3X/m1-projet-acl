@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "modele/generique/distance.h"
+
 #include "utils/geodesique_math_utils.h"
 
 /**
