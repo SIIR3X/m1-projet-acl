@@ -3,7 +3,6 @@
 
 #include "serveur/requetes/handlers/i_requete_handler.h"
 #include "types/commande_type.h"
-#include "utils/json_parser_utils.h"
 
 /**
  * @class AlgoDistanceRequeteHandler

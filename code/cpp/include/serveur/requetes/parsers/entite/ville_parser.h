@@ -6,7 +6,6 @@
 
 #include "modele/geographie/ville.h"
 #include "serveur/requetes/parsers/entite/i_entite_parser.h"
-#include "serveur/requetes/parsers/parser_registry.h"
 
 /**
  * @class VilleParser

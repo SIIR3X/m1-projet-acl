@@ -5,7 +5,6 @@
 
 #include "modele/geographie/distance/distance_geodesique.h"
 #include "serveur/requetes/parsers/distance/i_distance_parser.h"
-#include "serveur/requetes/parsers/parser_registry.h"
 
 /**
  * @class DistanceGeodesiqueParser
