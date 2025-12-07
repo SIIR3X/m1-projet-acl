@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "serveur/requetes/gestionnaires/requete_handler_factory.h"
-#include "serveur/requetes/parser/distance/distance_geodesique_parser.h"
-#include "serveur/requetes/parser/entite/ville_parser.h"
+#include "serveur/requetes/handlers/requete_handler_factory.h"
+#include "serveur/requetes/parsers/distance/distance_geodesique_parser.h"
+#include "serveur/requetes/parsers/entite/ville_parser.h"
 
 static const std::string REQUETE = R"json(
 {
