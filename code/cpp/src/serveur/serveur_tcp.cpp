@@ -1,5 +1,7 @@
 #include "serveur/serveur_tcp.h"
 
+#include "utils/debug_utils.h"
+
 void ServeurTCP::demarrer()
 {
     _serveurEstActif = true;

@@ -3,24 +3,33 @@ IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 
-# Allman style (accolades sur la ligne suivante)
 BreakBeforeBraces: Allman
 
 ColumnLimit: 120
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: false
 
-# Gestion des espaces
 SpaceBeforeParens: ControlStatements
 
-# Alignement et organisation
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 
-# Tri automatique des includes
 SortIncludes: true
+IncludeBlocks: Regroup
 
-# Indentation des namespaces
 NamespaceIndentation: All
-
 AccessModifierOffset: -4
+
+IncludeCategories:
+  - Regex: '^<.*>$'
+    Priority: 1
+  - Regex: '^"serveur/.*"'
+    Priority: 2
+  - Regex: '^"algorithmes/.*"'
+    Priority: 3
+  - Regex: '^"modele/.*"'
+    Priority: 4
+  - Regex: '^"utils/.*"'
+    Priority: 5
+  - Regex: '.*'
+    Priority: 10

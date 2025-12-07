@@ -1,6 +1,5 @@
-#include <gtest/gtest.h>
-
 #include <cmath>
+#include <gtest/gtest.h>
 
 #include "utils/math_utils.h"
 

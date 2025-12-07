@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-
 #include <stdexcept>
 
 #include "modele/geographie/coordonne/coord_geographique.h"

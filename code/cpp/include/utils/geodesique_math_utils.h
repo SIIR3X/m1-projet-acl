@@ -2,6 +2,7 @@
 #define GEODESIQUE_MATH_UTILS_H
 
 #include "modele/geographie/coordonne/coord_geographique.h"
+
 #include "utils/math_utils.h"
 
 /**
