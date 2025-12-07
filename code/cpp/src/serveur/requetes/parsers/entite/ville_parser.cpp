@@ -1,9 +1,7 @@
 #include "serveur/requetes/parsers/entite/ville_parser.h"
 
 #include <cstdlib>
-#include <stdexcept>
 
-#include "serveur/requetes/parsers/parser_registry.h"
 #include "utils/json_parser_utils.h"
 
 std::any VilleParser::parser(const std::string& json) const

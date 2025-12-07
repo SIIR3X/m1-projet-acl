@@ -4,9 +4,6 @@
 #include <any>
 #include <memory>
 
-#include "algorithmes/distance/data/algo_distance_data.h"
-#include "modele/graphe/graphe.h"
-
 /**
  * @class ISolveurHandler
  * @brief Interface abstraite représentant un maillon de la chaîne de gestion des solveurs.

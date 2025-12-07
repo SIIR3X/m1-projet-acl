@@ -1,15 +1,11 @@
 #ifndef ALGO_DISTANCE_DATA_BUILDER_H
 #define ALGO_DISTANCE_DATA_BUILDER_H
 
-#include <any>
 #include <limits>
-#include <memory>
 #include <vector>
 
 #include "algorithmes/commun/i_data_builder.h"
 #include "algorithmes/distance/data/algo_distance_data.h"
-#include "modele/generique/carte.h"
-#include "modele/generique/distance.h"
 #include "modele/graphe/graphe.h"
 
 /**

@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include <atomic>
+#include <iostream>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -13,7 +14,6 @@
 #include <vector>
 
 #include "serveur/requetes/handlers/requete_handler_factory.h"
-#include "utils/debug_utils.h"
 #include "utils/json_parser_utils.h"
 
 /**

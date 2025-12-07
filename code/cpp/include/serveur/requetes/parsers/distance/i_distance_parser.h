@@ -1,7 +1,6 @@
 #ifndef I_DISTANCE_PARSER_H
 #define I_DISTANCE_PARSER_H
 
-#include "modele/generique/distance.h"
 #include "serveur/requetes/parsers/distance/i_distance_parser_base.h"
 #include "serveur/requetes/parsers/i_parser_base.h"
 
