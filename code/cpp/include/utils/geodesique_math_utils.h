@@ -1,8 +1,6 @@
 #ifndef GEODESIQUE_MATH_UTILS_H
 #define GEODESIQUE_MATH_UTILS_H
 
-#include "modele/geographie/coordonne/coord_geographique.h"
-
 #include "utils/math_utils.h"
 
 /**
@@ -22,25 +20,20 @@ public:
      */
     static double haversine(double lat1, double lon1, double lat2, double lon2);
 
-    /**
-     * @brief Calcul la distance géodésique entre deux points.
-     * @param a Les coordonnées géodésique du point A.
-     * @param b Les coordonnées géodésique du point B.
-     * @return La distance géodésique entre les deux points.
-     */
-    static double distanceGeodesique(const CoordGeographique& a, const CoordGeographique& b);
+    static double distanceGeodesique(double latitudeA, double longitudeA, double latitudeB, double longitudeB);
 
 private:
     static constexpr double EARTH_RADIUS_KM = 6371.0;  ///< Rayon moyen de la Terre en kilomètres.
 };
 
-inline double GeodesiqueMathUtils::distanceGeodesique(const CoordGeographique& a, const CoordGeographique& b)
+inline double GeodesiqueMathUtils::distanceGeodesique(double latitudeA, double longitudeA, double latitudeB,
+                                                      double longitudeB)
 {
     // Récupération et conversion des coordonnées des villes en radians
-    const double lat1 = MathUtils::toRad(a._latitude);
-    const double lon1 = MathUtils::toRad(a._longitude);
-    const double lat2 = MathUtils::toRad(b._latitude);
-    const double lon2 = MathUtils::toRad(b._longitude);
+    const double lat1 = MathUtils::toRad(latitudeA);
+    const double lon1 = MathUtils::toRad(longitudeA);
+    const double lat2 = MathUtils::toRad(latitudeB);
+    const double lon2 = MathUtils::toRad(longitudeB);
 
     // Calcul la distance entre les deux villes à l'aide de haversine
     return GeodesiqueMathUtils::haversine(lat1, lon1, lat2, lon2);

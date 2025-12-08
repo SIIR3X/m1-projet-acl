@@ -1,16 +1,4 @@
-#include <iostream>
-
-#include "serveur/requetes/parsers/distance/distance_geodesique_parser.h"
-#include "serveur/requetes/parsers/distance/i_distance_parser_base.h"
-#include "serveur/requetes/parsers/entite/i_entite_parser_base.h"
-#include "serveur/requetes/parsers/entite/ville_parser.h"
-#include "serveur/requetes/parsers/parser_registry.h"
-
-#include "modele/geographie/ville.h"
-
-#include "utils/json_parser_utils.h"
-
-#include "factories/requete_handler_factory.h"
+#include <string>
 
 static const std::string REQUETE = R"json(
 {
@@ -64,16 +52,30 @@ static const std::string REQUETE = R"json(
 }
 )json";
 
+#include <iostream>
+#include <memory>
+
+#include "serveur/requetes/handlers/requete_handler.h"
+#include "serveur/requetes/parsers/distances/parseur_distance_geodesique.h"
+#include "serveur/requetes/parsers/entites/parseur_ville.h"
+#include "serveur/requetes/parsers/parseur_registry.h"
+
+#include "algorithmes/builders/data_builder_registry.h"
+#include "algorithmes/builders/data_builder_tsp.h"
+
+#include "factories/requete_handler_factory.h"
+
 int main(int argc, char *argv[])
 {
     std::shared_ptr<RequeteHandler> requeteHandler = RequeteHandlerFactory::chaine();
-
-    ParserRegistry<IEntiteParserBase>::enregistrerParser("ville", std::make_shared<VilleParser>());
-    ParserRegistry<IDistanceParserBase>::enregistrerParser("geodesique",
-                                                           std::make_shared<DistanceGeodesiqueParser<Ville>>());
-
     if (!requeteHandler)
         return 1;
+
+    RegistryParseur::instance().enregistrer("ville", []() { return std::make_unique<ParseurVille>(); });
+    RegistryParseur::instance().enregistrer("geodesique",
+                                            []() { return std::make_unique<ParseurDistanceGeodesique>(); });
+
+    DataBuilderRegistry::instance().enregistrer("tsp", []() { return std::make_unique<DataBuilderTSP>(); });
 
     std::string commande =
         JsonParserUtils::recupererObligatoire(REQUETE, "commande", JsonParserUtils::extraireChampString);

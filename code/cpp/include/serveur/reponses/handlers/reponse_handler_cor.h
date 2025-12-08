@@ -3,11 +3,11 @@
 
 #include <any>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
 #include "serveur/reponses/handlers/reponse_handler.h"
-#include "serveur/reponses/types/i_reponse.h"
 
 /**
  * @class ReponseHandlerCOR
@@ -26,39 +26,39 @@ public:
      * @brief Tente de construire la réponse.
      * @param commande La commande demandée.
      * @param args Les arguments passés au handler.
-     * @return Une instance de IReponse ou nullptr.
+     * @return Une réponse JSON ou std::nullopt si non traité.
      */
-    std::shared_ptr<IReponse> construire(const std::string& commande, const std::vector<std::any>& args) override;
+    std::optional<std::string> construire(const std::string& commande, const std::vector<std::any>& args) override;
 
 protected:
     /**
      * @brief Tente de construire une réponse à la requête.
      * @param commande La commande demandée.
      * @param args Les arguments passés au handler.
-     * @return Une instance de IReponse ou nullptr.
+     * @return Une réponse JSON ou std::nullopt si non traité.
      */
-    virtual std::shared_ptr<IReponse> construireReponse(const std::string& commande,
-                                                        const std::vector<std::any>& args) = 0;
+    virtual std::optional<std::string> construireReponse(const std::string& commande,
+                                                         const std::vector<std::any>& args) = 0;
 
 private:
     std::shared_ptr<ReponseHandlerCOR> _suivant;  ///< Le maillon suivant de la chaîne de responsabilité.
 };
 
-inline std::shared_ptr<IReponse> ReponseHandlerCOR::construire(const std::string& commande,
-                                                               const std::vector<std::any>& args)
+inline std::optional<std::string> ReponseHandlerCOR::construire(const std::string& commande,
+                                                                const std::vector<std::any>& args)
 {
     // La chaîne tente de construire la réponse localement
-    std::shared_ptr<IReponse> reponse = construireReponse(commande, args);
+    std::optional<std::string> reponse = construireReponse(commande, args);
 
     // La chaîne a réussi
-    if (reponse)
+    if (reponse.has_value())
         return reponse;
 
     // S'il existe un prochain maillon, alors il essaye de construire la réponse
     if (_suivant)
         return _suivant->construire(commande, args);
 
-    return nullptr;
+    return std::nullopt;
 }
 
 #endif  // REPONSE_HANDLER_COR_H
