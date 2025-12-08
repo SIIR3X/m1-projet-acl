@@ -7,8 +7,6 @@
 
 #include "algorithmes/handlers/solveur_handler.h"
 
-#include "types/algo_type.h"
-
 /**
  * @class SolveurHandlerCOR
  * @brief Maillon abstrait de la chaîne de responsabilité.
@@ -45,9 +43,6 @@ private:
 
 inline std::any SolveurHandlerCOR::resoudre(const std::string& nomAlgo, const std::any& donnees)
 {
-    if (algoFromString(nomAlgo) != AlgoType::TSP)
-        return std::any{};
-
     // La chaîne tente de résoudre localement
     std::any solution = resoudreDonnees(nomAlgo, donnees);
 

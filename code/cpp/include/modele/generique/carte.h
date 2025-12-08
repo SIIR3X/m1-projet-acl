@@ -103,7 +103,7 @@ inline Carte<T, R>::operator std::string() const
     std::stringstream ss;
     ss << "Carte (" << _elements.size() << " elements):\n";
 
-    for (const T& element : _elements) ss << " - " << static_cast<std::string>(element) << "\n";
+    for (const T& element : _elements) ss << " - " << static_cast<std::string>(*element) << "\n";
 
     return ss.str();
 }
