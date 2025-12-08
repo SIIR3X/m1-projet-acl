@@ -1,11 +1,16 @@
 #ifndef REQUETE_HANDLER_COR_H
 #define REQUETE_HANDLER_COR_H
 
+#include <any>
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "serveur/requetes/handlers/requete_handler.h"
+#include "serveur/requetes/parsers/parser.h"
+
+#include "factories/reponse_handler_factory.h"
 
 /**
  * @class RequeteHandlerCOR
@@ -29,13 +34,12 @@ public:
     std::optional<std::string> traiter(const std::string& commande, const std::string& requete) override;
 
 protected:
-    /**
-     * @brief Tente de générer une réponse à la requête.
-     * @param commande La commande demandée.
-     * @param requete La requête au format JSON.
-     * @return Une réponse JSON ou std::nullopt si non traité.
-     */
-    virtual std::optional<std::string> traiterRequete(const std::string& commande, const std::string& requete) = 0;
+    std::unique_ptr<Parser> _parseur;
+
+    virtual bool peutTraiter(const std::string& commande) const = 0;
+
+    virtual std::optional<std::vector<std::any>> traiterRequete(const std::string& commande,
+                                                                const std::vector<std::any>& argsBruts) = 0;
 
 private:
     std::shared_ptr<RequeteHandlerCOR> _suivant;  ///< Le maillon suivant de la chaîne de responsabilité.
@@ -43,18 +47,22 @@ private:
 
 inline std::optional<std::string> RequeteHandlerCOR::traiter(const std::string& commande, const std::string& requete)
 {
-    // La chaîne tente de traiter la requête localement
-    std::optional<std::string> reponse = traiterRequete(commande, requete);
+    if (!peutTraiter(commande) || !_parseur)
+    {
+        if (_suivant)
+            return _suivant->traiter(commande, requete);
+        return std::nullopt;
+    }
 
-    // La chaîne a réussi
-    if (reponse.has_value())
-        return reponse;
+    // Extraction des arguments de la requête
+    auto argsBruts = _parseur->parser(requete);
 
-    // S'il existe un prochain maillon, alors il essaye de traiter la requête
-    if (_suivant)
-        return _suivant->traiter(commande, requete);
+    // Transformation des données brutes en données métier
+    auto args = traiterRequete(commande, argsBruts);
 
-    return std::nullopt;
+    auto gestionnaire = ReponseHandlerFactory::chaine();
+
+    return gestionnaire->construire(commande, *args);
 }
 
 #endif  // REQUETE_HANDLER_COR_H

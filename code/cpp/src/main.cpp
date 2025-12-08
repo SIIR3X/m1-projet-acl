@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -7,62 +8,14 @@
 #include "factories/registry.h"
 #include "factories/requete_handler_factory.h"
 
+#include "types/requete.h"
+
 #include "utils/json_parser_utils.h"
-
-static const std::string REQUETE = R"json(
-{
-    "commande": "algo_distance",
-    "algo": "tsp",
-    "entite": "ville",
-    "distance": "geodesique",
-
-    "ensembles": [
-        {
-            "machines": 1,
-            "donnees": [
-                {
-                    "ville": "Strasbourg",
-                    "latitude": 48.58,
-                    "longitude": 7.75
-                },
-                {
-                    "ville": "Metz",
-                    "latitude": 49.12,
-                    "longitude": 6.17
-                },
-                {
-                    "ville": "Nancy",
-                    "latitude": 48.69,
-                    "longitude": 6.18
-                }
-            ]
-        },
-        {
-            "machines": 3,
-            "donnees": [
-                {
-                    "ville": "Paris",
-                    "latitude": 48.85,
-                    "longitude": 2.35
-                },
-                {
-                    "ville": "Lyon",
-                    "latitude": 45.75,
-                    "longitude": 4.85
-                },
-                {
-                    "ville": "Dijon",
-                    "latitude": 47.32,
-                    "longitude": 5.04
-                }
-            ]
-        }
-    ]
-}
-)json";
 
 int main(int argc, char *argv[])
 {
+    auto debut = std::chrono::high_resolution_clock::now();
+
     Registry::enregistrerTout();
 
     std::shared_ptr<RequeteHandler> requeteHandler = RequeteHandlerFactory::chaine();
@@ -75,7 +28,13 @@ int main(int argc, char *argv[])
     std::optional<std::string> reponse = requeteHandler->traiter(commande, REQUETE);
 
     std::cout << "Commande : " << commande << std::endl;
-    std::cout << reponse.value() << std::endl;
+
+    if (reponse)
+        std::cout << reponse.value() << std::endl;
+
+    auto fin = std::chrono::high_resolution_clock::now();
+    auto duree = std::chrono::duration_cast<std::chrono::milliseconds>(fin - debut);
+    std::cout << "Temps d'exécution : " << duree.count() << " ms" << std::endl;
 
     return 0;
 }
