@@ -1,16 +1,16 @@
-#ifndef PARSEUR_DISTANCE_GEODESIQUE_H
-#define PARSEUR_DISTANCE_GEODESIQUE_H
+#ifndef PARSER_DISTANCE_GEODESIQUE_H
+#define PARSER_DISTANCE_GEODESIQUE_H
 
 #include <any>
 #include <stdexcept>
 #include <string>
 
-#include "serveur/requetes/parsers/parseur.h"
+#include "serveur/requetes/parsers/parser.h"
 
-#include "modele/distances/distance_erased.h"
+#include "modele/distances/distance_effacee.h"
 #include "modele/distances/distance_geodesique.h"
 
-class ParseurDistanceGeodesique : public Parseur
+class ParseurDistanceGeodesique : public Parser
 {
 public:
     std::any parser(const std::string& json) const override;
@@ -20,7 +20,7 @@ inline std::any ParseurDistanceGeodesique::parser(const std::string& json) const
 {
     DistanceGeodesique distance;
 
-    DistanceErased erased(
+    return DistanceEffacee(
         [distance](const Entite* a, const Entite* b) -> std::any
         {
             auto A = dynamic_cast<const EntiteGeographique*>(a);
@@ -29,9 +29,8 @@ inline std::any ParseurDistanceGeodesique::parser(const std::string& json) const
                 throw std::runtime_error("Distance geodesique requiert une entite geographique");
 
             return std::any(distance(*A, *B));
-        });
-
-    return erased;
+        },
+        typeid(double));
 }
 
-#endif  // PARSEUR_DISTANCE_GEODESIQUE_H
+#endif  // PARSER_DISTANCE_GEODESIQUE_H

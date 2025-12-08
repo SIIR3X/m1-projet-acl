@@ -23,13 +23,24 @@ AccessModifierOffset: -4
 IncludeCategories:
   - Regex: '^<.*>$'
     Priority: 1
+
   - Regex: '^"serveur/.*"'
     Priority: 2
+
   - Regex: '^"algorithmes/.*"'
     Priority: 3
-  - Regex: '^"modele/.*"'
+
+  - Regex: '^"factories/.*"'
     Priority: 4
-  - Regex: '^"utils/.*"'
+
+  - Regex: '^"modele/.*"'
     Priority: 5
+
+  - Regex: '^"types/.*"'
+    Priority: 6
+
+  - Regex: '^"utils/.*"'
+    Priority: 7
+
   - Regex: '.*'
     Priority: 10

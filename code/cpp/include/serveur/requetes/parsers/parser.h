@@ -1,15 +1,15 @@
-#ifndef PARSEUR_H
-#define PARSEUR_H
+#ifndef PARSER_H
+#define PARSER_H
 
 #include <any>
 #include <string>
 
-class Parseur
+class Parser
 {
 public:
-    virtual ~Parseur() = default;
+    virtual ~Parser() = default;
 
     virtual std::any parser(const std::string& json) const = 0;
 };
 
-#endif  // PARSEUR_H
+#endif  // PARSER_H

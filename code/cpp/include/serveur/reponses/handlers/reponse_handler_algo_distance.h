@@ -11,9 +11,9 @@
 
 #include "algorithmes/data/output/output_data.h"
 
-#include "utils/json_builder.h"
-
 #include "types/commande_type.h"
+
+#include "utils/json_builder.h"
 
 /**
  * @class ReponseHandlerAlgoDistance
