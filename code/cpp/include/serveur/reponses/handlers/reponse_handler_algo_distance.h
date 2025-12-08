@@ -36,7 +36,10 @@ inline std::optional<std::string> ReponseHandlerAlgoDistance::construireReponse(
                                                                                 const std::vector<std::any>& args)
 {
     if (commandeFromString(commande) != CommandeType::ALGO_DISTANCE)
-        return nullptr;
+        return std::nullopt;
+
+    if (args.size() != 1)
+        return std::nullopt;
 
     const auto& outputs = std::any_cast<const std::vector<std::shared_ptr<OutputData>>&>(args[0]);
 

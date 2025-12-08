@@ -16,10 +16,10 @@
 class ParseurVille : public Parser
 {
 public:
-    std::any parser(const std::string& json) const override;
+    std::vector<std::any> parser(const std::string& json) const override;
 };
 
-inline std::any ParseurVille::parser(const std::string& json) const
+inline std::vector<std::any> ParseurVille::parser(const std::string& json) const
 {
     std::vector<std::shared_ptr<Entite>> resultat;
 
@@ -40,7 +40,7 @@ inline std::any ParseurVille::parser(const std::string& json) const
         resultat.push_back(std::make_shared<Ville>(nom, lat, lon));
     }
 
-    return resultat;
+    return {resultat};
 }
 
 #endif  // PARSER_VILLE_H

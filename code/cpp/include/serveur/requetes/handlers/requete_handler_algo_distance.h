@@ -1,10 +1,15 @@
 #ifndef REQUETE_HANDLER_ALGO_DISTANCE_H
 #define REQUETE_HANDLER_ALGO_DISTANCE_H
 
+#include <any>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "serveur/requetes/handlers/requete_handler_cor.h"
+#include "serveur/requetes/parsers/handlers/parser_algo_distance.h"
+
+#include "types/commande_type.h"
 
 /**
  * @class RequeteHandlerAlgoDistance
@@ -12,14 +17,20 @@
  */
 class RequeteHandlerAlgoDistance : public RequeteHandlerCOR
 {
+public:
+    RequeteHandlerAlgoDistance(std::shared_ptr<RequeteHandlerCOR> suivant = nullptr) : RequeteHandlerCOR(suivant)
+    {
+        _parseur = std::make_unique<ParserAlgoDistance>();
+    }
+
 protected:
-    /**
-     * @brief Tente de générer une réponse à la requête.
-     * @param commande La commande demandée.
-     * @param requete La requête au format JSON.
-     * @return Une réponse JSON ou std::nullopt si non traité.
-     */
-    std::optional<std::string> traiterRequete(const std::string& commande, const std::string& requete) override;
+    bool peutTraiter(const std::string& commande) const override
+    {
+        return commandeFromString(commande) == CommandeType::ALGO_DISTANCE;
+    }
+
+    std::optional<std::vector<std::any>> traiterRequete(const std::string& commande,
+                                                        const std::vector<std::any>& argsBruts) override;
 };
 
 #endif  // REQUETE_HANDLER_ALGO_DISTANCE_H
