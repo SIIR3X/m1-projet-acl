@@ -14,9 +14,9 @@
 
 #include "serveur/requetes/handlers/requete_handler.h"
 
-#include "utils/json_parser_utils.h"
-
 #include "factories/requete_handler_factory.h"
+
+#include "utils/json_parser_utils.h"
 
 /**
  * @enum NiveauLog

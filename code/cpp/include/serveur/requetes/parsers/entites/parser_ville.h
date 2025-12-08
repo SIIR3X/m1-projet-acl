@@ -1,19 +1,19 @@
-#ifndef PARSEUR_VILLE_H
-#define PARSEUR_VILLE_H
+#ifndef PARSER_VILLE_H
+#define PARSER_VILLE_H
 
 #include <any>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "serveur/requetes/parsers/parseur.h"
+#include "serveur/requetes/parsers/parser.h"
 
 #include "modele/entites/entite.h"
 #include "modele/entites/geographie/ville.h"
 
 #include "utils/json_parser_utils.h"
 
-class ParseurVille : public Parseur
+class ParseurVille : public Parser
 {
 public:
     std::any parser(const std::string& json) const override;
@@ -27,7 +27,7 @@ inline std::any ParseurVille::parser(const std::string& json) const
     for (auto& obj : objets)
     {
         // Récupération des champs obligatoires
-        std::string nom = JsonParserUtils::recupererObligatoire(obj, "nom", JsonParserUtils::extraireChampObjet);
+        std::string nom = JsonParserUtils::recupererObligatoire(obj, "ville", JsonParserUtils::extraireChampObjet);
         std::string latStr =
             JsonParserUtils::recupererObligatoire(obj, "latitude", JsonParserUtils::extraireChampObjet);
         std::string lonStr =
@@ -43,4 +43,4 @@ inline std::any ParseurVille::parser(const std::string& json) const
     return resultat;
 }
 
-#endif  // PARSEUR_VILLE_H
+#endif  // PARSER_VILLE_H

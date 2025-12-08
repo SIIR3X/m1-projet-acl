@@ -4,20 +4,20 @@
 #include <exception>
 #include <memory>
 
-#include "serveur/requetes/parsers/parseur_registry.h"
+#include "serveur/requetes/parsers/parser_registry.h"
 
-#include "algorithmes/builders/data_builder_registry.h"
+#include "algorithmes/builders/data/data_builder_registry.h"
 #include "algorithmes/data/output/output_data.h"
 
-#include "modele/distances/distance_erased.h"
-#include "modele/entites/entite.h"
-#include "modele/generique/carte.h"
-
-#include "utils/json_parser_utils.h"
-
+#include "factories/graphe_builder_handler_factory.h"
 #include "factories/reponse_handler_factory.h"
 #include "factories/solveur_handler_factory.h"
+
+#include "modele/distances/distance_effacee.h"
+
 #include "types/commande_type.h"
+
+#include "utils/json_parser_utils.h"
 
 std::optional<std::string> RequeteHandlerAlgoDistance::traiterRequete(const std::string& commande,
                                                                       const std::string& requete)
@@ -36,28 +36,17 @@ std::optional<std::string> RequeteHandlerAlgoDistance::traiterRequete(const std:
         std::vector<std::string> ensembles =
             JsonParserUtils::extraireListeObjets(JsonParserUtils::extraireBloc(requete, "ensembles"));
 
-        // Récupération des parseurs correspondant à l'entité et au type de distance demandée
-        auto parseurEntites = RegistryParseur::instance().get(entite);
-        auto parseurDistance = RegistryParseur::instance().get(distance);
+        auto parseurEntites = ParserRegistry::instance().get(entite);
+        auto parseurDistance = ParserRegistry::instance().get(distance);
 
-        // Création de la chaîne COR des handlers de solveurs
         auto solveur = SolveurHandlerFactory::chaine();
-
+        auto grapheBuilder = GrapheBuilderHandlerFactory::chaine();
         auto dataBuilder = DataBuilderRegistry::instance().get(algo);
 
         std::any distanceAny = parseurDistance->parser(requete);
+        auto distanceEffacee = std::any_cast<DistanceEffacee>(distanceAny);
 
-        auto distanceErased = std::any_cast<DistanceErased>(distanceAny);
-
-        using T = std::shared_ptr<Entite>;
-        using R = double;
-
-        Carte<T, R>::DistanceFunc distanceFunc = [distanceErased](const T& a, const T& b) -> R
-        {
-            // a.get() et b.get() donnent des Entite*
-            std::any resAny = distanceErased(a.get(), b.get());
-            return std::any_cast<R>(resAny);  // R == double
-        };
+        const std::type_info& typeR = distanceEffacee.typeRetour();
 
         std::vector<std::shared_ptr<OutputData>> solutions;
         solutions.reserve(ensembles.size());
@@ -71,17 +60,16 @@ std::optional<std::string> RequeteHandlerAlgoDistance::traiterRequete(const std:
             int machines = std::stoi(machinesStr);
 
             std::any entitesAny = parseurEntites->parser(donneesEnsemble);
-            auto entites = std::any_cast<std::vector<T>>(entitesAny);
+            auto entites = std::any_cast<std::vector<std::shared_ptr<Entite>>>(entitesAny);
 
             std::vector<std::string> labels;
             labels.reserve(entites.size());
 
             for (const auto& entite : entites) labels.push_back(entite->nom());
 
-            Carte<T, R> carte(entites, distanceFunc);
-            auto graphe = carte.construireGraphe();
+            std::any grapheAny = grapheBuilder->construire(typeR, entites, distanceEffacee);
 
-            auto inputData = dataBuilder->construire(graphe, labels, machines);
+            auto inputData = dataBuilder->construire(grapheAny, labels, machines);
 
             auto resultatAny = solveur->resoudre(algo, static_cast<TSPInputData&>(*inputData));
 
@@ -91,7 +79,7 @@ std::optional<std::string> RequeteHandlerAlgoDistance::traiterRequete(const std:
         }
 
         std::vector<std::any> args;
-        args.emplace_back(solutions);  // un seul élément : le vecteur complet
+        args.emplace_back(solutions);
 
         auto gestionnaire = ReponseHandlerFactory::chaine();
 

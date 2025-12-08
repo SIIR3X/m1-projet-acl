@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "algorithmes/builders/data_builder.h"
+#include "algorithmes/builders/data/data_builder.h"
 #include "algorithmes/data/input/tsp_input_data.h"
 
 #include "modele/entites/entite.h"
@@ -19,10 +19,11 @@ protected:
 inline std::unique_ptr<InputData> DataBuilderTSP::construireDonnees(const std::vector<std::any>& args) const
 {
     if (args.size() != 3)
-        throw std::runtime_error("DataBuilderTSP: invalid argument count");
+        throw std::runtime_error("construireDonnees() : nombre d'arguments invalide");
 
     using EntitePtr = std::shared_ptr<Entite>;
-    const auto& graphe = std::any_cast<const Graphe<double, EntitePtr>&>(args[0]);
+    auto graphePtr = std::any_cast<std::shared_ptr<Graphe<double, EntitePtr>>>(args[0]);
+    const auto& graphe = *graphePtr;
 
     const auto& labels = std::any_cast<const std::vector<std::string>&>(args[1]);
 
