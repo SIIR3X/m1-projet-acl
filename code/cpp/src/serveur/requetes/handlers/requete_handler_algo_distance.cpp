@@ -7,9 +7,9 @@
 #include "serveur/requetes/parsers/parser_registry.h"
 
 #include "algorithmes/builders/data/data_builder_registry.h"
+#include "algorithmes/builders/graphe/graphe_builder_registry.h"
 #include "algorithmes/data/output/output_data.h"
 
-#include "factories/graphe_builder_handler_factory.h"
 #include "factories/reponse_handler_factory.h"
 #include "factories/solveur_handler_factory.h"
 
@@ -39,14 +39,13 @@ std::optional<std::string> RequeteHandlerAlgoDistance::traiterRequete(const std:
         auto parseurEntites = ParserRegistry::instance().get(entite);
         auto parseurDistance = ParserRegistry::instance().get(distance);
 
-        auto solveur = SolveurHandlerFactory::chaine();
-        auto grapheBuilder = GrapheBuilderHandlerFactory::chaine();
-        auto dataBuilder = DataBuilderRegistry::instance().get(algo);
-
         std::any distanceAny = parseurDistance->parser(requete);
         auto distanceEffacee = std::any_cast<DistanceEffacee>(distanceAny);
-
         const std::type_info& typeR = distanceEffacee.typeRetour();
+
+        auto solveur = SolveurHandlerFactory::chaine();
+        auto grapheBuilder = GrapheBuilderRegistry::instance().get(typeR);
+        auto dataBuilder = DataBuilderRegistry::instance().get(algo);
 
         std::vector<std::shared_ptr<OutputData>> solutions;
         solutions.reserve(ensembles.size());
