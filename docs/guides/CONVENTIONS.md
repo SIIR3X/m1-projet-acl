@@ -11,7 +11,7 @@ Ce document définit les règles de style, de structure et d'organisation utilis
 ### Style commun (tous les langages)
 
 - Les **identifiants** (variables, fonctions, méthodes) sont écrits en **`camelCase`**.
-- Les **types**, **classes**, **structures** et **énumérations sont nommés en **`PascalCase`**.
+- Les **types**, **classes**, **structures** et **énumérations** sont nommés en **`PascalCase`**.
 - Les **constantes** sont écrites en **`UPPER_SNAKE_CASE`**.
 - Les **champs privés** d'une classe sont préfixés par **`_`**.
 
