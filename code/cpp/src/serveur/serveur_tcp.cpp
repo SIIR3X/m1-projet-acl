@@ -106,7 +106,8 @@ void ServeurTCP::gererClient(socket_t socketClient, int idClient)
     catch (const std::exception& e)
     {
         log(NiveauLog::ERREUR,
-            std::string("Erreur traitement : ") + e.what(), idClient);
+            std::string("Erreur traitement : ") + e.what(),
+            idClient);
         socket_close(socketClient);
         return;
     }
@@ -119,13 +120,19 @@ void ServeurTCP::gererClient(socket_t socketClient, int idClient)
     if (envoi < 0)
     {
         log(NiveauLog::ERREUR,
-            "Impossible d'envoyer la réponse", idClient);
+            "Impossible d'envoyer la réponse",
+            idClient);
         socket_close(socketClient);
         return;
     }
 
     log(NiveauLog::INFO,
-        "Réponse envoyée (" + std::to_string(envoi) + " octets)", idClient);
+        "Réponse envoyée (" + std::to_string(envoi) + " octets)",
+        idClient);
+
+    log(NiveauLog::DEBUG,
+        "Contenu de la réponse : " + reponse,
+        idClient);
 
     socket_close(socketClient);
     log(NiveauLog::INFO, "Client déconnecté", idClient);

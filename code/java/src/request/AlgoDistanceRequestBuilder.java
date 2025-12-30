@@ -48,8 +48,8 @@ public class AlgoDistanceRequestBuilder implements RequestBuilder
 		StringBuilder debut = new StringBuilder(); debut.append("{\n");
 		request.append("\"commande\": \""+commande.toString().toLowerCase()+"\",\n")
 				.append("\"algo\": \""+this._algo+"\",\n")
-				.append("\"entite\": \""+this._distance+"\",\n")
-				.append("\"distance\": \""+this._entite+"\",\n")
+				.append("\"entite\": \""+this._entite+"\",\n")
+				.append("\"distance\": \""+this._distance+"\",\n")
 				.append("\"ensembles\": [\n")
 				.append(ensembles)
 				.append("]");

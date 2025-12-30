@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 
 #include "utils/json_parser_utils.h"
 
-void mainTest()
+int main(int argc, char *argv[])
 {
     auto debut = std::chrono::high_resolution_clock::now();
 
@@ -67,5 +67,7 @@ void mainTest()
     auto fin = std::chrono::high_resolution_clock::now();
     auto duree = std::chrono::duration_cast<std::chrono::milliseconds>(fin - debut);
     std::cout << "Temps d'exécution : " << duree.count() << " ms" << std::endl;
+
+    return 0;
 }
-    */
+*/
