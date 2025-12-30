@@ -22,10 +22,17 @@ public class ServerClientService {
         RequestBuilderRegistry registry = new RequestBuilderRegistry();
         String request = registry.get(cmd).build(cmd, paths);
 
-        try (ClientTCP client = new ClientTCP(host, port)) {
-            client.connect();
-            client.write(request);
-            return client.read();
+        try {
+	        ClientTCP client = new ClientTCP(host, port);
+	        try {
+	            client.connect();
+	            client.write(request);
+	            return client.read();
+	        }
+	        finally
+	        {
+	          client.close();
+	        }
         }
         catch (IOException e) {
             throw new RuntimeException("Erreur communication serveur", e);
