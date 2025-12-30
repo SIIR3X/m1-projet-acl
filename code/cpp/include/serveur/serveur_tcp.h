@@ -1,22 +1,44 @@
 #ifndef SERVEUR_TCP_H
 #define SERVEUR_TCP_H
 
-#include <arpa/inet.h>
 #include <atomic>
 #include <iostream>
+#include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
-#include <sys/socket.h>
 #include <thread>
-#include <unistd.h>
 #include <unordered_map>
 #include <vector>
 
-#include "serveur/requetes/handlers/requete_handler.h"
-
 #include "factories/requete_handler_factory.h"
-
+#include "serveur/requetes/handlers/requete_handler.h"
 #include "utils/json_parser_utils.h"
+
+// Sockets (portable)
+#ifdef _WIN32
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN
+    #endif
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #pragma comment(lib, "Ws2_32.lib")
+
+    using socket_t = SOCKET;
+    static constexpr socket_t INVALID_SOCKET_FD = INVALID_SOCKET;
+
+    inline int socket_close(socket_t s) { return ::closesocket(s); }
+
+#else
+    #include <arpa/inet.h>
+    #include <sys/socket.h>
+    #include <unistd.h>
+
+    using socket_t = int;
+    static constexpr socket_t INVALID_SOCKET_FD = -1;
+
+    inline int socket_close(socket_t s) { return ::close(s); }
+#endif
 
 /**
  * @enum NiveauLog
@@ -41,9 +63,9 @@ public:
     ServeurTCP(const std::string& ip, int port)
         : _ip(ip),
           _port(port),
+          _socketServeur(INVALID_SOCKET_FD),
           _serveurEstActif(false),
           _compteurClients(0),
-          _socketServeur(-1),
           _requeteHandler(RequeteHandlerFactory::chaine())
     {
     }
@@ -51,10 +73,7 @@ public:
     /**
      * @brief Destructeur.
      */
-    ~ServeurTCP()
-    {
-        arreter();
-    }
+    ~ServeurTCP() { arreter(); }
 
     /**
      * @brief Démarre le serveur.
@@ -69,12 +88,16 @@ public:
 private:
     std::string _ip;                                  ///< L'adresse IP d'écoute du serveur.
     int _port;                                        ///< Le port d'écoute du serveur.
-    int _socketServeur;                               ///< Le socket principal du serveur.
+    socket_t _socketServeur;                          ///< Le socket principal du serveur.
     std::atomic<bool> _serveurEstActif;               ///< État du serveur.
     std::atomic<int> _compteurClients;                ///< Le compteur de clients.
     std::vector<std::thread> _threadsClients;         ///< Threads des différents clients
     std::mutex _mutexCout;                            ///< Mutex (verrou)
-    std::shared_ptr<RequeteHandler> _requeteHandler;  ///< La tête de la chaîne COR des handlers de requêtes.
+    std::shared_ptr<RequeteHandler> _requeteHandler;  ///< Tête de la chaîne COR des handlers de requêtes.
+
+    // Init/cleanup sockets (Windows seulement)
+    void initSockets();
+    void cleanupSockets();
 
     /**
      * @brief Boucle du serveur.
@@ -86,7 +109,7 @@ private:
      * @param socketClient Le socket du client à gérer.
      * @param idClient L'id du client.
      */
-    void gererClient(int socketClient, int idClient);
+    void gererClient(socket_t socketClient, int idClient);
 
     /**
      * @brief Traite une requête envoyée par un client.
@@ -102,30 +125,42 @@ private:
     void log(NiveauLog niveau, const std::string& message, int idClient = 0);
 };
 
+inline void ServeurTCP::initSockets()
+{
+#ifdef _WIN32
+    WSADATA wsa{};
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+        throw std::runtime_error("WSAStartup() a échoué");
+#endif
+}
+
+inline void ServeurTCP::cleanupSockets()
+{
+#ifdef _WIN32
+    WSACleanup();
+#endif
+}
+
 inline void ServeurTCP::boucleServeur()
 {
     log(NiveauLog::INFO, "Serveur en attente de connexions...");
 
     while (_serveurEstActif)
     {
-        // Essaye d'accepter un nouveau client
-        int socketClient = accept(_socketServeur, nullptr, nullptr);
+        socket_t socketClient = ::accept(_socketServeur, nullptr, nullptr);
 
         if (!_serveurEstActif)
             break;
 
-        if (socketClient < 0)
+        if (socketClient == INVALID_SOCKET_FD)
         {
             log(NiveauLog::ERREUR, "accept()");
             continue;
         }
 
-        // Attribution d'un id de client unique
         int idClient = ++_compteurClients;
-
         log(NiveauLog::INFO, "Nouvelle connexion acceptée", idClient);
 
-        // Essaye de lancer un thread gestion client
         try
         {
             _threadsClients.emplace_back(&ServeurTCP::gererClient, this, socketClient, idClient);
@@ -133,7 +168,7 @@ inline void ServeurTCP::boucleServeur()
         catch (const std::exception& e)
         {
             log(NiveauLog::ERREUR, std::string("Impossible de créer un thread : ") + e.what(), idClient);
-            close(socketClient);
+            socket_close(socketClient);
         }
     }
 }
@@ -145,19 +180,16 @@ inline std::string ServeurTCP::traiterRequete(const std::string& requete)
         if (!_requeteHandler)
             return "{\"erreur\": \"Handler non initialisé\"}";
 
-        // Extraction de la commande demandée
         std::string commande =
             JsonParserUtils::recupererObligatoire(requete, "commande", JsonParserUtils::extraireChampString);
 
-        // Traitement de la requête via les handlers
         std::optional<std::string> reponse = _requeteHandler->traiter(commande, requete);
 
         return reponse.value_or("{\"erreur\": \"Aucun handler n'a pu traiter la requête\"}");
     }
     catch (const std::exception& e)
     {
-        std::string err = std::string("{\"erreur\": \"") + e.what() + "\"}";
-        return err;
+        return std::string("{\"erreur\": \"") + e.what() + "\"}";
     }
     catch (...)
     {
@@ -167,10 +199,11 @@ inline std::string ServeurTCP::traiterRequete(const std::string& requete)
 
 inline void ServeurTCP::log(NiveauLog niveau, const std::string& message, int idClient)
 {
-    static const std::unordered_map<NiveauLog, std::string> texteNiveau = {{NiveauLog::INFO, "INFO"},
-                                                                           {NiveauLog::ERREUR, "ERREUR"},
-                                                                           {NiveauLog::DEBUG, "DEBUG"},
-                                                                           {NiveauLog::WARNING, "WARNING"}};
+    static const std::unordered_map<NiveauLog, std::string> texteNiveau = {
+        {NiveauLog::INFO, "INFO"},
+        {NiveauLog::ERREUR, "ERREUR"},
+        {NiveauLog::DEBUG, "DEBUG"},
+        {NiveauLog::WARNING, "WARNING"}};
 
     std::lock_guard<std::mutex> verrou(_mutexCout);
 

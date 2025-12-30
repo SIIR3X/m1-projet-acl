@@ -29,6 +29,10 @@ file(GLOB_RECURSE LIB_SOURCES
 add_library(projet-lib ${LIB_SOURCES})
 target_include_directories(projet-lib PUBLIC ${CPP_ROOT}/include)
 
+if (WIN32)
+    target_link_libraries(projet-lib PUBLIC ws2_32)
+endif()
+
 ###############################################################################
 #                               Main executable
 ###############################################################################
