@@ -1,4 +1,4 @@
-package ma_partie_acl;
+package request;
 
 /* enumeration des types de traitement a effectuer avec leur classe analogue */
 public enum TypeTraitement

@@ -1,9 +1,10 @@
-package ma_partie_acl;
+package request;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 /* obligation d'immutabilite vis-a-vis de de l'enumMap */
 /* Construit la requete pour l'algorithme de distance, en raccord avec les attentes serveur */
@@ -27,7 +28,7 @@ public class AlgoDistanceRequestBuilder implements RequestBuilder
 				n--;
 				ensembles.append(indentString("{\n", 1)).append(indentString("\"donnees\":\n", 1));
 
-				List<String> lines = Files.readAllLines(file);
+				List<String> lines = Files.readAllLines(file, StandardCharsets.ISO_8859_1);
 				for (String line: lines)
 				{
 					ensembles.append(indentString(line, 3)).append("\n");
