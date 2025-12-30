@@ -18,38 +18,46 @@ protected:
 
 inline std::unique_ptr<InputData> DataBuilderTSP::construireDonnees(const std::vector<std::any>& args) const
 {
-    if (args.size() != 3)
-        throw std::runtime_error("construireDonnees() : nombre d'arguments invalide");
+    if (args.size() != 2)
+        throw std::runtime_error("DataBuilderTSP::construireDonnees : nombre d'arguments invalide");
 
     using EntitePtr = std::shared_ptr<Entite>;
-    auto graphePtr = std::any_cast<std::shared_ptr<Graphe<double, EntitePtr>>>(args[0]);
-    const auto& graphe = *graphePtr;
+    using GrapheT   = Graphe<double, EntitePtr>;
 
-    const auto& labels = std::any_cast<const std::vector<std::string>&>(args[1]);
+    auto graphePtr = std::any_cast<std::shared_ptr<GrapheT>>(args[0]);
+    if (!graphePtr)
+        throw std::runtime_error("DataBuilderTSP : graphe nul");
 
-    int machines = std::any_cast<int>(args[2]);
+    const GrapheT& graphe = *graphePtr;
 
-    TSPInputData data;
+    const auto& labels =
+        std::any_cast<const std::vector<std::string>&>(args[1]);
 
-    int n = graphe.nombreSommets();
-    data.nombreSommets = n;
-    data.machines = machines;
-    data.labels = labels;
+    auto data = std::make_unique<TSPInputData>();
+    const auto sommets = graphe.sommets();
+    const int n = static_cast<int>(sommets.size());
 
-    data.distances.assign(n, std::vector<double>(n));
+    data->nombreSommets = n;
+    data->labels = labels;
+    data->distances.assign(n, std::vector<double>(n, 0.0));
 
     for (int i = 0; i < n; ++i)
     {
         for (int j = 0; j < n; ++j)
         {
-            auto s1 = graphe.sommets()[i];
-            auto s2 = graphe.sommets()[j];
-            auto a = graphe.getAreteParSommets(s1, s2);
-            data.distances[i][j] = a ? a->_v : 0.0;
+            if (i == j)
+            {
+                data->distances[i][j] = 0.0;
+                continue;
+            }
+
+            auto arete = graphe.getAreteParSommets(sommets[i], sommets[j]);
+            if (arete)
+                data->distances[i][j] = arete->_v;
         }
     }
 
-    return std::make_unique<TSPInputData>(std::move(data));
+    return data;
 }
 
 #endif  // DATA_BUILDER_TSP_H

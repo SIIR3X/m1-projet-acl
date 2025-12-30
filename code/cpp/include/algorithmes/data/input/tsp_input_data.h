@@ -11,7 +11,6 @@ struct TSPInputData : public InputData
     std::vector<std::vector<double>> distances;
     std::vector<std::string> labels;
     int nombreSommets;
-    int machines;
 };
 
 #endif  // TSP_INPUT_DATA_H

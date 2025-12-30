@@ -1,3 +1,35 @@
+#include "factories/registry.h"
+#include "serveur/serveur_tcp.h"
+#include <iostream>
+
+int main(int argc, char *argv[])
+{
+    Registry::enregistrerTout();
+
+    try
+    {
+        const std::string ip = "127.0.0.1";
+        const int port = 8080;
+
+        ServeurTCP serveur(ip, port);
+
+        std::cout << "Démarrage du serveur sur " << ip << ":" << port << std::endl;
+
+        // Instruction bloquante (la boucle du serveur tourne ici)
+        serveur.demarrer();
+
+        std::cout << "Serveur arrêté proprement." << std::endl;
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Erreur fatale : " << e.what() << std::endl;
+        return 1;
+    }
+
+    return 0;
+}
+
+/**
 #include <chrono>
 #include <iostream>
 #include <memory>
@@ -12,7 +44,7 @@
 
 #include "utils/json_parser_utils.h"
 
-int main(int argc, char *argv[])
+void mainTest()
 {
     auto debut = std::chrono::high_resolution_clock::now();
 
@@ -23,9 +55,9 @@ int main(int argc, char *argv[])
         return 1;
 
     std::string commande =
-        JsonParserUtils::recupererObligatoire(REQUETE, "commande", JsonParserUtils::extraireChampString);
+        JsonParserUtils::recupererObligatoire(REQ, "commande", JsonParserUtils::extraireChampString);
 
-    std::optional<std::string> reponse = requeteHandler->traiter(commande, REQUETE);
+    std::optional<std::string> reponse = requeteHandler->traiter(commande, REQ);
 
     std::cout << "Commande : " << commande << std::endl;
 
@@ -35,6 +67,5 @@ int main(int argc, char *argv[])
     auto fin = std::chrono::high_resolution_clock::now();
     auto duree = std::chrono::duration_cast<std::chrono::milliseconds>(fin - debut);
     std::cout << "Temps d'exécution : " << duree.count() << " ms" << std::endl;
-
-    return 0;
 }
+    */

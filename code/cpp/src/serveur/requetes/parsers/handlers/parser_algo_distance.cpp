@@ -31,7 +31,6 @@ std::vector<std::any> ParserAlgoDistance::parser(const std::string& json) const
     auto ensemblesJson = JsonParserUtils::extraireListeObjets(JsonParserUtils::extraireBloc(json, "ensembles"));
 
     std::vector<std::vector<std::shared_ptr<Entite>>> ensemblesEntites;
-    std::vector<int> ensemblesMachines;
     std::vector<std::vector<std::string>> ensemblesLabels;
 
     auto parseurEntites = ParserRegistry::instance().get(typeEntite);
@@ -40,8 +39,6 @@ std::vector<std::any> ParserAlgoDistance::parser(const std::string& json) const
     {
         std::string donneesBloc =
             JsonParserUtils::recupererObligatoire(ensembleJson, "donnees", JsonParserUtils::extraireBloc);
-        int machines = std::stoi(
-            JsonParserUtils::recupererObligatoire(ensembleJson, "machines", JsonParserUtils::extraireChampObjet));
 
         auto entsVec = parseurEntites->parser(donneesBloc);
         if (entsVec.empty())
@@ -54,12 +51,10 @@ std::vector<std::any> ParserAlgoDistance::parser(const std::string& json) const
         for (const auto& e : entites) labels.push_back(e->nom());
 
         ensemblesEntites.push_back(entites);
-        ensemblesMachines.push_back(machines);
         ensemblesLabels.push_back(labels);
     }
 
     argsBruts.emplace_back(ensemblesEntites);
-    argsBruts.emplace_back(ensemblesMachines);
     argsBruts.emplace_back(ensemblesLabels);
 
     return argsBruts;

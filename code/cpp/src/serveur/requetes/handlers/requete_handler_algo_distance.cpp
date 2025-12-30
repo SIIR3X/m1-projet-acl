@@ -18,7 +18,7 @@
 std::optional<std::vector<std::any>> RequeteHandlerAlgoDistance::traiterRequete(const std::string& commande,
                                                                                 const std::vector<std::any>& argsBruts)
 {
-    if (argsBruts.size() != 5)
+    if (argsBruts.size() != 4)
         return std::nullopt;
 
     try
@@ -30,9 +30,7 @@ std::optional<std::vector<std::any>> RequeteHandlerAlgoDistance::traiterRequete(
         const auto& ensemblesEntites =
             std::any_cast<const std::vector<std::vector<std::shared_ptr<Entite>>>&>(argsBruts[2]);
 
-        const auto& ensemblesMachines = std::any_cast<const std::vector<int>&>(argsBruts[3]);
-
-        const auto& ensemblesLabels = std::any_cast<const std::vector<std::vector<std::string>>&>(argsBruts[4]);
+        const auto& ensemblesLabels = std::any_cast<const std::vector<std::vector<std::string>>&>(argsBruts[3]);
 
         const std::type_info& typeR = distanceEffacee.typeRetour();
 
@@ -46,12 +44,12 @@ std::optional<std::vector<std::any>> RequeteHandlerAlgoDistance::traiterRequete(
         for (size_t i = 0; i < ensemblesEntites.size(); ++i)
         {
             const auto& entites = ensemblesEntites[i];
-            int machines = ensemblesMachines[i];
+
             const auto& labels = ensemblesLabels[i];
 
             std::any grapheAny = grapheBuilder->construire(typeR, entites, distanceEffacee);
 
-            auto inputData = dataBuilder->construire(grapheAny, labels, machines);
+            auto inputData = dataBuilder->construire(grapheAny, labels);
 
             std::any solAny = solveur->resoudre(algo, static_cast<TSPInputData&>(*inputData));
 

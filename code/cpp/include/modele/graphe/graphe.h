@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "modele/graphe/arete.h"
 #include "modele/graphe/p_element.h"
@@ -276,34 +277,24 @@ inline void Graphe<S, T>::copieDepuis(const Graphe<S, T>& other)
 {
     _prochaineClef = other._prochaineClef;
 
+    std::unordered_map<const Sommet<T>*, Sommet<T>*> mapSommets;
+
     // Copie des sommets
-    PElement<Sommet<T>*>* p = other._lSommets;
-    while (p)
+    for (auto p = other._lSommets; p; p = p->_suivant)
     {
-        creeSommet(p->_info->_v);
-        p = p->_suivant;
+        Sommet<T>* nouveau = creeSommet(p->_info->_v);
+        nouveau->_clef = p->_info->_clef; // IMPORTANT
+        mapSommets[p->_info] = nouveau;
     }
 
     // Copie des arêtes
-    PElement<Arete<S, T>*>* a = other._lAretes;
-    while (a)
+    for (auto a = other._lAretes; a; a = a->_suivant)
     {
-        Sommet<T>* s1 = nullptr;
-        Sommet<T>* s2 = nullptr;
+        auto oldA = a->_info;
+        Sommet<T>* s1 = mapSommets.at(oldA->_debut);
+        Sommet<T>* s2 = mapSommets.at(oldA->_fin);
 
-        PElement<Sommet<T>*>* q = _lSommets;
-        while (q)
-        {
-            if (q->_info->_clef == a->_info->_debut->_clef)
-                s1 = q->_info;
-
-            if (q->_info->_clef == a->_info->_fin->_clef)
-                s2 = q->_info;
-
-            q = q->_suivant;
-        }
-        creeArete(a->_info->_v, s1, s2);
-        a = a->_suivant;
+        creeArete(oldA->_v, s1, s2);
     }
 }
 

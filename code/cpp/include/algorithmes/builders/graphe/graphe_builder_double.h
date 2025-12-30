@@ -34,7 +34,7 @@ inline std::any GrapheBuilderDouble::construire(const std::type_info& typeR,
     Carte<T, R> carte(entites, distFn);
     auto graphe = carte.construireGraphe();
 
-    return std::make_shared<Graphe<R, T>>(std::move(graphe));
+    return std::make_shared<Graphe<R, T>>(graphe);
 }
 
 #endif  // GRAPHE_BUILDER_DOUBLE_H
