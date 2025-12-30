@@ -41,42 +41,35 @@ public class LocalJsonParser {
 	}
 
 	public static List<Tour> parseTours(
-            Path path,
+            String json,
             Map<String, City> cities,
             TourBuilder builder) {
 
-        try {
-            String json = Files.readString(path);
+        List<Tour> tours = new ArrayList<>();
 
-            List<Tour> tours = new ArrayList<>();
+		String[] blocks = json.split("\\{\\s*\"chemin\"");
+		for (int i = 1; i < blocks.length; i++) {
 
-            String[] blocks = json.split("\\{\\s*\"chemin\"");
-            for (int i = 1; i < blocks.length; i++) {
+		    String block = blocks[i];
 
-                String block = blocks[i];
+		    List<String> cityNames =
+		        extractArray(block, "chemin");
 
-                List<String> cityNames =
-                    extractArray(block, "chemin");
+		    List<Double> distances =
+		        extractArray(block, "distances")
+		            .stream()
+		            .map(Double::parseDouble)
+		            .toList();
 
-                List<Double> distances =
-                    extractArray(block, "distances")
-                        .stream()
-                        .map(Double::parseDouble)
-                        .toList();
+		    List<City> orderedCities = new ArrayList<>();
+		    for (String name : cityNames) {
+		        orderedCities.add(cities.get(name));
+		    }
 
-                List<City> orderedCities = new ArrayList<>();
-                for (String name : cityNames) {
-                    orderedCities.add(cities.get(name));
-                }
+		    tours.add(builder.buildTour(orderedCities, distances));
+		}
 
-                tours.add(builder.buildTour(orderedCities, distances));
-            }
-
-            return tours;
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+		return tours;
     }
 
     private static List<String> extractArray(String json, String key) {
