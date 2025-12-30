@@ -1,4 +1,4 @@
-package ma_partie_acl;
+package client;
 
 import java.io.IOException;
 import java.io.InputStream;
