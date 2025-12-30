@@ -66,20 +66,23 @@ doc-cpp:
 
 build-java:
 	@mkdir -p $(JAVA_BUILD_DIR)
-	@find $(JAVA_SRC_DIR) -name "*.java" > $(JAVA_BUILD_DIR)/sources_main.txt
-	@find $(JAVA_TEST_DIR) -name "*.java" >> $(JAVA_BUILD_DIR)/sources_main.txt
-	@javac -cp "$(JUNIT_JAR):$(JAVA_BUILD_DIR)" -d $(JAVA_BUILD_DIR) @$(JAVA_BUILD_DIR)/sources_main.txt
+	@find $(JAVA_SRC_DIR) -name "*.java" \
+		-not -path "*/test/*" \
+		-not -path "*/tests/*" \
+		> $(JAVA_BUILD_DIR)/sources.txt
+	@javac -d $(JAVA_BUILD_DIR) @$(JAVA_BUILD_DIR)/sources.txt
 
-run-java:
-	@mkdir -p $(JAVA_BUILD_DIR)
-	@find $(JAVA_SRC_DIR) -name "*.java" > $(JAVA_BUILD_DIR)/sources_run.txt
-	@javac -d $(JAVA_BUILD_DIR) @$(JAVA_BUILD_DIR)/sources_run.txt
-	@java -cp $(JAVA_BUILD_DIR) Main
+run-java: build-java
+	@java -cp $(JAVA_BUILD_DIR) $(JAVA_MAIN)
 
 run-tests-java: build-java
+	@find $(JAVA_TEST_DIR) -name "*.java" > $(JAVA_BUILD_DIR)/sources_test.txt
+	@javac -cp "$(JUNIT_JAR);$(JAVA_BUILD_DIR)" \
+	       -d $(JAVA_BUILD_DIR) \
+	       @$(JAVA_BUILD_DIR)/sources_test.txt
 	@java -jar $(JUNIT_JAR) \
-		--class-path $(JAVA_BUILD_DIR) \
-		--scan-class-path
+	       --class-path $(JAVA_BUILD_DIR) \
+	       --scan-class-path=
 
 doc-java:
 	@mkdir -p $(JAVA_DOC_DIR)
