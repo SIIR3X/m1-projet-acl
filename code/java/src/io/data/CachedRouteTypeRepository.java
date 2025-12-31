@@ -20,6 +20,10 @@ public class CachedRouteTypeRepository implements RouteTypeRepository
     @Override
     public RoadType findType(City from, City to) 
     {
+        if (from == null || to == null) {
+            return RoadType.COMMUNALE;
+        }
+        
         RouteKey key = new RouteKey(from.getName(), to.getName());
 
         return _cache.computeIfAbsent(

@@ -2,7 +2,10 @@ package ui.view;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.io.File;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -17,7 +20,7 @@ import ui.controller.MapController;
 
 public class HomePanel extends JPanel 
 {
-	private Path _selectedCsv;
+	private List<Path> _selectedCsvFiles;
     private final JButton _optimizeButton;
     private final MapPanel _mapPanel;
 
@@ -32,7 +35,7 @@ public class HomePanel extends JPanel
         title.setFont(new Font("Arial", Font.BOLD, 22));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton chooseFileButton = new JButton("Choisir un fichier CSV");
+        JButton chooseFileButton = new JButton("Choisir un ou plusieurs fichiers JSON de villes");
         chooseFileButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         _optimizeButton = new JButton("Optimiser");
@@ -53,19 +56,24 @@ public class HomePanel extends JPanel
         // Action choisir fichier
         chooseFileButton.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle("Choisir un fichier CSV");
+            chooser.setMultiSelectionEnabled(true);
+            chooser.setDialogTitle("Choisir un/des fichier(s) JSON de villes");
 
             int result = chooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
-                _selectedCsv = chooser.getSelectedFile().toPath();
-                fileLabel.setText("Fichier : " + _selectedCsv.getFileName());
-                _optimizeButton.setEnabled(true);
+                File[] files = chooser.getSelectedFiles();
+                _selectedCsvFiles = Arrays.stream(files)
+                                         .map(File::toPath)
+                                         .toList();
+
+                fileLabel.setText(files.length + " fichiers sélectionnés");
+                _optimizeButton.setEnabled(!_selectedCsvFiles.isEmpty());
             }
         });
 
         // Action optimiser
         _optimizeButton.addActionListener(e -> {
-            controller.optimize(_selectedCsv);
+            controller.optimize(_selectedCsvFiles);
             // Afficher la carte à la place du HomePanel
             removeAll();
             add(_mapPanel);
