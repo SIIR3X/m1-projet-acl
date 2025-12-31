@@ -14,17 +14,19 @@ import model.RoadType;
 
 public class CsvRouteTypeRepository implements RouteTypeRepository {
 
-	private final Map<RouteKey, RoadType> routes = new HashMap<>();
+	private final Map<RouteKey, RoadType> _routes = new HashMap<>();
 
-    public CsvRouteTypeRepository(Path csvPath) {
+    public CsvRouteTypeRepository(Path csvPath) 
+    {
         load(csvPath);
     }
 
-    private void load(Path path) {
+    private void load(Path path) 
+    {
         try {
             List<String> lines = Files.readAllLines(
                 path,
-                StandardCharsets.ISO_8859_1 // IMPORTANT
+                StandardCharsets.ISO_8859_1
             );
 
             // 1. Lire l'en-tête (villes colonnes)
@@ -46,8 +48,8 @@ public class CsvRouteTypeRepository implements RouteTypeRepository {
                         String cityB = cities.get(j - 1);
                         RoadType type = RoadType.fromLabel(value);
 
-                        routes.put(new RouteKey(cityA, cityB), type);
-                        routes.put(new RouteKey(cityB, cityA), type); // symétrie
+                        _routes.put(new RouteKey(cityA, cityB), type);
+                        _routes.put(new RouteKey(cityB, cityA), type); // symétrie
                     }
                 }
             }
@@ -58,8 +60,9 @@ public class CsvRouteTypeRepository implements RouteTypeRepository {
     }
 
     @Override
-    public RoadType findType(City from, City to) {
-        return routes.getOrDefault(
+    public RoadType findType(City from, City to) 
+    {
+        return _routes.getOrDefault(
             new RouteKey(from.getName(), to.getName()),
             RoadType.COMMUNALE
         );

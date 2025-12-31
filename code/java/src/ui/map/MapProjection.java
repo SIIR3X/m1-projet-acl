@@ -2,33 +2,35 @@ package ui.map;
 
 import model.City;
 
-public class MapProjection {
-
-	private final double minLat, maxLat;
-    private final double minLon, maxLon;
-    private final int width, height;
-    private final int margin;
+public class MapProjection 
+{
+	private final double _minLat, _maxLat;
+    private final double _minLon, _maxLon;
+    private final int _width, _height;
+    private final int _margin;
 
     public MapProjection(
             double minLat, double maxLat,
             double minLon, double maxLon,
-            int width, int height, int margin) {
-
-        this.minLat = minLat;
-        this.maxLat = maxLat;
-        this.minLon = minLon;
-        this.maxLon = maxLon;
-        this.width = width;
-        this.height = height;
-        this.margin = margin;
+            int width, int height, int margin) 
+    {
+        this._minLat = minLat;
+        this._maxLat = maxLat;
+        this._minLon = minLon;
+        this._maxLon = maxLon;
+        this._width = width;
+        this._height = height;
+        this._margin = margin;
     }
     
-    public int x(City city) {
-        return margin + (int)((city.getLongitude() - minLon) / (maxLon - minLon) * (width - 2*margin));
+    public int x(City city) 
+    {
+        return _margin + (int)((city.getLongitude() - _minLon) / (_maxLon - _minLon) * (_width - 2*_margin));
     }
 
-    public int y(City city) {
-        return margin + (int)((maxLat - city.getLatitude()) / (maxLat - minLat) * (height - 2*margin));
+    public int y(City city) 
+    {
+        return _margin + (int)((_maxLat - city.getLatitude()) / (_maxLat - _minLat) * (_height - 2*_margin));
     }
 
 }

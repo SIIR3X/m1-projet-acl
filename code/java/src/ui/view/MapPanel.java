@@ -20,15 +20,15 @@ import ui.drawing.DefaultCityDrawingStrategy;
 import ui.drawing.RouteDrawingStrategyFactory;
 import ui.map.MapProjection;
 
-public class MapPanel extends JPanel {
-
-	private final MapController controller;
-    private final CityDrawingStrategy cityDrawer =
-        new DefaultCityDrawingStrategy();
+public class MapPanel extends JPanel 
+{
+	private final MapController _controller;
+    private final CityDrawingStrategy _cityDrawer = new DefaultCityDrawingStrategy();
     
-    private MapProjection projection;
+    private MapProjection _projection;
 
-    private void updateProjection(Tour tour) {
+    private void updateProjection(Tour tour) 
+    {
         double minLat = Double.MAX_VALUE;
         double maxLat = -Double.MAX_VALUE;
         double minLon = Double.MAX_VALUE;
@@ -44,22 +44,24 @@ public class MapPanel extends JPanel {
             maxLon = Math.max(maxLon, Math.max(a.getLongitude(), b.getLongitude()));
         }
 
-        projection = new MapProjection(
+        _projection = new MapProjection(
             minLat, maxLat,
             minLon, maxLon,
             getWidth(), getHeight(), 200
         );
     }
 
-    public MapPanel(MapController controller) {
-        this.controller = controller;
+    public MapPanel(MapController controller) 
+    {
+        this._controller = controller;
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) 
+    {
         super.paintComponent(g);
 
-        Tour tour = controller.getCurrentTour();
+        Tour tour = _controller.getCurrentTour();
         if (tour == null) return;
 
         updateProjection(tour);
@@ -71,7 +73,7 @@ public class MapPanel extends JPanel {
             AbstractRouteDrawingStrategy strategy =
                 RouteDrawingStrategyFactory.get(route.getRoadType());
 
-            strategy.draw(g2d, route, projection);
+            strategy.draw(g2d, route, _projection);
         }
 
         // Dessiner les villes (une seule fois)
@@ -82,13 +84,14 @@ public class MapPanel extends JPanel {
         }
 
         for (City city : cities) {
-            cityDrawer.draw(g2d, city, projection);
+            _cityDrawer.draw(g2d, city, _projection);
         }
         
         drawLegend(g2d);
     }
     
-    private void drawLegend(Graphics2D g2d) {
+    private void drawLegend(Graphics2D g2d) 
+    {
         int x = 20;
         int y = 20;
         int lineHeight = 20;

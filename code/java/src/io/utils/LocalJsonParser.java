@@ -1,4 +1,4 @@
-package io.test;
+package io.utils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -10,14 +10,16 @@ import model.City;
 import model.Tour;
 import service.TourBuilder;
 
-public class LocalJsonParser {
+public class LocalJsonParser 
+{
 
     /* ============================================================
      *  API PUBLIQUE
      * ============================================================ */
 
     /** Parse le fichier JSON des villes */
-    public static Map<String, City> parseCities(Path path) {
+    public static Map<String, City> parseCities(Path path) 
+    {
         try {
             String json = Files.readString(path, StandardCharsets.UTF_8);
             Map<String, City> cities = new HashMap<>();
@@ -47,7 +49,8 @@ public class LocalJsonParser {
     public static List<Tour> parseTours(
             String json,
             Map<String, City> cities,
-            TourBuilder builder) {
+            TourBuilder builder) 
+    {
 
         List<Tour> tours = new ArrayList<>();
 
@@ -109,7 +112,8 @@ public class LocalJsonParser {
      * ============================================================ */
 
     /** Clé unique et fiable pour une ville */
-    private static String cityKey(String name) {
+    private static String cityKey(String name) 
+    {
         return name
                 .toLowerCase(Locale.ROOT)
                 .replaceAll("[àáâä]", "a")
@@ -123,7 +127,8 @@ public class LocalJsonParser {
     }
 
     /** Corrige le mojibake UTF-8 classique */
-    private static String fixEncoding(String s) {
+    private static String fixEncoding(String s) 
+    {
         if (s.contains("Ã") || s.contains("Â")) {
             return new String(
                 s.getBytes(StandardCharsets.ISO_8859_1),
@@ -134,7 +139,8 @@ public class LocalJsonParser {
     }
 
     /** Extrait un tableau de chaînes JSON */
-    private static List<String> extractArray(String json, String key) {
+    private static List<String> extractArray(String json, String key) 
+    {
         int start = json.indexOf("\"" + key + "\"");
         if (start < 0) return List.of();
 
@@ -151,7 +157,8 @@ public class LocalJsonParser {
     }
 
     /** Extrait un tableau de doubles JSON */
-    private static List<Double> extractDoubleArray(String json, String key) {
+    private static List<Double> extractDoubleArray(String json, String key) 
+    {
         int start = json.indexOf("\"" + key + "\"");
         if (start < 0) return List.of();
 
@@ -169,7 +176,8 @@ public class LocalJsonParser {
     }
 
     /** Extrait une valeur simple "clé": valeur */
-    private static String extractValue(String json, String key) {
+    private static String extractValue(String json, String key) 
+    {
         int start = json.indexOf("\"" + key + "\"");
         if (start < 0) {
             throw new IllegalArgumentException("Clé absente: " + key);

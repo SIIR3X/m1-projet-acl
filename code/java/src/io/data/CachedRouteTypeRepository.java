@@ -6,22 +6,25 @@ import java.util.Map;
 import model.City;
 import model.RoadType;
 
-public class CachedRouteTypeRepository implements RouteTypeRepository {
+public class CachedRouteTypeRepository implements RouteTypeRepository 
+{
 
-	private final RouteTypeRepository delegate;
-    private final Map<RouteKey, RoadType> cache = new HashMap<>();
+	private final RouteTypeRepository _delegate;
+    private final Map<RouteKey, RoadType> _cache = new HashMap<>();
 
-    public CachedRouteTypeRepository(RouteTypeRepository routeTypeRepository) {
-        this.delegate = routeTypeRepository;
+    public CachedRouteTypeRepository(RouteTypeRepository routeTypeRepository) 
+    {
+        this._delegate = routeTypeRepository;
     }
 
     @Override
-    public RoadType findType(City from, City to) {
+    public RoadType findType(City from, City to) 
+    {
         RouteKey key = new RouteKey(from.getName(), to.getName());
 
-        return cache.computeIfAbsent(
+        return _cache.computeIfAbsent(
             key,
-            k -> delegate.findType(from, to)
+            k -> _delegate.findType(from, to)
         );
     }
 }

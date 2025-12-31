@@ -9,15 +9,18 @@ import model.RoadType;
 
 // Pour utiliser -> rajouter un fichier de config Maven avec Apache POI pour lire les excel
 
-public class ExcelRouteTypeRepository implements RouteTypeRepository {
+public class ExcelRouteTypeRepository implements RouteTypeRepository 
+{
 
-	private final Map<RouteKey, RoadType> routeTypes = new HashMap<>();
+	private final Map<RouteKey, RoadType> _routeTypes = new HashMap<>();
 
-    public ExcelRouteTypeRepository(Path excelPath) {
+    public ExcelRouteTypeRepository(Path excelPath) 
+    {
         load(excelPath);
     }
 
-    private void load(Path path) {
+    private void load(Path path) 
+    {
 //        try (Workbook workbook = WorkbookFactory.create(path.toFile())) {
 //            Sheet sheet = workbook.getSheetAt(0);
 //
@@ -51,7 +54,8 @@ public class ExcelRouteTypeRepository implements RouteTypeRepository {
     }
 
     @Override
-    public RoadType findType(City from, City to) {
+    public RoadType findType(City from, City to) 
+    {
 		return null;
 //        return routeTypes.getOrDefault(
 //            new RouteKey(from.getName(), to.getName()),

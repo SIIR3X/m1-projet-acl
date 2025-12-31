@@ -1,26 +1,31 @@
 package model;
 
-public class City {
+public class City 
+{
 
-	private final String name;
-	private final double latitude;
-	private final double longitude;
+	private final String _name;
+	private final double _latitude;
+	private final double _longitude;
 	
-	public City(String name, double latitude, double longitude) {
-		this.name = name;
-		this.latitude = latitude;
-		this.longitude = longitude;
+	public City(String name, double latitude, double longitude) 
+	{
+		this._name = name;
+		this._latitude = latitude;
+		this._longitude = longitude;
 	}
 	
-	public String getName() {
-		return name;
+	public String getName() 
+	{
+		return _name;
 	}
 
-	public double getLatitude() {
-		return latitude;
+	public double getLatitude() 
+	{
+		return _latitude;
 	}
 
-	public double getLongitude() {
-		return longitude;
+	public double getLongitude() 
+	{
+		return _longitude;
 	}
 }
