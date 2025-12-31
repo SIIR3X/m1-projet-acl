@@ -7,10 +7,12 @@ import java.awt.Graphics2D;
 import model.City;
 import ui.map.MapProjection;
 
-public class DefaultCityDrawingStrategy implements CityDrawingStrategy {
+public class DefaultCityDrawingStrategy implements CityDrawingStrategy 
+{
 
 	@Override
-    public void draw(Graphics2D g2d, City city, MapProjection p) {
+    public void draw(Graphics2D g2d, City city, MapProjection p) 
+	{
         int x = p.x(city);
         int y = p.y(city);
 

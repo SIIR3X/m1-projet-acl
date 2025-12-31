@@ -1,13 +1,16 @@
 package io.data;
 
-public record RouteKey(String from, String to) {
+public record RouteKey(String from, String to) 
+{
 
-    public RouteKey {
+    public RouteKey 
+    {
         from = normalize(from);
         to = normalize(to);
     }
 
-    private static String normalize(String s) {
+    private static String normalize(String s) 
+    {
         return s.toLowerCase()
                 .replace("é", "e")
                 .replace("è", "e")

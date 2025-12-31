@@ -12,15 +12,18 @@ import java.util.Map;
 import model.City;
 import model.RoadType;
 
-public class MultiCsvRouteTypeRepository implements RouteTypeRepository {
+public class MultiCsvRouteTypeRepository implements RouteTypeRepository 
+{
 
-	private final Map<RouteKey, RoadType> routes = new HashMap<>();
+	private final Map<RouteKey, RoadType> _routes = new HashMap<>();
 
-    public MultiCsvRouteTypeRepository(List<Path> csvPaths) {
+    public MultiCsvRouteTypeRepository(List<Path> csvPaths) 
+    {
         csvPaths.forEach(this::load);
     }
 
-    private void load(Path path) {
+    private void load(Path path) 
+    {
     	try {
             List<String> lines = Files.readAllLines(
                 path,
@@ -44,8 +47,8 @@ public class MultiCsvRouteTypeRepository implements RouteTypeRepository {
                         String cityB = cities.get(j - 1);
                         RoadType type = RoadType.fromLabel(value);
 
-                        routes.put(new RouteKey(cityA, cityB), type);
-                        routes.put(new RouteKey(cityB, cityA), type);
+                        _routes.put(new RouteKey(cityA, cityB), type);
+                        _routes.put(new RouteKey(cityB, cityA), type);
                     }
                 }
             }
@@ -56,8 +59,9 @@ public class MultiCsvRouteTypeRepository implements RouteTypeRepository {
     }
 
     @Override
-    public RoadType findType(City from, City to) {
-        return routes.getOrDefault(
+    public RoadType findType(City from, City to) 
+    {
+        return _routes.getOrDefault(
             new RouteKey(from.getName(), to.getName()),
             RoadType.COMMUNALE
         );

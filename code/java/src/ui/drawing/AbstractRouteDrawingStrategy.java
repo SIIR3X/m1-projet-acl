@@ -8,10 +8,11 @@ import java.awt.Graphics2D;
 import model.Route;
 import ui.map.MapProjection;
 
-public abstract class AbstractRouteDrawingStrategy {
+public abstract class AbstractRouteDrawingStrategy 
+{
 	
-    public final void draw(Graphics2D g2d, Route route, MapProjection p) {
-
+    public final void draw(Graphics2D g2d, Route route, MapProjection p) 
+    {
         int x1 = p.x(route.getFrom());
         int y1 = p.y(route.getFrom());
         int x2 = p.x(route.getTo());
@@ -29,8 +30,8 @@ public abstract class AbstractRouteDrawingStrategy {
             Graphics2D g2d,
             Route route,
             int x1, int y1,
-            int x2, int y2) {
-
+            int x2, int y2) 
+    {
         int mx = (x1 + x2) / 2;
         int my = (y1 + y2) / 2;
 

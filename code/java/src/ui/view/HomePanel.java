@@ -1,7 +1,6 @@
 package ui.view;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Font;
 import java.nio.file.Path;
 
@@ -16,14 +15,16 @@ import javax.swing.JPanel;
 import ui.controller.AppController;
 import ui.controller.MapController;
 
-public class HomePanel extends JPanel {
-	private Path selectedCsv;
-    private final JButton optimizeButton;
-    private final MapPanel mapPanel;
+public class HomePanel extends JPanel 
+{
+	private Path _selectedCsv;
+    private final JButton _optimizeButton;
+    private final MapPanel _mapPanel;
 
 
-    public HomePanel(AppController controller, MapController mapController) {
-        this.mapPanel = new MapPanel(mapController);
+    public HomePanel(AppController controller, MapController mapController) 
+    {
+        this._mapPanel = new MapPanel(mapController);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 
@@ -34,9 +35,9 @@ public class HomePanel extends JPanel {
         JButton chooseFileButton = new JButton("Choisir un fichier CSV");
         chooseFileButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        optimizeButton = new JButton("Optimiser");
-        optimizeButton.setEnabled(false);
-        optimizeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        _optimizeButton = new JButton("Optimiser");
+        _optimizeButton.setEnabled(false);
+        _optimizeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel fileLabel = new JLabel("Aucun fichier sélectionné");
         fileLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -47,7 +48,7 @@ public class HomePanel extends JPanel {
         add(Box.createVerticalStrut(15));
         add(fileLabel);
         add(Box.createVerticalStrut(30));
-        add(optimizeButton);
+        add(_optimizeButton);
 
         // Action choisir fichier
         chooseFileButton.addActionListener(e -> {
@@ -56,18 +57,18 @@ public class HomePanel extends JPanel {
 
             int result = chooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
-                selectedCsv = chooser.getSelectedFile().toPath();
-                fileLabel.setText("Fichier : " + selectedCsv.getFileName());
-                optimizeButton.setEnabled(true);
+                _selectedCsv = chooser.getSelectedFile().toPath();
+                fileLabel.setText("Fichier : " + _selectedCsv.getFileName());
+                _optimizeButton.setEnabled(true);
             }
         });
 
         // Action optimiser
-        optimizeButton.addActionListener(e -> {
-            controller.optimize(selectedCsv);
+        _optimizeButton.addActionListener(e -> {
+            controller.optimize(_selectedCsv);
             // Afficher la carte à la place du HomePanel
             removeAll();
-            add(mapPanel);
+            add(_mapPanel);
             revalidate();
             repaint();
         });

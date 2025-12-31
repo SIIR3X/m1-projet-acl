@@ -3,7 +3,8 @@ package model;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum RoadType {
+public enum RoadType 
+{
 	COMMUNALE("communale"),
 	DEPARTEMENTALE("départementale"),
 	NATIONALE("nationale"),
@@ -11,22 +12,25 @@ public enum RoadType {
 	VOIE_RAPIDE("voie rapide"),
 	AUTOROUTE("autoroute");
 	
-	private final String label;
+    private static final Map<String, RoadType> BY_LABEL;
+	
+	private final String _label;
 
-    RoadType(String label) {
-        this.label = label;
+    RoadType(String label) 
+    {
+        this._label = label;
     }
 
-    private static final Map<String, RoadType> BY_LABEL;
-
-    static {
+    static 
+    {
         BY_LABEL = new HashMap<>();
         for (RoadType type : values()) {
-            BY_LABEL.put(normalize(type.label), type);
+            BY_LABEL.put(normalize(type._label), type);
         }
     }
 
-    public static RoadType fromLabel(String label) {
+    public static RoadType fromLabel(String label) 
+    {
         if (label == null || label.isBlank()) {
             return COMMUNALE;
         }
@@ -38,7 +42,8 @@ public enum RoadType {
         return type;
     }
 
-    private static String normalize(String s) {
+    private static String normalize(String s) 
+    {
         return s.toLowerCase()
                 .replace("é", "e")
                 .replace("è", "e")
