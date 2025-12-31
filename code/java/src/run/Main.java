@@ -1,9 +1,11 @@
+package run;
 import java.nio.file.Path;
 
 import javax.swing.SwingUtilities;
 
 import io.data.CachedRouteTypeRepository;
 import io.data.CsvRouteTypeRepository;
+import io.data.MultiCsvRouteTypeRepository;
 import io.data.RouteTypeRepository;
 import service.RouteTypeService;
 import service.ServerClientService;
@@ -20,15 +22,13 @@ public class Main {
 			/* =====================================================
              * DATA / REPOSITORIES
              * ===================================================== */
-			// CSV décrivant les types de routes
-			// Plusieurs csv du coup // A voir
-            Path routeCsvPath = Path.of("data/routes.csv");
+			Path routesDir = Path.of("data/routes");
 
-            RouteTypeRepository csvRepo =
-                new CsvRouteTypeRepository(routeCsvPath);
+			RouteTypeRepository repo =
+			    new MultiCsvRouteTypeRepository(routesDir);
 
             RouteTypeRepository cachedRepo =
-                new CachedRouteTypeRepository(csvRepo);
+                new CachedRouteTypeRepository(repo);
 			
             /* =====================================================
              * SERVICES MÉTIER

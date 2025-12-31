@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JPanel;
@@ -27,21 +28,23 @@ public class MapPanel extends JPanel
     
     private MapProjection _projection;
 
-    private void updateProjection(Tour tour) 
+    private void updateProjection(List<Tour> tours) 
     {
-        double minLat = Double.MAX_VALUE;
+    	double minLat = Double.MAX_VALUE;
         double maxLat = -Double.MAX_VALUE;
         double minLon = Double.MAX_VALUE;
         double maxLon = -Double.MAX_VALUE;
 
-        for (Route r : tour.getRoutes()) {
-            City a = r.getFrom();
-            City b = r.getTo();
+        for (Tour tour : tours) {
+            for (Route r : tour.getRoutes()) {
+                City a = r.getFrom();
+                City b = r.getTo();
 
-            minLat = Math.min(minLat, Math.min(a.getLatitude(), b.getLatitude()));
-            maxLat = Math.max(maxLat, Math.max(a.getLatitude(), b.getLatitude()));
-            minLon = Math.min(minLon, Math.min(a.getLongitude(), b.getLongitude()));
-            maxLon = Math.max(maxLon, Math.max(a.getLongitude(), b.getLongitude()));
+                minLat = Math.min(minLat, Math.min(a.getLatitude(), b.getLatitude()));
+                maxLat = Math.max(maxLat, Math.max(a.getLatitude(), b.getLatitude()));
+                minLon = Math.min(minLon, Math.min(a.getLongitude(), b.getLongitude()));
+                maxLon = Math.max(maxLon, Math.max(a.getLongitude(), b.getLongitude()));
+            }
         }
 
         _projection = new MapProjection(
@@ -61,26 +64,31 @@ public class MapPanel extends JPanel
     {
         super.paintComponent(g);
 
-        Tour tour = _controller.getCurrentTour();
-        if (tour == null) return;
+        List<Tour> tours = _controller.getTours();
+        if (tours == null || tours.isEmpty()) return;
 
-        updateProjection(tour);
+        // 1️⃣ projection globale
+        updateProjection(tours);
 
         Graphics2D g2d = (Graphics2D) g;
 
-        // Dessiner les routes
-        for (Route route : tour.getRoutes()) {
-            AbstractRouteDrawingStrategy strategy =
-                RouteDrawingStrategyFactory.get(route.getRoadType());
+        // Routes
+        for (Tour tour : tours) {
+            for (Route route : tour.getRoutes()) {
+                AbstractRouteDrawingStrategy strategy =
+                    RouteDrawingStrategyFactory.get(route.getRoadType());
 
-            strategy.draw(g2d, route, _projection);
+                strategy.draw(g2d, route, _projection);
+            }
         }
 
-        // Dessiner les villes (une seule fois)
         Set<City> cities = new HashSet<>();
-        for (Route r : tour.getRoutes()) {
-            cities.add(r.getFrom());
-            cities.add(r.getTo());
+
+        for (Tour tour : tours) {
+            for (Route r : tour.getRoutes()) {
+                cities.add(r.getFrom());
+                cities.add(r.getTo());
+            }
         }
 
         for (City city : cities) {

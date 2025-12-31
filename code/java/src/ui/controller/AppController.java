@@ -1,6 +1,7 @@
 package ui.controller;
 
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,20 +26,28 @@ public class AppController
 		this._tourBuilder = tourBuilder;
     }
 
-    public void optimize(Path csvPath) 
+    public void optimize(List<Path> jsonPaths) 
     {
         // appeler le serveur
-        String responseJson = _serverService.optimize(List.of(csvPath));
+        String responseJson = _serverService.optimize(jsonPaths);
 
+        System.out.println("===== RÉPONSE SERVEUR =====");
+        System.out.println(responseJson);
+        System.out.println("===========================");
+        
         // Charger les villes
-        Map<String, City> cities = LocalJsonParser.parseCities(csvPath);
+        Map<String, City> cities = new HashMap<>();
+
+        for (Path path : jsonPaths) {
+            cities.putAll(LocalJsonParser.parseCities(path));
+        }
 
         // Charger les tournées
         List<Tour> tours =
             LocalJsonParser.parseTours(
                 responseJson,
                 cities,
-                this._tourBuilder
+                _tourBuilder
             );
 
         if (tours.isEmpty()) {
@@ -46,7 +55,7 @@ public class AppController
             return;
         }
 
-        _mapController.setCurrentTour(tours.get(0));
+        _mapController.setTours(tours);
 
     }
 }
