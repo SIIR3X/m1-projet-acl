@@ -44,6 +44,7 @@ public class ClientTCP
 	{
 		this._outputStream.write(data.getBytes(StandardCharsets.UTF_8));
 		this._outputStream.flush();
+	 	_socket.shutdownOutput();
 	}
 
 	/* fermeture du socket et des flux d'entrees sorties */

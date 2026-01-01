@@ -78,23 +78,28 @@ void ServeurTCP::gererClient(socket_t socketClient, int idClient)
 {
     log(NiveauLog::INFO, "Client connecté", idClient);
 
-    char buffer[2048];
+    std::string requete;
+    char buffer[4096];
 
-#ifdef _WIN32
-    int reception = recv(socketClient, buffer, sizeof(buffer) - 1, 0);
-#else
-    ssize_t reception = recv(socketClient, buffer, sizeof(buffer) - 1, 0);
-#endif
-
-    if (reception <= 0)
+    while (true)
     {
-        log(NiveauLog::ERREUR, "Échec de réception", idClient);
+#ifdef _WIN32
+        int reception = recv(socketClient, buffer, sizeof(buffer), 0);
+#else
+        ssize_t reception = recv(socketClient, buffer, sizeof(buffer), 0);
+#endif
+        if (reception <= 0)
+            break;
+
+        requete.append(buffer, reception);
+    }
+
+    if (requete.empty())
+    {
+        log(NiveauLog::ERREUR, "Requête vide ou réception échouée", idClient);
         socket_close(socketClient);
         return;
     }
-
-    buffer[reception] = '\0';
-    std::string requete(buffer);
 
     log(NiveauLog::INFO, "Requête reçue : " + requete, idClient);
 
@@ -112,10 +117,13 @@ void ServeurTCP::gererClient(socket_t socketClient, int idClient)
         return;
     }
 
-    int envoi = send(socketClient,
-                     reponse.c_str(),
-                     static_cast<int>(reponse.size()),
-                     0);
+#ifdef _WIN32
+    int envoi = send(socketClient, reponse.c_str(),
+                     static_cast<int>(reponse.size()), 0);
+#else
+    ssize_t envoi = send(socketClient, reponse.c_str(),
+                         reponse.size(), 0);
+#endif
 
     if (envoi < 0)
     {
