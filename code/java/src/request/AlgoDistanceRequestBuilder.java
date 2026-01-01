@@ -5,20 +5,44 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
-/* obligation d'immutabilite vis-a-vis de de l'enumMap */
-/* Construit la requete pour l'algorithme de distance, en raccord avec les attentes serveur */
+/* Obligation d'immutabilite vis-a-vis de de l'enumMap. */
+/* Construit la requete pour l'algorithme de distance, en raccord avec les attentes serveur. */
 public class AlgoDistanceRequestBuilder implements RequestBuilder
 {
-	// Mettre un parametre de build
+	// Supprimable, utiliser la Map dans build.
 	private String _algo = "tsp", 
 				   _entite = "ville", 
 				   _distance = "geodesique";
 
 	@Override
-	public String build(TypeTraitement commande, List<Path> files)
+	public String build(TypeTraitement commande, HashMap<String,String> parameters, List<Path> files)
 	{
-		// construit la requete pour algo_distance
+		// Construit la requete pour algo_distance.
+		StringBuilder ensembles = formatEnsembles(files);
+		StringBuilder request = new StringBuilder();
+		StringBuilder accoladeDebut = new StringBuilder(); accoladeDebut.append("{\n");
+
+		request.append("\"commande\": \"").append(commande.toString().toLowerCase()).append("\",\n")
+        // Subsitue pour les lignes algo, entite et distance (parametres intermediaires)
+        // , lier avec l'ui pour recuperer les parametres intermediaires dans Map.
+        // .append(formatParameters(parameters))
+        .append("\"algo\": \"").append(this._algo).append("\",\n")
+        .append("\"entite\": \"").append(this._entite).append("\",\n")
+        .append("\"distance\": \"").append(this._distance).append("\",\n")
+				.append("\"ensembles\": [\n").append(ensembles).append("]");
+
+		StringBuilder accoladeFin = new StringBuilder(); accoladeFin.append("\n}");
+		request = indentString(request.toString(), 1);
+
+		return accoladeDebut.append(request).append(accoladeFin).toString();
+	}
+
+  /* Retourne en format json le contenu du parametre ensembles (contient les donnees des fichiers passees). */
+  private StringBuilder formatEnsembles(List<Path> files)
+  {
+		// Construit la requete pour algo_distance.
 		int n = files.size();
 		StringBuilder ensembles = new StringBuilder();
 		for (Path file: files)
@@ -44,19 +68,19 @@ public class AlgoDistanceRequestBuilder implements RequestBuilder
 				e.printStackTrace();
 			}
 		}
-		StringBuilder request = new StringBuilder();
-		StringBuilder debut = new StringBuilder(); debut.append("{\n");
-		request.append("\"commande\": \""+commande.toString().toLowerCase()+"\",\n")
-				.append("\"algo\": \""+this._algo+"\",\n")
-				.append("\"entite\": \""+this._entite+"\",\n")
-				.append("\"distance\": \""+this._distance+"\",\n")
-				.append("\"ensembles\": [\n")
-				.append(ensembles)
-				.append("]");
-		StringBuilder fin = new StringBuilder(); fin.append("\n}");
-		request = indentString(request.toString(), 1);
-		return debut.append(request).append(fin).toString();
-	}
+    return ensembles;
+  }
+
+  /* Retourne en format json les parametres intermediaires, sans accolades. */
+  private StringBuilder formatParameters(HashMap<String,String> parameters)
+  {
+    StringBuilder result = new StringBuilder();
+    for (var entry: parameters.entrySet())
+    {
+      result.append("\"").append(entry.getKey()).append("\": \"").append(entry.getValue()).append("\",\n");
+    }
+    return result;
+  }
 
 	/* Indente s de n indentations (space 2), ne traite pas le cas des lignes vides, car ici on en a pas */
 	private StringBuilder indentString(String s, int n)

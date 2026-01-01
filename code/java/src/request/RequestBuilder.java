@@ -1,13 +1,14 @@
 package request;
 
-import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.nio.file.Path;
 
-/* Patron de conception "Strategie" + map qui lie le type de traitement a l'interface ici presente
- * Objectif: selon un `TypeTraitement commande`,
+/* Patron de conception "Strategie" + map qui lie le type de traitement a l'interface.
+ * Objectif: selon un `TypeTraitement commande` et de ses parametres,
  * construire une requete adapte a ce type de traitement contenant les fichiers passes.
  * */
 public interface RequestBuilder
 {
-	public String build(TypeTraitement commande, List<Path> files); // ajouter entre commade et files un objet abstrait
+	public String build(TypeTraitement commande, HashMap<String, String> parameters, List<Path> files);
 }
