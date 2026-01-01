@@ -3,6 +3,7 @@ package service;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.HashMap;
 
 import request.*;
 import client.*;
@@ -22,11 +23,14 @@ public class ServerClientService
     {
         TypeTraitement cmd = TypeTraitement.ALGO_DISTANCE;
         RequestBuilderRegistry registry = new RequestBuilderRegistry();
-        String request = registry.get(cmd).build(cmd, paths);
+        HashMap<String, String> parameters = new HashMap<>();
+        String request = registry.get(cmd).build(cmd, parameters, paths);
 
-        try {
+        try
+        {
 	        ClientTCP client = new ClientTCP(_host, _port);
-	        try {
+	        try
+          {
 	            client.connect();
 	            client.write(request);
 	            return client.read();
@@ -36,7 +40,8 @@ public class ServerClientService
 	          client.close();
 	        }
         }
-        catch (IOException e) {
+        catch (IOException e)
+        {
             throw new RuntimeException("Erreur communication serveur", e);
         }
     }
