@@ -52,7 +52,7 @@ public class AlgoDistanceRequestBuilder implements RequestBuilder
 				n--;
 				ensembles.append(indentString("{\n", 1)).append(indentString("\"donnees\":\n", 1));
 
-				List<String> lines = Files.readAllLines(file, StandardCharsets.ISO_8859_1);
+				List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
 				for (String line: lines)
 				{
 					ensembles.append(indentString(line, 3)).append("\n");
