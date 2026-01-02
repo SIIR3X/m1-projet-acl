@@ -67,14 +67,16 @@ public class MapPanel extends JPanel
         List<Tour> tours = _controller.getTours();
         if (tours == null || tours.isEmpty()) return;
 
-        // 1️⃣ projection globale
+        // projection globale
         updateProjection(tours);
 
         Graphics2D g2d = (Graphics2D) g;
 
         // Routes
-        for (Tour tour : tours) {
-            for (Route route : tour.getRoutes()) {
+        for (Tour tour : tours)
+        {
+            for (Route route : tour.getRoutes())
+            {
                 AbstractRouteDrawingStrategy strategy =
                     RouteDrawingStrategyFactory.get(route.getRoadType());
 
@@ -84,14 +86,17 @@ public class MapPanel extends JPanel
 
         Set<City> cities = new HashSet<>();
 
-        for (Tour tour : tours) {
-            for (Route r : tour.getRoutes()) {
+        for (Tour tour : tours)
+        {
+            for (Route r : tour.getRoutes())
+            {
                 cities.add(r.getFrom());
                 cities.add(r.getTo());
             }
         }
 
-        for (City city : cities) {
+        for (City city : cities)
+        {
             _cityDrawer.draw(g2d, city, _projection);
         }
         
@@ -106,7 +111,8 @@ public class MapPanel extends JPanel
 
         g2d.setFont(new Font("Arial", Font.PLAIN, 12));
 
-        for (RoadType type : RoadType.values()) {
+        for (RoadType type : RoadType.values())
+        {
             AbstractRouteDrawingStrategy strategy = RouteDrawingStrategyFactory.get(type);
 
             g2d.setColor(strategy.getColor());

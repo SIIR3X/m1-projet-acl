@@ -3,9 +3,9 @@ package request;
 /* enumeration des types de traitement a effectuer avec leur classe analogue */
 public enum TypeTraitement
 {
-	/* constante, appel au constructeur, stocke leur classe correspondante */
+	/* constante, appel au constructeur, stock leur classe correspondante */
 	ALGO_DISTANCE(AlgoDistanceRequestBuilder.class);
-	// exmeple : ALGO_TEMPS(AlgoTempsRequestBuilder.class);
+	// exemple : ALGO_TEMPS(AlgoTempsRequestBuilder.class);
 
 	/* stocker uniquement les classes qui derivent de RequestBuilder par constante */
 	final Class<? extends RequestBuilder> _builderClass;
