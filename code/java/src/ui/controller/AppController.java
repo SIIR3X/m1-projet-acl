@@ -50,7 +50,8 @@ public class AppController
                 _tourBuilder
             );
 
-        if (tours.isEmpty()) {
+        if (tours.isEmpty())
+        {
             System.err.println("Aucune tournée trouvée !");
             return;
         }
