@@ -4,7 +4,8 @@ import java.nio.file.Path;
 import javax.swing.SwingUtilities;
 
 import io.data.CachedRouteTypeRepository;
-import io.data.MultiCsvRouteTypeRepository;
+import io.data.CsvRouteTypeRepository;
+import io.data.MultiRouteTypeRepository;
 import io.data.RouteTypeRepository;
 import service.RouteTypeService;
 import service.ServerClientService;
@@ -24,7 +25,11 @@ public class Main {
 			Path routesDir = Path.of("data/routes");
 
 			RouteTypeRepository repo =
-			    new MultiCsvRouteTypeRepository(routesDir);
+					new MultiRouteTypeRepository(
+						    Path.of("data/routes"),
+						    CsvRouteTypeRepository::new, // On peut remplacer par ExcelRouteTypeRepository, ou faire une liste avec Csv et Excel
+						    ".csv"
+						);
 
             RouteTypeRepository cachedRepo =
                 new CachedRouteTypeRepository(repo);

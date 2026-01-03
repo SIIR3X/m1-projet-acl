@@ -9,22 +9,24 @@ import java.util.List;
 import model.City;
 import model.RoadType;
 
-public class MultiCsvRouteTypeRepository implements RouteTypeRepository 
-{
-	private final List<RouteTypeRepository> repositories = new ArrayList<>();
+public class MultiRouteTypeRepository implements RouteTypeRepository {
 
-    public MultiCsvRouteTypeRepository(Path directory) {
+    private final List<RouteTypeRepository> repositories = new ArrayList<>();
+
+    public MultiRouteTypeRepository(
+            Path directory,
+            RouteTypeRepositoryFactory factory,
+            String fileExtension) {
+
         try (var stream = Files.list(directory)) {
 
             stream
-                .filter(p -> p.toString().endsWith(".csv"))
-                .forEach(p -> repositories.add(
-                    new CsvRouteTypeRepository(p)
-                ));
+                .filter(p -> p.toString().endsWith(fileExtension))
+                .forEach(p -> repositories.add(factory.create(p)));
 
         } catch (IOException e) {
             throw new RuntimeException(
-                "Erreur lors du chargement des CSV dans " + directory, e
+                "Erreur lors du chargement des fichiers dans " + directory, e
             );
         }
     }
