@@ -3,7 +3,7 @@ package service;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import request.*;
 import client.*;
@@ -23,7 +23,7 @@ public class ServerClientService
     {
         TypeTraitement cmd = TypeTraitement.ALGO_DISTANCE;
         RequestBuilderRegistry registry = new RequestBuilderRegistry();
-        HashMap<String, String> parameters = new HashMap<>();
+        ArrayList<String> parameters = new ArrayList<>();
         String request = registry.get(cmd).build(cmd, parameters, paths);
 
         try
