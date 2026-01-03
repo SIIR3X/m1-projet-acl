@@ -26,5 +26,9 @@ public class Tour
     {
         return _totalDistance;
     }
+    
+    public int getNbCites() {
+    	return _routes.size();
+    }
 
 }

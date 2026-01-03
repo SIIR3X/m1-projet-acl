@@ -29,7 +29,7 @@ public class CsvRouteTypeRepository implements RouteTypeRepository {
                 StandardCharsets.ISO_8859_1
             );
 
-            // 1. Lire l'en-tête (villes colonnes)
+            // Lire l'en-tête (villes colonnes)
             String[] header = lines.get(0).split(";");
             List<String> cities = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class CsvRouteTypeRepository implements RouteTypeRepository {
                 cities.add(header[i].trim());
             }
 
-            // 2. Lire les lignes
+            // Lire les lignes
             for (int i = 1; i < lines.size(); i++) {
                 String[] cells = lines.get(i).split(";");
                 String cityA = cells[0].trim();

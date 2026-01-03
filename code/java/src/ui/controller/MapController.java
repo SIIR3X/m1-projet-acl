@@ -27,4 +27,12 @@ public class MapController
 	public double getTotalDistance() {
 		return _totalDistance;
 	}
+	
+	public int getTotalNbCities() {
+		int sum = 0;
+		for (Tour t : _tours) {
+			sum += t.getNbCites();
+		}
+		return sum;
+	}
 }
