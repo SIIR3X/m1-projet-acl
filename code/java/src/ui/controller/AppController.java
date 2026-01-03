@@ -17,6 +17,8 @@ public class AppController
     private final ServerClientService _serverService;
     private final TourBuilder _tourBuilder;
 
+    // dossier par défaut pour les JSON
+    private final Path _defaultJsonDir = Path.of("data/13_fichiers_JSON");
 
     public AppController(MapController mapController,
                          ServerClientService serverService, TourBuilder tourBuilder) 
@@ -24,6 +26,18 @@ public class AppController
         this._mapController = mapController;
         this._serverService = serverService;
 		this._tourBuilder = tourBuilder;
+    }
+    
+    public Path getDefaultJsonDir() {
+        return _defaultJsonDir;
+    }
+    
+    private double computeTotalDistance(List<Tour> tours) {
+        double sum = 0.0;
+        for (Tour t : tours) {
+            sum += t.getTotalDistance();
+        }
+        return sum;
     }
 
     public void optimize(List<Path> jsonPaths) 
@@ -57,6 +71,7 @@ public class AppController
         }
 
         _mapController.setTours(tours);
+        _mapController.setTotalDistance(computeTotalDistance(tours));
 
     }
 }

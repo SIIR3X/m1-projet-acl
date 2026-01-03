@@ -35,11 +35,11 @@ public abstract class AbstractRouteDrawingStrategy
         int mx = (x1 + x2) / 2;
         int my = (y1 + y2) / 2;
 
-        g2d.setColor(Color.DARK_GRAY);
-        g2d.setFont(new Font("Arial", Font.PLAIN, 10));
+        g2d.setColor(new Color(80, 80, 80));
+        g2d.setFont(new Font("Arial", Font.ITALIC, 12));
         g2d.drawString(
             String.format("%.1f km", route.getDistance()),
-            mx + 4, my - 4
+            mx + 2, my - 2
         );
     }
 

@@ -6,10 +6,9 @@ import java.util.List;
 import model.Tour;
 
 public class MapController 
-{
-//    private Tour _currentTour;
-    
+{   
     private List<Tour> _tours = new ArrayList<>();
+    private double _totalDistance = 0;
 
     public void setTours(List<Tour> tours)
     {
@@ -20,14 +19,12 @@ public class MapController
     {
         return _tours;
     }
-    
-//    public void setCurrentTour(List<Tour> tours) 
-//    {
-//        this._currentTour = tours;
-//    }
-//
-//    public Tour getCurrentTour() 
-//    {
-//        return _currentTour;
-//    }
+
+	public void setTotalDistance(double computeTotalDistance) {
+		this._totalDistance = computeTotalDistance;
+	}
+
+	public double getTotalDistance() {
+		return _totalDistance;
+	}
 }
