@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import javax.swing.SwingUtilities;
 
 import io.data.CachedRouteTypeRepository;
-import io.data.CsvRouteTypeRepository;
 import io.data.MultiCsvRouteTypeRepository;
 import io.data.RouteTypeRepository;
 import service.RouteTypeService;

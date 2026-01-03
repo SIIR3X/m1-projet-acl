@@ -1,13 +1,10 @@
 package io.data;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import model.City;
 import model.RoadType;
@@ -17,7 +14,6 @@ public class MultiCsvRouteTypeRepository implements RouteTypeRepository
 	private final List<RouteTypeRepository> repositories = new ArrayList<>();
 
     public MultiCsvRouteTypeRepository(Path directory) {
-
         try (var stream = Files.list(directory)) {
 
             stream

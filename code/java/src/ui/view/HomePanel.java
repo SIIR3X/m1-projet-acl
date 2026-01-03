@@ -16,7 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import ui.controller.AppController;
-import ui.controller.MapController;
 
 public class HomePanel extends JPanel 
 {
