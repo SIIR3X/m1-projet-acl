@@ -124,6 +124,7 @@ public class MapPanel extends JPanel
         }
         
         double totalKm = _controller.getTotalDistance();
-        _distanceLabel.setText(String.format("Distance totale : %.2f km", totalKm));
+        int nbCities = _controller.getTotalNbCities();
+        _distanceLabel.setText(String.format("Distance totale : %.2f km / Nombre de villes visitées : %d", totalKm, nbCities));
     }
 }
