@@ -23,11 +23,13 @@ public class HomePanel extends JPanel
 	private List<Path> _selectedCsvFiles;
     private final JButton _optimizeButton;
     private final MapPanel _mapPanel;
+    private final MainViewPanel _mainView;
 
 
-    public HomePanel(AppController controller, MapController mapController) 
+    public HomePanel(AppController controller, MapPanel mapPanel, MainViewPanel mainView) 
     {
-        this._mapPanel = new MapPanel(mapController);
+        this._mapPanel = mapPanel;
+        this._mainView = mainView;	
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -57,6 +59,7 @@ public class HomePanel extends JPanel
         chooseFileButton.addActionListener(e ->
         {
             JFileChooser chooser = new JFileChooser();
+            chooser.setCurrentDirectory(controller.getDefaultJsonDir().toFile());
             chooser.setMultiSelectionEnabled(true);
             chooser.setDialogTitle("Choisir un/des fichier(s) JSON de villes");
 
@@ -76,12 +79,8 @@ public class HomePanel extends JPanel
         // Action optimiser
         _optimizeButton.addActionListener(e ->
         {
-            controller.optimize(_selectedCsvFiles);
-            // Afficher la carte à la place du HomePanel
-            removeAll();
-            add(_mapPanel);
-            revalidate();
-            repaint();
+        	controller.optimize(_selectedCsvFiles);
+            _mainView.showMap(); // afficher la carte
         });
     }
 }

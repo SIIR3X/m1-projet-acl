@@ -21,7 +21,7 @@ public class DefaultCityDrawingStrategy implements CityDrawingStrategy
         g2d.fillOval(x - 4, y - 4, 8, 8);
 
         // Nom
-        g2d.setFont(new Font("Arial", Font.PLAIN, 11));
+        g2d.setFont(new Font("Arial", Font.BOLD, 11));
         g2d.drawString(city.getName(), x - 10, y - 8);
     }
 }

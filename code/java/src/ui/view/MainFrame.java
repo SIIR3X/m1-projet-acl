@@ -14,6 +14,6 @@ public class MainFrame extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        setContentPane(new HomePanel(controller, mapController));
+        setContentPane(new MainViewPanel(controller, mapController));
     }
 }
