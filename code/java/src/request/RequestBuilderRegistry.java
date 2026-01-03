@@ -4,13 +4,15 @@ import java.util.EnumMap;
 
 public final class RequestBuilderRegistry
 {
+  /* lie les types de traitement a leur classe concrete */
 	private final EnumMap<TypeTraitement, RequestBuilder> builders = new EnumMap<>(TypeTraitement.class);
 	
+  /* construit l'enummap avec toutes les constantes dans TypeTraitement et leur classe associe */
 	public RequestBuilderRegistry()
 	{
 		for (TypeTraitement commande: TypeTraitement.values())
 		{
-			// ajoue des objets (RequestBuilder) par reflection dans l'enummap
+			// ajout des objets (RequestBuilder) par reflection dans l'enummap
 			try
 			{
 				builders.put(commande, commande._builderClass.getConstructor().newInstance());
@@ -22,6 +24,7 @@ public final class RequestBuilderRegistry
 		}
 	}
 	
+  /* obtient la classe concrete pour un TypeTraitement donne */
 	public RequestBuilder get(TypeTraitement commande)
 	{
 		RequestBuilder tt = builders.get(commande);
@@ -32,4 +35,4 @@ public final class RequestBuilderRegistry
 		return tt;
 	}
 }
-/* utilisation : RequestBuilderRegistry registry; req = registry.get(cmd.type()).build(cmd) */
+/* utilisation : req = registry.get(cmd.type()).build(cmd) */

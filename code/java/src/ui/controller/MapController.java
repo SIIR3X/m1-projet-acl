@@ -11,11 +11,13 @@ public class MapController
     
     private List<Tour> _tours = new ArrayList<>();
 
-    public void setTours(List<Tour> tours) {
+    public void setTours(List<Tour> tours)
+    {
         this._tours = tours;
     }
 
-    public List<Tour> getTours() {
+    public List<Tour> getTours()
+    {
         return _tours;
     }
     

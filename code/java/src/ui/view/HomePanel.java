@@ -54,13 +54,15 @@ public class HomePanel extends JPanel
         add(_optimizeButton);
 
         // Action choisir fichier
-        chooseFileButton.addActionListener(e -> {
+        chooseFileButton.addActionListener(e ->
+        {
             JFileChooser chooser = new JFileChooser();
             chooser.setMultiSelectionEnabled(true);
             chooser.setDialogTitle("Choisir un/des fichier(s) JSON de villes");
 
             int result = chooser.showOpenDialog(this);
-            if (result == JFileChooser.APPROVE_OPTION) {
+            if (result == JFileChooser.APPROVE_OPTION)
+            {
                 File[] files = chooser.getSelectedFiles();
                 _selectedCsvFiles = Arrays.stream(files)
                                          .map(File::toPath)
@@ -72,7 +74,8 @@ public class HomePanel extends JPanel
         });
 
         // Action optimiser
-        _optimizeButton.addActionListener(e -> {
+        _optimizeButton.addActionListener(e ->
+        {
             controller.optimize(_selectedCsvFiles);
             // Afficher la carte à la place du HomePanel
             removeAll();

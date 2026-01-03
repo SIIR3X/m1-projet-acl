@@ -21,7 +21,7 @@ CPP_DOC_DIR   = docs/cpp/code
 
 # Java
 JAVA_SRC_DIR    = code/java/src
-JAVA_TEST_DIR   = code/java/tests
+JAVA_TEST_DIR   = code/java/src/test
 JAVA_LIB 	 	= code/java/lib
 JAVA_BUILD_DIR  = build/java
 JAVA_MAIN       = run/Main
@@ -75,14 +75,14 @@ build-java:
 run-java: build-java
 	@java -cp $(JAVA_BUILD_DIR) $(JAVA_MAIN)
 
-run-tests-java: build-java
-	@find $(JAVA_TEST_DIR) -name "*.java" > $(JAVA_BUILD_DIR)/sources_test.txt
-	@javac -cp "$(JUNIT_JAR);$(JAVA_BUILD_DIR)" \
-	       -d $(JAVA_BUILD_DIR) \
-	       @$(JAVA_BUILD_DIR)/sources_test.txt
-	@java -jar $(JUNIT_JAR) \
-	       --class-path $(JAVA_BUILD_DIR) \
-	       --scan-class-path=
+build-java-all:
+	@mkdir -p $(JAVA_BUILD_DIR)
+	@find $(JAVA_SRC_DIR) -name "*.java" > $(JAVA_BUILD_DIR)/sources_all.txt
+	@javac -d $(JAVA_BUILD_DIR) @$(JAVA_BUILD_DIR)/sources_all.txt
+
+# usage: make run-test-java TEST=test.TestRequestBuilder
+run-test-java: build-java-all
+	@java -cp $(JAVA_BUILD_DIR) $(TEST)
 
 doc-java:
 	@mkdir -p $(JAVA_DOC_DIR)
