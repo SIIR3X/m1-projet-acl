@@ -13,7 +13,7 @@ public class TestRequestBuilder
 	public static void main(String[] args)
 	{
     // ajoute le(s) fichier(s)
-    Path filePath = Paths.get("../../../data/13_fichiers_JSON/GrandEst.json");
+    Path filePath = Paths.get("data/13_fichiers_JSON/GrandEst.json");
     List<Path> paths = new ArrayList<>();
     paths.add(filePath);
 
