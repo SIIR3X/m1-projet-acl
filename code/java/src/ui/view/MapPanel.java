@@ -50,7 +50,7 @@ public class MapPanel extends JPanel
         _projection = new MapProjection(
             minLat, maxLat,
             minLon, maxLon,
-            getWidth(), getHeight(), 200
+            getWidth(), getHeight(), 80
         );
     }
 
@@ -67,7 +67,6 @@ public class MapPanel extends JPanel
         List<Tour> tours = _controller.getTours();
         if (tours == null || tours.isEmpty()) return;
 
-        // 1️⃣ projection globale
         updateProjection(tours);
 
         Graphics2D g2d = (Graphics2D) g;
@@ -100,8 +99,8 @@ public class MapPanel extends JPanel
     
     private void drawLegend(Graphics2D g2d) 
     {
-        int x = 20;
-        int y = 20;
+        int x = 5;
+        int y = 5;
         int lineHeight = 20;
 
         g2d.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -120,6 +119,4 @@ public class MapPanel extends JPanel
             y += lineHeight;
         }
     }
-
-
 }

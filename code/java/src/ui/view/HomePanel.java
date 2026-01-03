@@ -29,7 +29,7 @@ public class HomePanel extends JPanel
     {
         this._mapPanel = new MapPanel(mapController);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel title = new JLabel("Optimisation de tournée");
         title.setFont(new Font("Arial", Font.BOLD, 22));
@@ -66,7 +66,7 @@ public class HomePanel extends JPanel
                                          .map(File::toPath)
                                          .toList();
 
-                fileLabel.setText(files.length + " fichiers sélectionnés");
+                fileLabel.setText(files.length > 1 ? files.length + " fichiers sélectionnés" : files.length + " fichier sélectionné");
                 _optimizeButton.setEnabled(!_selectedCsvFiles.isEmpty());
             }
         });
