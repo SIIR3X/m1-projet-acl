@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
 
 import request.*;
 
@@ -18,7 +17,7 @@ public class TestRequestBuilder
     paths.add(filePath);
 
 		TypeTraitement cmd = TypeTraitement.ALGO_DISTANCE;
-    HashMap<String,String> parameters = new HashMap<>();
+    ArrayList<String> parameters = new ArrayList<>();
 		RequestBuilderRegistry registry = new RequestBuilderRegistry();
 		String request = registry.get(cmd).build(cmd, parameters, paths);
 		System.out.println(request);

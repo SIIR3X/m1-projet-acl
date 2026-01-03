@@ -5,19 +5,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.lang.reflect.Field;
+import java.lang.IllegalArgumentException;
 
 /* Obligation d'immutabilite vis-a-vis de de l'enumMap. */
 /* Construit la requete pour l'algorithme de distance, en raccord avec les attentes serveur. */
 public class AlgoDistanceRequestBuilder implements RequestBuilder
 {
-	// Supprimable, utiliser la Map dans build.
+	// Tout les champs private String sont extrait dans la methode formatParameters.
 	private String _algo = "tsp", 
 				   _entite = "ville", 
 				   _distance = "geodesique";
 
 	@Override
-	public String build(TypeTraitement commande, HashMap<String,String> parameters, List<Path> files)
+	public String build(TypeTraitement commande, ArrayList<String> parameters, List<Path> files)
 	{
 		// Construit la requete pour algo_distance.
 		StringBuilder ensembles = formatEnsembles(files);
@@ -72,12 +74,29 @@ public class AlgoDistanceRequestBuilder implements RequestBuilder
   }
 
   /* Retourne en format json les parametres intermediaires, sans accolades. */
-  private StringBuilder formatParameters(HashMap<String,String> parameters)
+  private StringBuilder formatParameters(ArrayList<String> parameters)
   {
-    StringBuilder result = new StringBuilder();
-    for (var entry: parameters.entrySet())
+    // Recuperer les champs private String (qui correspondent aux clefs)
+    Class<?> this_class = AlgoDistanceRequestBuilder.class;
+    ArrayList<String> privateStringFields = new ArrayList<>();
+    Field[] fields = this_class.getDeclaredFields();
+    for (Field field: fields)
     {
-      result.append("\"").append(entry.getKey()).append("\": \"").append(entry.getValue()).append("\",\n");
+      if (field.getType().equals(String.class) && java.lang.reflect.Modifier.isPrivate(field.getModifiers()))
+      {
+        privateStringFields.add(field.getName().substring(1)); // enleve le _
+      }
+    }
+
+    if (privateStringFields.size() != parameters.size())
+    {
+      throw new IllegalArgumentException("Le nombre de champ clef ne correspond pas au nombre de parametres.");
+    }
+
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < privateStringFields.size(); i++)
+    {
+      result.append("\"").append(privateStringFields.get(i)).append("\": \"").append(parameters.get(i)).append("\",\n");
     }
     return result;
   }
