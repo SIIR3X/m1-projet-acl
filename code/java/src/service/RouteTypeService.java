@@ -16,7 +16,8 @@ public class RouteTypeService
 
     public RoadType getType(City from, City to) 
     {
-        return _repository.findType(from, to);
+    	 RoadType type = _repository.findType(from, to);
+         return type != null ? type : RoadType.COMMUNALE;
     }
 
 }

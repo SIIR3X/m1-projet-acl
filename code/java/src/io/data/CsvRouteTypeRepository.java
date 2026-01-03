@@ -62,10 +62,7 @@ public class CsvRouteTypeRepository implements RouteTypeRepository {
     @Override
     public RoadType findType(City from, City to) 
     {
-        return _routes.getOrDefault(
-            new RouteKey(from.getName(), to.getName()),
-            RoadType.COMMUNALE
-        );
+    	return _routes.get(new RouteKey(from.getName(), to.getName()));
     }
 
 }
