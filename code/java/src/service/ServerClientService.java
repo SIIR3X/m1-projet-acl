@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import request.*;
 import client.*;
 
+/**
+ * Gère la communication entre le client Java et le serveur C++ :
+ * envoie les données de villes/chemins et récupère la réponse JSON optimisée.
+ */
 public class ServerClientService 
 {
 	private final String _host;

@@ -7,9 +7,12 @@ import model.City;
 import model.Route;
 import model.Tour;
 
+/**
+ * Service chargé de construire des objets Route et Tour à partir
+ * d'une liste de villes ordonnées et des distances associées.
+ */
 public class TourBuilder 
 {
-
 	private final RouteTypeService _routeTypeService;
 
     public TourBuilder(RouteTypeService routeTypeService) 

@@ -14,6 +14,10 @@ import ui.controller.AppController;
 import ui.controller.MapController;
 import ui.view.MainFrame;
 
+/**
+ * Point d'entrée de l'application.
+ * Configure les repositories, services, contrôleurs et lance l'interface graphique Swing.
+ */
 public class Main {
 
 	public static void main(String[] args) {

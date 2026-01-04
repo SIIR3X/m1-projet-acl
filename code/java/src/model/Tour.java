@@ -3,9 +3,12 @@ package model;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Représente une tournée, c'est-à-dire une séquence ordonnée de routes,
+ * et calcule automatiquement la distance totale du parcours.
+ */
 public class Tour 
 {
-
 	private final List<Route> _routes;
     private final double _totalDistance;
 

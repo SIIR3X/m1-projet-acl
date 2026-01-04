@@ -8,6 +8,11 @@ import java.awt.Graphics2D;
 import model.Route;
 import ui.map.MapProjection;
 
+/**
+ * Classe de base pour les stratégies de dessin de routes.
+ * Définit le contrat pour la couleur, l'épaisseur du trait et le dessin
+ * d'un tronçon sur la carte.
+ */
 public abstract class AbstractRouteDrawingStrategy 
 {
 	

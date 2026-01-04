@@ -9,14 +9,19 @@ import java.util.List;
 import model.City;
 import model.RoadType;
 
-public class MultiRouteTypeRepository implements RouteTypeRepository {
-
+/**
+ * Implémentation de RouteTypeRepository qui agrège plusieurs fichiers
+ * d'un répertoire (CSV, Excel, etc.) en une seule source logique.
+ */
+public class MultiRouteTypeRepository implements RouteTypeRepository 
+{
     private final List<RouteTypeRepository> repositories = new ArrayList<>();
 
     public MultiRouteTypeRepository(
             Path directory,
             RouteTypeRepositoryFactory factory,
-            String fileExtension) {
+            String fileExtension) 
+    {
 
         try (var stream = Files.list(directory)) {
 
@@ -32,7 +37,8 @@ public class MultiRouteTypeRepository implements RouteTypeRepository {
     }
 
     @Override
-    public RoadType findType(City from, City to) {
+    public RoadType findType(City from, City to) 
+    {
         for (RouteTypeRepository repo : repositories) {
             RoadType type = repo.findType(from, to);
             if (type != null) {

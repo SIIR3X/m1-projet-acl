@@ -3,6 +3,10 @@ package ui.drawing;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
+/**
+ * Stratégie de dessin pour les routes départementales
+ * (couleur noire, épaisseur moyenne).
+ */
 public class DepartmentalRoadDrawingStrategy extends AbstractRouteDrawingStrategy 
 {
 	@Override

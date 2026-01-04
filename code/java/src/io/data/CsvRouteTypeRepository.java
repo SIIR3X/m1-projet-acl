@@ -12,8 +12,12 @@ import java.util.Map;
 import model.City;
 import model.RoadType;
 
-public class CsvRouteTypeRepository implements RouteTypeRepository {
-
+/**
+ * Implémentation de RouteTypeRepository qui charge les types de routes
+ * à partir d'un fichier CSV contenant une matrice ville/ville.
+ */
+public class CsvRouteTypeRepository implements RouteTypeRepository 
+{
 	private final Map<RouteKey, RoadType> _routes = new HashMap<>();
 
     public CsvRouteTypeRepository(Path csvPath) 

@@ -1,8 +1,11 @@
 package io.data;
 
+/**
+ * Clé normalisée (ville de départ / ville d'arrivée) pour indexer
+ * les types de routes dans des structures de données (Map).
+ */
 public record RouteKey(String from, String to) 
 {
-
     public RouteKey 
     {
         from = normalize(from);

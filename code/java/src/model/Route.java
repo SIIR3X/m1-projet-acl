@@ -1,8 +1,11 @@
 package model;
 
+/**
+ * Représente un tronçon de route entre deux villes, avec sa distance
+ * et le type de route associé (communale, nationale, autoroute, etc.).
+ */
 public class Route 
-{
-	
+{	
 	private final City _from;
 	private final City _to;
 	private final double _distance;

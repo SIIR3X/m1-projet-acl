@@ -2,6 +2,10 @@ package ui.map;
 
 import model.City;
 
+/**
+ * Gère la projection des coordonnées géographiques (latitude/longitude)
+ * en coordonnées écran pour l'affichage sur la carte.
+ */
 public class MapProjection 
 {
 	private final double _minLat, _maxLat;

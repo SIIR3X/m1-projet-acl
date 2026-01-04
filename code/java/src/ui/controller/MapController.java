@@ -5,6 +5,10 @@ import java.util.List;
 
 import model.Tour;
 
+/**
+ * Contrôleur de la carte qui stocke les tournées courantes ainsi que
+ * la distance totale, et expose ces informations à la couche graphique.
+ */
 public class MapController 
 {   
     private List<Tour> _tours = new ArrayList<>();

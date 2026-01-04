@@ -7,9 +7,12 @@ import java.awt.Graphics2D;
 import model.City;
 import ui.map.MapProjection;
 
+/**
+ * Implémentation par défaut de la stratégie de dessin des villes,
+ * utilisée lorsqu'aucune stratégie spécifique n'est requise.
+ */
 public class DefaultCityDrawingStrategy implements CityDrawingStrategy 
 {
-
 	@Override
     public void draw(Graphics2D g2d, City city, MapProjection p) 
 	{
