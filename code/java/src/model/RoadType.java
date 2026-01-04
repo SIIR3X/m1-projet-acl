@@ -3,6 +3,10 @@ package model;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Enumère les différents types de routes possibles et fournit une
+ * méthode utilitaire pour retrouver un type à partir de son libellé textuel.
+ */
 public enum RoadType 
 {
 	COMMUNALE("communale"),

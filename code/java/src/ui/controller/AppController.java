@@ -11,6 +11,10 @@ import model.Tour;
 import service.ServerClientService;
 import service.TourBuilder;
 
+/**
+ * Contrôleur applicatif principal : orchestre le chargement des fichiers JSON,
+ * l'appel au serveur pour optimiser les tournées et la mise à jour de la carte.
+ */
 public class AppController 
 {
 	private final MapController _mapController;
@@ -45,9 +49,9 @@ public class AppController
         // appeler le serveur
         String responseJson = _serverService.optimize(jsonPaths);
 
-        System.out.println("===== RÉPONSE SERVEUR =====");
-        System.out.println(responseJson);
-        System.out.println("===========================");
+//        System.out.println("===== RÉPONSE SERVEUR =====");
+//        System.out.println(responseJson);
+//        System.out.println("===========================");
         
         // Charger les villes
         Map<String, City> cities = new HashMap<>();

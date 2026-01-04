@@ -5,11 +5,13 @@ import java.util.Map;
 
 import model.RoadType;
 
+/**
+ * Fabrique de stratégies de dessin de routes qui retourne la stratégie
+ * appropriée en fonction du type de route (RoadType).
+ */
 public final class RouteDrawingStrategyFactory 
 {
-
-	private static final Map<RoadType, AbstractRouteDrawingStrategy> STRATEGIES =
-	        new EnumMap<>(RoadType.class);
+	private static final Map<RoadType, AbstractRouteDrawingStrategy> STRATEGIES = new EnumMap<>(RoadType.class);
 
     static 
     {
@@ -33,5 +35,4 @@ public final class RouteDrawingStrategyFactory
             STRATEGIES.get(RoadType.COMMUNALE)
         );
     }
-   
 }

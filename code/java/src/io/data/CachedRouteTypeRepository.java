@@ -6,9 +6,12 @@ import java.util.Map;
 import model.City;
 import model.RoadType;
 
+/**
+ * Décorateur de RouteTypeRepository qui met en cache en mémoire les types
+ * de routes déjà calculés afin d'éviter de reinterroger la source.
+ */
 public class CachedRouteTypeRepository implements RouteTypeRepository 
 {
-
 	private final RouteTypeRepository _delegate;
     private final Map<RouteKey, RoadType> _cache = new HashMap<>();
 

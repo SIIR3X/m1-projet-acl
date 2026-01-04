@@ -10,9 +10,14 @@ import model.City;
 import model.Tour;
 import service.TourBuilder;
 
+/**
+ * Fournit des méthodes statiques pour :
+ * - charger les villes depuis un fichier JSON local ;
+ * - parser la réponse JSON du serveur en tournées (chemins + distances),
+ *   en reliant les noms de villes aux instances de City existantes.
+ */
 public class LocalJsonParser 
 {
-
     /* ============================================================
      *  API PUBLIQUE
      * ============================================================ */

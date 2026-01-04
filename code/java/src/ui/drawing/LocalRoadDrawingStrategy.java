@@ -3,6 +3,10 @@ package ui.drawing;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
+/**
+ * Stratégie de dessin pour les routes communales
+ * (couleur noire, trait en pointillé).
+ */
 public class LocalRoadDrawingStrategy extends AbstractRouteDrawingStrategy 
 {
 	@Override
@@ -23,5 +27,4 @@ public class LocalRoadDrawingStrategy extends AbstractRouteDrawingStrategy
             0
         );
     }
-
 }

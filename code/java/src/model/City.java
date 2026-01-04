@@ -1,8 +1,11 @@
 package model;
 
+/**
+ * Représente une ville avec son nom et sa position géographique
+ * (latitude et longitude) telle qu'elle apparaît dans les données.
+ */
 public class City 
 {
-
 	private final String _name;
 	private final double _latitude;
 	private final double _longitude;

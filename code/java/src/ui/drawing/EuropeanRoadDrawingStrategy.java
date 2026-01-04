@@ -3,9 +3,12 @@ package ui.drawing;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
+/**
+ * Stratégie de dessin pour les routes européennes
+ * (couleur bleue, trait en pointillé).
+ */
 public class EuropeanRoadDrawingStrategy extends AbstractRouteDrawingStrategy 
 {
-
 	@Override
 	public Color getColor() 
 	{

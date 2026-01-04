@@ -7,11 +7,12 @@ import java.util.Map;
 import model.City;
 import model.RoadType;
 
-// Pour utiliser -> rajouter un fichier de config Maven avec Apache POI pour lire les excel
-
+/**
+ * Implémentation prévue de RouteTypeRepository pour lire les types de routes
+ * depuis un fichier Excel (basée sur Apache POI, non finalisée dans cette version).
+ */
 public class ExcelRouteTypeRepository implements RouteTypeRepository 
 {
-
 	private final Map<RouteKey, RoadType> _routeTypes = new HashMap<>();
 
     public ExcelRouteTypeRepository(Path excelPath) 
@@ -19,48 +20,89 @@ public class ExcelRouteTypeRepository implements RouteTypeRepository
         load(excelPath);
     }
 
-    private void load(Path path) 
-    {
+    private void load(Path path) {
 //        try (Workbook workbook = WorkbookFactory.create(path.toFile())) {
 //            Sheet sheet = workbook.getSheetAt(0);
 //
 //            // 1. Lire les villes (ligne 0)
-//            List<String> cities = new ArrayList<>();
 //            Row header = sheet.getRow(0);
+//            if (header == null) {
+//                throw new IllegalArgumentException("Ligne d'en-tête manquante dans le fichier Excel : " + path);
+//            }
+//
+//            List<String> cities = new ArrayList<>();
+//            // On commence en 1 pour ignorer la cellule (0,0)
 //            for (int col = 1; col < header.getLastCellNum(); col++) {
-//                cities.add(header.getCell(col).getStringCellValue());
+//                Cell cell = header.getCell(col);
+//                if (cell != null && cell.getCellType() == CellType.STRING) {
+//                    String cityName = cell.getStringCellValue().trim();
+//                    if (!cityName.isEmpty()) {
+//                        cities.add(cityName);
+//                    } else {
+//                        cities.add(""); // garder l'indexation cohérente
+//                    }
+//                } else {
+//                    cities.add("");
+//                }
 //            }
 //
 //            // 2. Lire la matrice (partie droite)
+//            // On parcourt les lignes 1..n, en supposant qu'il y a autant de lignes que de villes
 //            for (int i = 1; i <= cities.size(); i++) {
 //                Row row = sheet.getRow(i);
-//                String cityA = row.getCell(0).getStringCellValue();
+//                if (row == null) {
+//                    continue;
+//                }
 //
-//                for (int j = i + 1; j <= cities.size(); j++) {
+//                Cell cityACell = row.getCell(0);
+//                if (cityACell == null || cityACell.getCellType() != CellType.STRING) {
+//                    continue;
+//                }
+//
+//                String cityA = cityACell.getStringCellValue().trim();
+//                if (cityA.isEmpty()) {
+//                    continue;
+//                }
+//
+//                // j démarre à i pour éviter de traiter deux fois (A,B) / (B,A)
+//                for (int j = i; j <= cities.size(); j++) {
 //                    Cell cell = row.getCell(j);
-//                    if (cell != null && cell.getCellType() == CellType.STRING) {
-//                        RoadType type = RoadType.fromCode(cell.getStringCellValue());
-//
-//                        String cityB = cities.get(j - 1);
-//                        routeTypes.put(new RouteKey(cityA, cityB), type);
-//                        routeTypes.put(new RouteKey(cityB, cityA), type); // symétrie
+//                    if (cell == null || cell.getCellType() != CellType.STRING) {
+//                        continue;
 //                    }
+//
+//                    String raw = cell.getStringCellValue().trim();
+//                    if (raw.isEmpty()) {
+//                        continue;
+//                    }
+//
+//                    // cityB est dans la liste header : index j-1
+//                    String cityB = cities.get(j - 1);
+//                    if (cityB == null || cityB.isEmpty()) {
+//                        continue;
+//                    }
+//
+//                    // Convertir le texte (label) en RoadType
+//                    RoadType type = RoadType.fromLabel(raw);
+//
+//                    // Stocker les deux sens avec une RouteKey normalisée
+//                    RouteKey keyAB = new RouteKey(cityA, cityB);
+//                    RouteKey keyBA = new RouteKey(cityB, cityA);
+//                    _routeTypes.put(keyAB, type);
+//                    _routeTypes.put(keyBA, type); // symétrie
 //                }
 //            }
 //
 //        } catch (IOException e) {
-//            throw new RuntimeException("Failed to load route types", e);
+//            throw new RuntimeException("Erreur lors de la lecture du fichier Excel : " + path, e);
 //        }
     }
 
     @Override
-    public RoadType findType(City from, City to) 
-    {
-		return null;
-//        return routeTypes.getOrDefault(
-//            new RouteKey(from.getName(), to.getName()),
-//            RoadType.LOCAL
-//        );
+    public RoadType findType(City from, City to) {
+        if (from == null || to == null) {
+            return null;
+        }
+        return _routeTypes.get(new RouteKey(from.getName(), to.getName()));
     }
-
 }
