@@ -30,13 +30,8 @@ CPP_DOC_DIR   = docs/cpp/code
 
 # Java
 JAVA_SRC_DIR    = code/java/src
-JAVA_TEST_DIR   = code/java/src/test
-JAVA_LIB 	 	= code/java/lib
 JAVA_BUILD_DIR  = build/java
-JAVA_MAIN       = run/Main
-JAVA_DOC_DIR    = docs/java/code
-JUNIT_JAR       = $(JAVA_LIB)/junit-platform-console-standalone-1.10.1.jar
-JAVA_FORMAT 	= $(JAVA_LIB)/google-java-format-1.20.0-all-deps.jar
+JAVA_MAIN       = Main
 
 # Commandes génériques
 CMAKE    = cmake
@@ -94,29 +89,14 @@ doc-cpp:
 ##################################### Java ####################################
 ###############################################################################
 
+JAVA_SOURCES := $(shell find $(JAVA_SRC_DIR) -name "*.java")
+
 build-java:
 	@mkdir -p $(JAVA_BUILD_DIR)
-	@find $(JAVA_SRC_DIR) -name "*.java" \
-		-not -path "*/test/*" \
-		-not -path "*/tests/*" \
-		> $(JAVA_BUILD_DIR)/sources.txt
-	@javac -d $(JAVA_BUILD_DIR) @$(JAVA_BUILD_DIR)/sources.txt
+	@javac -d $(JAVA_BUILD_DIR) $(JAVA_SOURCES)
 
 run-java: build-java
 	@java -cp $(JAVA_BUILD_DIR) $(JAVA_MAIN)
-
-build-java-all:
-	@mkdir -p $(JAVA_BUILD_DIR)
-	@find $(JAVA_SRC_DIR) -name "*.java" > $(JAVA_BUILD_DIR)/sources_all.txt
-	@javac -d $(JAVA_BUILD_DIR) @$(JAVA_BUILD_DIR)/sources_all.txt
-
-# usage: make run-test-java TEST=test.TestRequestBuilder
-run-test-java: build-java-all
-	@java -cp $(JAVA_BUILD_DIR) $(TEST)
-
-doc-java:
-	@mkdir -p $(JAVA_DOC_DIR)
-	@javadoc -d $(JAVA_DOC_DIR) $(shell find $(JAVA_SRC_DIR) -name "*.java")
 
 
 ###############################################################################
