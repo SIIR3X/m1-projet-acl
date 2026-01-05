@@ -14,6 +14,15 @@
 # Dossiers
 BUILD_DIR     = build
 
+# C
+CC          = gcc
+C_STD       = -std=c17
+C_WARN      = -Wall -Wextra -Wpedantic
+C_OPT       = -O2
+C_INC       = -I$(C_DIR)
+C_BUILD_DIR = $(BUILD_DIR)/c
+C_TARGET    = programme-c
+
 # Cpp
 CPP_BUILD_DIR = $(BUILD_DIR)/cpp
 CPP_DIR       = code/cpp
@@ -34,6 +43,27 @@ CMAKE    = cmake
 MAKE_CMD = $(MAKE)
 DOXYGEN  = doxygen
 CTEST    = ctest
+
+
+###############################################################################
+###################################### C ######################################
+###############################################################################
+
+C_SOURCES := $(shell find $(C_DIR) -name "*.c")
+C_OBJECTS := $(patsubst $(C_DIR)/%.c,$(C_BUILD_DIR)/%.o,$(C_SOURCES))
+
+build-c: $(C_BUILD_DIR)/$(C_TARGET)
+
+$(C_BUILD_DIR)/$(C_TARGET): $(C_OBJECTS)
+	@mkdir -p $(C_BUILD_DIR)
+	@$(CC) $(C_STD) $(C_WARN) $(C_OPT) $^ -o $@
+
+$(C_BUILD_DIR)/%.o: $(C_DIR)/%.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(C_STD) $(C_WARN) $(C_OPT) $(C_INC) -c $< -o $@
+
+run-c: build-c
+	@$(C_BUILD_DIR)/$(C_TARGET) 2 10
 
 
 ###############################################################################
