@@ -1,17 +1,8 @@
 package requete;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-
 import modele.Ville;
-
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.lang.reflect.Field;
-import java.lang.IllegalArgumentException;
 
 /* Obligation d'immutabilite vis-a-vis de de l'enumMap. */
 /* Construit la requete pour l'algorithme de distance, en raccord avec les attentes serveur. */
@@ -24,16 +15,14 @@ public class AlgoDistanceRequeteBuilder implements RequeteBuilder
 	@Override
 	public String build(TypeTraitement commande, Object donnees)
 	{
-		Map<Integer, List<Ville>> ensembles =
-				(Map<Integer, List<Ville>>)donnees;
+		@SuppressWarnings("unchecked")
+		Map<Integer, List<Ville>> ensembles = (Map<Integer, List<Ville>>)donnees;
 		
 		return construireJson(commande, ensembles);
 	}
 	
-	private String construireJson(
-			TypeTraitement commande,
-			Map<Integer, List<Ville>> ensembles
-	) {
+	private String construireJson(TypeTraitement commande, Map<Integer, List<Ville>> ensembles)
+	{
 		StringBuilder json = new StringBuilder();
 		
         json.append("{\n")
@@ -48,10 +37,12 @@ public class AlgoDistanceRequeteBuilder implements RequeteBuilder
         int i = 0;
         int total = ensembles.size();
         
-        for (List<Ville> villes : ensembles.values()) {
+        for (List<Ville> villes : ensembles.values())
+		{
         	json.append(construireEnsemble(villes));
         	
-        	if (++i < total) {
+        	if (++i < total)
+			{
         		json.append(",");
         	}
         	json.append("\n");
@@ -64,7 +55,8 @@ public class AlgoDistanceRequeteBuilder implements RequeteBuilder
         return json.toString();
 	}
 	
-	private String construireEnsemble(List<Ville> villes) {
+	private String construireEnsemble(List<Ville> villes)
+	{
         StringBuilder sb = new StringBuilder();
 
         sb.append("    {\n")
@@ -79,7 +71,8 @@ public class AlgoDistanceRequeteBuilder implements RequeteBuilder
               .append("\"longitude\": ").append(v.getLongitude())
               .append(" }");
 
-            if (i < villes.size() - 1) {
+            if (i < villes.size() - 1)
+			{
                 sb.append(",");
             }
             sb.append("\n");
