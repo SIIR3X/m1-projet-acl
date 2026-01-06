@@ -9,12 +9,17 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import controleur.GestionSelection;
 import modele.Carte;
 import modele.EntiteGeographique;
+import modele.Route;
+import modele.Tour;
+import ui.drawing.AbstractRouteDrawingStrategy;
+import ui.drawing.RouteDrawingStrategyFactory;
 import viewport.Viewport;
 
 /**
@@ -39,6 +44,8 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 	
 	/** Gestionnaire de sélection (contrôleur UI) */
 	private GestionSelection<T> _selection;
+	
+	private List<Tour> _tours;
 	
 	private static final int RAYON = 6;
 	
@@ -92,6 +99,8 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		for (T element : _carte.getElements()) {
 			dessinerElement(g2d, element);
 		}
+		
+		dessinerRoutes(g2d);
 	}
 	
 	private void dessinerElement(Graphics2D g2d, T element) {
@@ -110,6 +119,16 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(element.toString(), x + 6, y - 6);
  	}
+	
+	private void dessinerRoutes(Graphics2D g2d) {
+        for (Tour tour : _tours) {
+            for (Route route : tour.getRoutes()) {
+                AbstractRouteDrawingStrategy strategy =
+                    RouteDrawingStrategyFactory.get(route.getRoadType());
+                strategy.draw(g2d, route, (Viewport<EntiteGeographique>) _viewport);
+            }
+        }
+	}
 	
 	private void gererClic(int sx, int sy) {
 		if (_selection.getMode() != GestionSelection.Mode.MANUEL) {
@@ -173,4 +192,21 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 	           && sy >= ty
 	           && sy <= ty + hauteurTexte;
 	}
+	
+	public void setTours(List<Tour> tours)
+    {
+        this._tours  = tours;
+    }
+	
+//	public void setTotalDistance(double computeTotalDistance) {
+//		this._totalDistance = computeTotalDistance;
+//	}
+	
+    private double computeTotalDistance(List<Tour> tours) {
+        double sum = 0.0;
+        for (Tour t : tours) {
+            sum += t.getTotalDistance();
+        }
+        return sum;
+    }
 }

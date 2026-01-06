@@ -1,8 +1,11 @@
 package vue;
 
 import java.awt.BorderLayout;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JFrame;
 
@@ -10,10 +13,17 @@ import chargement.ChargeurDonnees;
 import controleur.GestionSelection;
 import integration.LanceurOptimisation;
 import integration.LecteurSolutionVille;
+import json.LecteurJson;
+import modele.Ville;
+import modele.Route;
+import modele.Tour;
 import modele.Carte;
 import modele.EntiteGeographique;
 import service.RegroupeurParCamion;
 import service.ServeurClientService;
+import service.TourBuilder;
+import ui.drawing.AbstractRouteDrawingStrategy;
+import ui.drawing.RouteDrawingStrategyFactory;
 import viewport.Viewport;
 
 public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
@@ -27,15 +37,19 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 	private GestionSelection<T> _selection;
 	private final ServeurClientService _serveurService;
 	private final ChargeurDonnees<List<T>> _chargeurDonnees;
+	private final TourBuilder _tourBuilder;
 	
 	private final VueCarte<T> _vueCarte;
 	private final BarreControle _barreControle;
+
+	private List<Tour> _tours = new ArrayList<>();
 
 	public FenetrePrincipale(
 			Carte<T> carte,
 			Viewport<T> viewport,
 			ServeurClientService serveurService,
-			ChargeurDonnees<List<T>> chargeurDonnees
+			ChargeurDonnees<List<T>> chargeurDonnees,
+			TourBuilder tourBuilder
 		) {
 		super("Client Java");
 		
@@ -43,7 +57,7 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 		this._viewport = viewport;
 		this._serveurService = serveurService;
 		this._chargeurDonnees = chargeurDonnees;
-		
+		this._tourBuilder = tourBuilder;
 		this._selection =
 				new GestionSelection<>(_carte.getElements());
 		
@@ -123,6 +137,24 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 				
 		        System.out.println("Réponse serveur :");
 		        System.out.println(reponseJson);
+		        
+		        List<Tour> tours =
+	                LecteurJson.parseTours(
+	                    reponseJson,
+	                    _carte.getElements(),
+	                    _tourBuilder
+	                );
+
+	            if (tours.isEmpty())
+	            {
+	                System.err.println("Aucune tournée trouvée !");
+	                return;
+	            }
+
+	            _vueCarte.setTours(tours);
+	            //_vueCarte.setTotalDistance(computeTotalDistance(tours));
+
+	            _vueCarte.repaint();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
