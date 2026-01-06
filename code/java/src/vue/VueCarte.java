@@ -9,6 +9,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -57,6 +58,7 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		this._carte = carte;
 		this._viewport = viewport;
 		this._selection = selection;
+		this._tours = new ArrayList<>();
 		
 		// Couleur de fonds du panneau
 		setBackground(Color.WHITE);
@@ -95,7 +97,7 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D)g;
-		
+
 		for (T element : _carte.getElements()) {
 			dessinerElement(g2d, element);
 		}
@@ -120,6 +122,7 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		g2d.drawString(element.toString(), x + 6, y - 6);
  	}
 	
+	@SuppressWarnings("unchecked")
 	private void dessinerRoutes(Graphics2D g2d) {
         for (Tour tour : _tours) {
             for (Route route : tour.getRoutes()) {

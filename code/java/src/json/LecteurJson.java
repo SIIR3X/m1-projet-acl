@@ -114,16 +114,23 @@ public class LecteurJson {
 
             List<String> rawVilleNames = extractArray(block, "chemin");
             List<Double> distances = extractDoubleArray(block, "distances");
+            
+            for (Ville v : cities.values()) {
+				// Pré-chargement des clés pour éviter les erreurs d'encodage
+				System.out.println("Pré-chargement de la ville : " + v.getNom() + " (clé=" + cityKey(v.getNom()) + ")");
+			}
 
             List<Ville> orderedCities = new ArrayList<>();
             for (String rawName : rawVilleNames) {
                 String fixedName = fixEncoding(rawName);
                 String key = cityKey(fixedName);
 
+                System.out.println("Recherche de la ville : " + fixedName + " (clé=" + key + ")");
+                
                 Ville Ville = cities.get(key);
                 if (Ville == null) {
                     throw new IllegalArgumentException(
-                        "Ville inconnue : " + fixedName + " (clé=" + key + ")"
+                        "Ville inconnue : " + rawName + " (clé=" + key + ")"
                     );
                 }
 
@@ -149,7 +156,7 @@ public class LecteurJson {
      * ============================================================ */
 
     /** Clé unique et fiable pour une ville */
-    private static String cityKey(String name) 
+    public static String cityKey(String name) 
     {
         return name
                 .toLowerCase(Locale.ROOT)
@@ -188,7 +195,8 @@ public class LecteurJson {
         String content = json.substring(start + 1, end);
 
         return Arrays.stream(content.split(","))
-                .map(s -> s.replaceAll("[\"\\s]", ""))
+        		.map(s -> s.trim())
+        		.map(s -> s.replaceAll("^\"|\"$", ""))
                 .filter(s -> !s.isEmpty())
                 .toList();
     }
