@@ -67,7 +67,7 @@ public class ClientTCP
 		return this._socket.getInetAddress().toString();
 	}
 	
-	/* getter port */
+	/* getter port (int) */
 	public int getPort()
 	{
 		return this._socket.getPort();

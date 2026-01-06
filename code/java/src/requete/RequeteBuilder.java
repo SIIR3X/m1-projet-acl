@@ -1,8 +1,8 @@
 package requete;
 
-/* Patron de conception "Strategie" + map qui lie le type de traitement a l'interface.
- * Objectif: selon un `TypeTraitement commande` et de ses parametres,
- * construire une requete adapte a ce type de traitement contenant les fichiers passes.
+/* Patron de conception "Strategie".
+ * Objectif: selon un `TypeTraitement commande`,
+ * construire une requete adapte a ce type de traitement.
  * */
 public interface RequeteBuilder
 {
