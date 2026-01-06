@@ -1,10 +1,18 @@
+import java.nio.file.Path;
+
 import javax.swing.SwingUtilities;
 
 import chargement.ChargeurDonnees;
 import chargement.ChargeurVillesJson;
+import io.data.CachedRouteTypeRepository;
+import io.data.CsvRouteTypeRepository;
+import io.data.MultiRouteTypeRepository;
+import io.data.RouteTypeRepository;
 import modele.Carte;
 import modele.Ville;
+import service.RouteTypeService;
 import service.ServeurClientService;
+import service.TourBuilder;
 import viewport.Viewport;
 import vue.FenetrePrincipale;
 
@@ -12,6 +20,32 @@ public class Main {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			try {
+				
+				/* =====================================================
+	             * DATA / REPOSITORIES
+	             * ===================================================== */
+				Path routesDir = Path.of("data/routes");
+
+				RouteTypeRepository repo =
+						new MultiRouteTypeRepository(
+							    routesDir,
+							    CsvRouteTypeRepository::new, // On peut remplacer par ExcelRouteTypeRepository, ou faire une liste avec Csv et Excel
+							    ".csv"
+							);
+
+	            RouteTypeRepository cachedRepo =
+	                new CachedRouteTypeRepository(repo);
+				
+	            /* =====================================================
+	             * SERVICES MÉTIER
+	             * ===================================================== */
+
+	            RouteTypeService routeTypeService =
+	                new RouteTypeService(cachedRepo);
+
+	            TourBuilder tourBuilder =
+	                new TourBuilder(routeTypeService);
+	            
                 /* ============================
                  * 1. Service serveur
                  * ============================ */
@@ -43,7 +77,8 @@ public class Main {
                                 carte,
                                 viewport,
                                 serveurClientService,
-                                chargeurVilles
+                                chargeurVilles,
+                                tourBuilder
                         );
 
                 fenetre.setVisible(true);
