@@ -1,11 +1,10 @@
 package vue;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.swing.JFrame;
 
@@ -15,15 +14,12 @@ import integration.LanceurOptimisation;
 import integration.LecteurSolutionVille;
 import json.LecteurJson;
 import modele.Ville;
-import modele.Route;
 import modele.Tour;
 import modele.Carte;
 import modele.EntiteGeographique;
 import service.RegroupeurParCamion;
 import service.ServeurClientService;
 import service.TourBuilder;
-import ui.drawing.AbstractRouteDrawingStrategy;
-import ui.drawing.RouteDrawingStrategyFactory;
 import viewport.Viewport;
 
 public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
@@ -41,8 +37,6 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 	
 	private final VueCarte<T> _vueCarte;
 	private final BarreControle _barreControle;
-
-	private List<Tour> _tours = new ArrayList<>();
 
 	public FenetrePrincipale(
 			Carte<T> carte,
@@ -82,10 +76,17 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	public void viderTours() {
+		_vueCarte.setTours(new ArrayList<>());
+		_vueCarte.repaint();
+	}
+	
+	@SuppressWarnings("unchecked")
 	private void initialiserInteractions() {
 		// Mode aléatoire
 		_barreControle.getRadioAleatoire().addActionListener(e -> {
 			_selection.activerModeAleatoire();
+			viderTours();
 			_vueCarte.repaint();
 			
 			_barreControle.mettreAJourCamions(
@@ -96,6 +97,7 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 		// Mode manuel
 		_barreControle.getRadioManuel().addActionListener(e -> {
 			_selection.activerModeManuel();
+			viderTours();
 			_vueCarte.repaint();
 			
 			_barreControle.mettreAJourCamions(
@@ -106,8 +108,15 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 		// Bouton optimiser
 		_barreControle.getBoutonOptimiser().addActionListener(e -> {
 			try {
+				List<Ville> villesSelectionnees = new ArrayList<>();
+				for (T v : _carte.getElements()) {
+				    if (_selection.estSelectionnee(v)) {
+				        villesSelectionnees.add((Ville)v);
+				    }
+				}
+				
 				int nbCamions = _barreControle.getNombreCamions();
-				int nbElements = _selection.getSelection().size();
+				int nbElements = villesSelectionnees.size();
 				
 				if (nbElements == 0) {
 		            System.out.println("Aucun élément sélectionné");
@@ -125,23 +134,30 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 				var affectations =
 						LecteurSolutionVille.lire("data/ordonnancements/ordonnancement_jackson.csv");
 				
-		        // 3. Regroupement par camion
-				var ensembles =
-						RegroupeurParCamion.regrouper(
+		        // 3. Regroupement par camion via les id des villes
+				var ensemblesId =
+						RegroupeurParCamion.regrouperParIdCamion(
 								affectations,
-								_carte.getElements()
+								villesSelectionnees
 						);
+
+				// 4. Construction de la MAP COMPLETE nom -> Ville (IMPORTANT)
+				Map<String, Ville> cities = new HashMap<>();
+				for (Ville v : (List<Ville>) _carte.getElements()) {
+				    cities.put(LecteurJson.cityKey(v.getNom()), v);
+				}
 				
-				// 4. Appel serveur
-				String reponseJson = _serveurService.optimiser(ensembles);
+				// 5. Appel serveur
+				String reponseJson = _serveurService.optimiser(ensemblesId);
 				
 		        System.out.println("Réponse serveur :");
 		        System.out.println(reponseJson);
 		        
+		     // 6. Construction des tounrées à partir de la réponse
 		        List<Tour> tours =
 	                LecteurJson.parseTours(
 	                    reponseJson,
-	                    _carte.getElements(),
+	                    cities,
 	                    _tourBuilder
 	                );
 

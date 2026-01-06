@@ -1,5 +1,6 @@
 package controleur;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,9 +66,13 @@ public class GestionSelection<T> {
 	}	
 
 	public Set<T> getSelection() {
-		return Set.copyOf(_selection);
+		return _selection;
 	}
 	
+	public List<T> getSelectionListe() {
+		return new ArrayList<>(_selection);
+	}
+ 	
 	public void setListener(SelectionListener listener) {
 		this._listener = listener;
 	}
