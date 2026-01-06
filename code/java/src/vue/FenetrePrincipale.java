@@ -1,12 +1,16 @@
 package vue;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.Box;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 
 import chargement.ChargeurDonnees;
 import controleur.GestionSelection;
@@ -37,6 +41,9 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 	
 	private final VueCarte<T> _vueCarte;
 	private final BarreControle _barreControle;
+	private final LegendPanel _legendPanel;
+	private final ToursPanel _toursPanel;
+	private final JPanel _blocGauche;
 
 	public FenetrePrincipale(
 			Carte<T> carte,
@@ -60,15 +67,24 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 		
 		this._barreControle =
 				new BarreControle(_carte.getNombreElements());
-		
+		this._legendPanel = new LegendPanel();
+		this._toursPanel = new ToursPanel();
+		this._blocGauche = new JPanel(new BorderLayout());
 		this._selection.setListener(nbSelectionnees -> {
 			_barreControle.mettreAJourCamions(nbSelectionnees);
 		});
-		
+
+		// Légende en haut
+		_blocGauche.add(_legendPanel, BorderLayout.NORTH);
+
+		// Panneau des distances en bas
+		_blocGauche.add(_toursPanel, BorderLayout.SOUTH);
+
+		_blocGauche.setPreferredSize(new Dimension(210, 0));
 		setLayout(new BorderLayout());
 		add(_vueCarte, BorderLayout.CENTER);
 		add(_barreControle, BorderLayout.SOUTH);
-		
+		add(_blocGauche, BorderLayout.WEST);
 		initialiserInteractions();
 		
 		setSize(900, 700);
@@ -168,9 +184,9 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 	            }
 
 	            _vueCarte.setTours(tours);
-	            //_vueCarte.setTotalDistance(computeTotalDistance(tours));
-
 	            _vueCarte.repaint();
+	            
+	            _toursPanel.setTours(tours);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -220,6 +236,7 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 	        );
 
 	        // 6. Rafraîchissement
+	        _toursPanel.removeTours();
 	        _vueCarte.repaint();
 
 	    } catch (Exception e) {
