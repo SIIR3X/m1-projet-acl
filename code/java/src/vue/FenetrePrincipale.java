@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -74,6 +73,10 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 			_barreControle.mettreAJourCamions(nbSelectionnees);
 		});
 
+		_toursPanel.setTourSelectionListener(index -> {
+		    _vueCarte.setTourSelectionnee(index);
+		});
+		
 		// Légende en haut
 		_blocGauche.add(_legendPanel, BorderLayout.NORTH);
 

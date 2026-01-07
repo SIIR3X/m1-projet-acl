@@ -48,6 +48,8 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 	
 	private List<Tour> _tours;
 	
+	private Integer _tourSelectionnee = null;
+	
 	private static final int RAYON = 6;
 	
 	public VueCarte(
@@ -110,7 +112,6 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		int x = (int)p[0];
 		int y = (int)p[1];
 		
-		// Couleur selon sélection
 		g2d.setColor(
 				_selection.estSelectionnee(element) ? Color.RED : Color.LIGHT_GRAY
 		);
@@ -121,17 +122,28 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(element.toString(), x + 6, y - 6);
  	}
-	
-	@SuppressWarnings("unchecked")
-	private void dessinerRoutes(Graphics2D g2d) {
-        for (Tour tour : _tours) {
-            for (Route route : tour.getRoutes()) {
-                AbstractRouteDrawingStrategy strategy =
-                    RouteDrawingStrategyFactory.get(route.getRoadType());
-                strategy.draw(g2d, route, (Viewport<EntiteGeographique>) _viewport);
+
+    @SuppressWarnings("unchecked")
+    private void dessinerRoutes(Graphics2D g2d) {
+        if (_tours == null) return;
+
+        if (_tourSelectionnee == null) {
+            for (Tour tour : _tours) {
+                dessinerTour(g2d, tour);
             }
+        } else if (_tourSelectionnee >= 0 && _tourSelectionnee < _tours.size()) {
+            dessinerTour(g2d, _tours.get(_tourSelectionnee));
         }
-	}
+    }
+
+    @SuppressWarnings("unchecked")
+    private void dessinerTour(Graphics2D g2d, Tour tour) {
+        for (Route route : tour.getRoutes()) {
+            AbstractRouteDrawingStrategy strategy =
+                RouteDrawingStrategyFactory.get(route.getRoadType());
+            strategy.draw(g2d, route, (Viewport<EntiteGeographique>) _viewport);
+        }
+    }
 	
 	private void gererClic(int sx, int sy) {
 		if (_selection.getMode() != GestionSelection.Mode.MANUEL) {
@@ -199,17 +211,11 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 	public void setTours(List<Tour> tours)
     {
         this._tours  = tours;
+        repaint();
     }
 	
-//	public void setTotalDistance(double computeTotalDistance) {
-//		this._totalDistance = computeTotalDistance;
-//	}
-	
-    private double computeTotalDistance(List<Tour> tours) {
-        double sum = 0.0;
-        for (Tour t : tours) {
-            sum += t.getTotalDistance();
-        }
-        return sum;
+    public void setTourSelectionnee(Integer index) {
+        this._tourSelectionnee = index;
+        repaint();
     }
 }
