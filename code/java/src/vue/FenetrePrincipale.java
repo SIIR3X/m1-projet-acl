@@ -157,11 +157,17 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame
 				// 1. Lancement du programme C
 				String executable = "programme-c";
 				String os = System.getProperty("os.name").toLowerCase();
-				if (os.contains("win")) { executable += ".exe"; }
+
+				if (os.contains("win")) {
+					executable = ".\\executables\\" + executable + ".exe";
+				} else {
+					executable = "./executables/" + executable;
+				}
+
 				LanceurOptimisation.lancer(
-						"build/c/" + executable,
-						nbCamions,
-						nbElements
+					executable,
+					nbCamions,
+					nbElements
 				);
 				
 				// 2. Lecture de la solution
