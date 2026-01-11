@@ -31,7 +31,8 @@ CPP_DOC_DIR   = docs/cpp/code
 # Java
 JAVA_SRC_DIR    = code/java/src
 JAVA_BUILD_DIR  = build/java
-JAVA_MAIN       = Main
+JAVA_MAIN       = run.Main
+JAVA_JAR        = $(BUILD_DIR)/programme-java.jar
 
 # Commandes génériques
 CMAKE    = cmake
@@ -70,10 +71,10 @@ build-cpp:
 	@cd $(CPP_BUILD_DIR) && $(CMAKE) ../../$(CPP_DIR) && $(CMAKE) --build .
 
 run-cpp: build-cpp
-	@$(CPP_BUILD_DIR)/projet-acl
+	@$(CPP_BUILD_DIR)/programme-cpp
 
 run-cpp-mem: build-cpp
-	@valgrind --leak-check=full --show-leak-kinds=all $(CPP_BUILD_DIR)/projet-acl
+	@valgrind --leak-check=full --show-leak-kinds=all $(CPP_BUILD_DIR)/programme-cpp
 
 run-tests-cpp: build-cpp
 	@cd $(CPP_BUILD_DIR) && $(CTEST) --output-on-failure
@@ -97,6 +98,10 @@ build-java:
 
 run-java: build-java
 	@java -cp $(JAVA_BUILD_DIR) $(JAVA_MAIN)
+
+build-jar: build-java
+	@mkdir -p $(BUILD_DIR)
+	@jar cfe $(JAVA_JAR) $(JAVA_MAIN) -C $(JAVA_BUILD_DIR) .
 
 
 ###############################################################################

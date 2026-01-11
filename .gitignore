@@ -6,7 +6,6 @@ out/
 dist/
 *.o
 *.obj
-*.exe
 *.dll
 *.so
 *.a
