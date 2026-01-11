@@ -219,25 +219,4 @@ public class LecteurJson {
         }
         return values;
     }
-
-    /** Extrait une valeur simple "clé": valeur */
-    private static String extractValue(String json, String key) 
-    {
-        int start = json.indexOf("\"" + key + "\"");
-        if (start < 0) {
-            throw new IllegalArgumentException("Clé absente: " + key);
-        }
-
-        start = json.indexOf(":", start) + 1;
-        int endComma = json.indexOf(",", start);
-        int endBrace = json.indexOf("}", start);
-
-        int end = (endComma < 0) ? endBrace
-                : (endBrace < 0) ? endComma
-                : Math.min(endComma, endBrace);
-
-        return json.substring(start, end)
-                .replaceAll("[\"\\s]", "")
-                .trim();
-    }
 }

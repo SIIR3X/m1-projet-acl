@@ -18,9 +18,21 @@ import javax.swing.SwingConstants;
 
 import modele.Tour;
 
-public class ToursPanel extends JPanel {
+/**
+ * Panneau listant les tournées et leurs distances.
+ * 
+ * Ce composant affiche un bloc par camion (libellé « Camion i »
+ * et distance totale associée) et permet de sélectionner une
+ * tournée ou l’ensemble des tournées pour filtrer l’affichage
+ * de la carte via un listener de sélection.
+ */
+public class ToursPanel extends JPanel 
+{
 
-	public interface TourSelectionListener {
+	private static final long serialVersionUID = 1L;
+
+	public interface TourSelectionListener 
+	{
         void tourSelectionnee(Integer index);
     }
 	
@@ -28,18 +40,21 @@ public class ToursPanel extends JPanel {
     private final Font valueFont;
     private TourSelectionListener listener;
 
-    public ToursPanel() {
+    public ToursPanel() 
+    {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         Font base = getFont();
         titleFont = base.deriveFont(Font.BOLD, 13);
         valueFont = base.deriveFont(Font.PLAIN, 13f);
     }
     
-    public void setTourSelectionListener(TourSelectionListener l) {
+    public void setTourSelectionListener(TourSelectionListener l) 
+    {
         this.listener = l;
     }
 
-    public void setTours(List<Tour> tours) {
+    public void setTours(List<Tour> tours) 
+    {
     	removeAll();
 
     	JButton tous = new JButton("<html><u>Tous les camions</u></html>");
@@ -97,7 +112,8 @@ public class ToursPanel extends JPanel {
         repaint();
     }
     
-    public void removeTours() {
+    public void removeTours() 
+    {
     	removeAll();
     	revalidate();
         repaint();

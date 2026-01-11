@@ -14,10 +14,19 @@ import dessin.AbstractRouteDrawingStrategy;
 import dessin.RouteDrawingStrategyFactory;
 import modele.RoadType;
 
+/**
+ * Panneau d’affichage de la légende des types de routes.
+ * 
+ * Dessine, dans un encadré titré, la liste
+ * des différents types de route avec leur style de tracé
+ * (couleur et épaisseur) tel qu’utilisé pour le rendu des tournées.
+ */
 public class LegendPanel extends JPanel 
 {
 
-    private static final int LINE_HEIGHT = 20;
+	private static final long serialVersionUID = 1L;
+	
+	private static final int LINE_HEIGHT = 20;
     private static final int LEFT_MARGIN = 10;
     private static final int TOP_MARGIN = 30;
 
@@ -35,18 +44,20 @@ public class LegendPanel extends JPanel
     }
 
     @Override
-    public Dimension getPreferredSize() {
+    public Dimension getPreferredSize() 
+    {
         int lines = RoadType.values().length;
         int heightContent = TOP_MARGIN + lines * LINE_HEIGHT;
         int padding = 6;
         int totalHeight = heightContent + padding;
 
-        int largeur = 250; // largeur cible du panneau gauche
+        int largeur = 250;
         return new Dimension(largeur, totalHeight);
     }
 
     @Override
-    public Dimension getMaximumSize() {
+    public Dimension getMaximumSize() 
+    {
         Dimension pref = getPreferredSize();
         return new Dimension(pref.width, pref.height);
     }

@@ -31,14 +31,15 @@ import viewport.Viewport;
  * Vue Swing d'une carte géographique.
  *
  * Cette classe est responsable du rendu graphique des entités
- * présentes dans une carte, en utilisant un Viewport pour la projection.
+ * présentes dans une carte, en utilisant un Viewport pour la projection,
+ * et gère aussi les interactions utilisateur (sélection, zoom,
+ * déplacement et réinitialisation de la vue).
  *
  * @param <T> type des entités géographiques affichées
  */
-public class VueCarte<T extends EntiteGeographique> extends JPanel {
-	/**
-	 * 
-	 */
+public class VueCarte<T extends EntiteGeographique> extends JPanel 
+{
+
 	private static final long serialVersionUID = 1L;
 
 	/** Carte à afficher */
@@ -68,13 +69,14 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 			Carte<T> carte,
 			Viewport<T> viewport,
 			GestionSelection<T> selection
-	) {
+	)
+	{
 		this._carte = carte;
 		this._viewport = viewport;
 		this._selection = selection;
 		this._tours = new ArrayList<>();
 		
-		// Couleur de fonds du panneau
+		// Couleur de fond du panneau
 		setBackground(Color.WHITE);
 		
 		setLayout(null);
@@ -175,12 +177,14 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
         addMouseMotionListener(ma);
 	}
 	
-	public void setSelection(GestionSelection<T> selection) {
+	public void setSelection(GestionSelection<T> selection) 
+	{
 	    this._selection = selection;
 	}
 	
 	@Override
-	protected void paintComponent(Graphics g) {
+	protected void paintComponent(Graphics g) 
+	{
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D)g;
 
@@ -191,7 +195,8 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		}
 	}
 	
-	private void dessinerElement(Graphics2D g2d, T element) {
+	private void dessinerElement(Graphics2D g2d, T element) 
+	{
 		double[] p = _viewport.projeter(element);
 		int x = (int)p[0];
 		int y = (int)p[1];
@@ -208,7 +213,8 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		g2d.drawString(element.toString(), x + 6, y - 6);
  	}
 
-    private void dessinerRoutes(Graphics2D g2d) {
+    private void dessinerRoutes(Graphics2D g2d) 
+    {
         if (_tours == null) return;
 
         if (_tourSelectionnee == null) {
@@ -221,7 +227,8 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
     }
 
     @SuppressWarnings("unchecked")
-    private void dessinerTour(Graphics2D g2d, Tour tour) {
+    private void dessinerTour(Graphics2D g2d, Tour tour) 
+    {
         for (Route route : tour.getRoutes()) {
             AbstractRouteDrawingStrategy strategy =
                 RouteDrawingStrategyFactory.get(route.getRoadType());
@@ -229,7 +236,8 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
         }
     }
 	
-	private void gererClic(int sx, int sy) {
+	private void gererClic(int sx, int sy) 
+	{
 		if (_selection.getMode() != GestionSelection.Mode.MANUEL) {
 			return;
 		}
@@ -245,7 +253,8 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		}
 	}
 	
-	private void gererSurvol(int sx, int sy) {
+	private void gererSurvol(int sx, int sy) 
+	{
 		Graphics2D g2d = (Graphics2D)getGraphics();
 		boolean surElement = false;
 		
@@ -268,7 +277,8 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 	        T element,
 	        int sx,
 	        int sy
-	) {
+	) 
+	{
 	    double[] p = _viewport.projeter(element);
 	    int x = (int) p[0];
 	    int y = (int) p[1];
@@ -292,7 +302,8 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 	           && sy <= ty + hauteurTexte;
 	}
 	
-	private void repositionnerBouton() {
+	private void repositionnerBouton() 
+	{
         Dimension pref = _btnResetVue.getPreferredSize();
         int x = getWidth() - pref.width - 10;
         int y = 10;
