@@ -2,9 +2,12 @@ package vue;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -12,15 +15,16 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import controleur.GestionSelection;
+import dessin.AbstractRouteDrawingStrategy;
+import dessin.RouteDrawingStrategyFactory;
 import modele.Carte;
 import modele.EntiteGeographique;
 import modele.Route;
 import modele.Tour;
-import ui.drawing.AbstractRouteDrawingStrategy;
-import ui.drawing.RouteDrawingStrategyFactory;
 import viewport.Viewport;
 
 /**
@@ -50,6 +54,14 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 	
 	private Integer _tourSelectionnee = null;
 	
+	private int _dragStartX;
+	
+    private int _dragStartY;
+    
+    private boolean _dragging = false;
+    
+    private final JButton _btnResetVue;
+	
 	private static final int RAYON = 6;
 	
 	public VueCarte(
@@ -65,20 +77,34 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		// Couleur de fonds du panneau
 		setBackground(Color.WHITE);
 		
+		setLayout(null);
+
+        _btnResetVue = new JButton("Réinitialiser la vue");
+        _btnResetVue.setMargin(new Insets(2, 6, 2, 6));
+        _btnResetVue.setFocusPainted(false);
+
+        _btnResetVue.addActionListener(e -> {
+            _viewport.resetPanAndZoom();
+            repaint();
+        });
+
+        add(_btnResetVue);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                _viewport.setTaille(getWidth(), getHeight());
+                repositionnerBouton();
+                repaint();
+            }
+        });
+		
 		// Gestion du resize
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				_viewport.setTaille(getWidth(), getHeight());
 				repaint();
-			}
-		});
-		
-		// Gestion des clics souris (mode manuel uniquement)
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				gererClic(e.getX(), e.getY());
 			}
 		});
 		
@@ -89,6 +115,64 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 				gererSurvol(e.getX(), e.getY());
 			}
 		});
+		
+		// Gestion du zoom
+		addMouseWheelListener(e -> {
+		    int notches = e.getWheelRotation();
+		    double factor = (notches < 0) ? 1.1 : 1.0 / 1.1;
+
+		    // on borne le zoom
+		    double newZoom = _viewport.getZoom() * factor;
+		    if (newZoom < 0.2 || newZoom > 12.0) {
+		        return;
+		    }
+
+		    _viewport.zoomAt(factor, e.getX(), e.getY());
+		    repaint();
+		});
+		
+		// Gestion du déplacement de la carte
+		MouseAdapter ma = new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // bouton milieu ou droit pour le déplacement
+                if (e.getButton() == MouseEvent.BUTTON2
+                    || e.getButton() == MouseEvent.BUTTON3) {
+                    _dragging = true;
+                    _dragStartX = e.getX();
+                    _dragStartY = e.getY();
+                    setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                } else {
+                	// comportement existant (sélection ville avec clic gauche)
+                    gererClic(e.getX(), e.getY());
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (_dragging) {
+                    _dragging = false;
+                    setCursor(Cursor.getDefaultCursor());
+                }
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (_dragging) {
+                    int dx = e.getX() - _dragStartX;
+                    int dy = e.getY() - _dragStartY;
+                    _dragStartX = e.getX();
+                    _dragStartY = e.getY();
+
+                    // déplacer la carte
+                    _viewport.addOffset(dx, dy);
+                    repaint();
+                }
+            }
+        };
+
+        addMouseListener(ma);
+        addMouseMotionListener(ma);
 	}
 	
 	public void setSelection(GestionSelection<T> selection) {
@@ -100,11 +184,11 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D)g;
 
+		dessinerRoutes(g2d);
+		
 		for (T element : _carte.getElements()) {
 			dessinerElement(g2d, element);
 		}
-		
-		dessinerRoutes(g2d);
 	}
 	
 	private void dessinerElement(Graphics2D g2d, T element) {
@@ -120,10 +204,10 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 		
 		// Label
 		g2d.setColor(Color.BLACK);
+		g2d.setFont(new Font("Serif", Font.ROMAN_BASELINE, 12));
 		g2d.drawString(element.toString(), x + 6, y - 6);
  	}
 
-    @SuppressWarnings("unchecked")
     private void dessinerRoutes(Graphics2D g2d) {
         if (_tours == null) return;
 
@@ -207,6 +291,13 @@ public class VueCarte<T extends EntiteGeographique> extends JPanel {
 	           && sy >= ty
 	           && sy <= ty + hauteurTexte;
 	}
+	
+	private void repositionnerBouton() {
+        Dimension pref = _btnResetVue.getPreferredSize();
+        int x = getWidth() - pref.width - 10;
+        int y = 10;
+        _btnResetVue.setBounds(x, y, pref.width, pref.height);
+    }
 	
 	public void setTours(List<Tour> tours)
     {

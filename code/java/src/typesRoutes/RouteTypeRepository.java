@@ -1,4 +1,4 @@
-package io.data;
+package typesRoutes;
 
 import modele.RoadType;
 import modele.Ville;

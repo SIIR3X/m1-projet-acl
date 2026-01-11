@@ -10,9 +10,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import dessin.AbstractRouteDrawingStrategy;
+import dessin.RouteDrawingStrategyFactory;
 import modele.RoadType;
-import ui.drawing.AbstractRouteDrawingStrategy;
-import ui.drawing.RouteDrawingStrategyFactory;
 
 public class LegendPanel extends JPanel 
 {

@@ -1,4 +1,4 @@
-package io.data;
+package typesRoutes;
 
 /**
  * Clé normalisée (ville de départ / ville d'arrivée) pour indexer

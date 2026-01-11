@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -88,6 +90,7 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 		add(_vueCarte, BorderLayout.CENTER);
 		add(_barreControle, BorderLayout.SOUTH);
 		add(_blocGauche, BorderLayout.WEST);
+
 		initialiserInteractions();
 		
 		setSize(900, 700);

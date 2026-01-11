@@ -4,15 +4,15 @@ import javax.swing.SwingUtilities;
 
 import chargement.ChargeurDonnees;
 import chargement.ChargeurVillesJson;
-import io.data.CachedRouteTypeRepository;
-import io.data.CsvRouteTypeRepository;
-import io.data.MultiRouteTypeRepository;
-import io.data.RouteTypeRepository;
 import modele.Carte;
 import modele.Ville;
 import service.RouteTypeService;
 import service.ServeurClientService;
 import service.TourBuilder;
+import typesRoutes.CachedRouteTypeRepository;
+import typesRoutes.CsvRouteTypeRepository;
+import typesRoutes.MultiRouteTypeRepository;
+import typesRoutes.RouteTypeRepository;
 import viewport.Viewport;
 import vue.FenetrePrincipale;
 
