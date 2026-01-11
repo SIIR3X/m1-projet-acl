@@ -33,7 +33,15 @@ public class Viewport<T extends EntiteGeographique> {
 	private double _longitudeMin;
 	private double _longitudeMax;
 	
-	public Viewport(Carte<T> carte, double largeur, double hauteur) {
+	/** Zoom et déplacment sur la carte **/
+	private double _zoom = 1.0;
+	private double _offsetX = 0.0;
+    private double _offsetY = 0.0;
+
+
+    
+	public Viewport(Carte<T> carte, double largeur, double hauteur)
+	{
 		this._carte = carte;
 		this._largeur = largeur;
 		this._hauteur = hauteur;
@@ -75,13 +83,16 @@ public class Viewport<T extends EntiteGeographique> {
 	 * @param longitude Longitude géographique
 	 * @return coordonnée X en pixels
 	 */
-	public double projeterX(double longitude) {
+	public double projeterX(double longitude) 
+	{
 		double largeurUtile = _largeur - 2 * _marge;
-		
-	    return _marge +
-	           (longitude - _longitudeMin)
-	           / (_longitudeMax - _longitudeMin)
-	           * largeurUtile;
+	    double xSansZoom =
+	        _marge +
+	        (longitude - _longitudeMin)
+	        / (_longitudeMax - _longitudeMin)
+	        * largeurUtile;
+
+	    return xSansZoom * _zoom + _offsetX;
 	}
 	
 	/**
@@ -93,14 +104,17 @@ public class Viewport<T extends EntiteGeographique> {
 	 * @param latitude Latitude géographique
 	 * @return coordonnée Y en pixels
 	 */
-	public double projeterY(double latitude) {
+	public double projeterY(double latitude) 
+	{
 		double hauteurUtile = _hauteur - 2 * _marge;
-		
-	    return _marge +
-	           hauteurUtile
-	           - (latitude - _latitudeMin)
-	           / (_latitudeMax - _latitudeMin)
-	           * hauteurUtile;
+	    double ySansZoom =
+	        _marge +
+	        hauteurUtile
+	        - (latitude - _latitudeMin)
+	        / (_latitudeMax - _latitudeMin)
+	        * hauteurUtile;
+
+	    return ySansZoom * _zoom + _offsetY;
 	}
 	
 	/**
@@ -136,4 +150,69 @@ public class Viewport<T extends EntiteGeographique> {
 	    this._hauteur = hauteur;
 	    recalculerBornes();
 	}
+	
+    public double getZoom() 
+    {
+        return _zoom;
+    }
+
+    public void setZoom(double zoom) 
+    {
+        this._zoom = zoom;
+    }
+	
+    public double getOffsetX() 
+    { 
+    	return _offsetX; 
+    }
+    
+    public double getOffsetY() 
+    { 
+    	return _offsetY; 
+    }
+    
+    public void addOffset(double dx, double dy) 
+    {
+        _offsetX += dx;
+        _offsetY += dy;
+    }
+
+    public void resetPanAndZoom() 
+    {
+        _zoom = 1.0;
+        _offsetX = 0.0;
+        _offsetY = 0.0;
+    }
+    
+    private void setPan(double x, double y) {
+        _offsetX = x;
+        _offsetY = y;
+    }
+    
+    /**
+     * Applique un zoom relatif centré sur une position écran donnée, en
+     * ajustant automatiquement le décalage (_offsetX, _offsetY) de façon
+     * à ce que le point sous le curseur reste visuellement au même endroit
+     * après le changement d’échelle.
+     *
+     * @param factor  facteur de zoom à appliquer par rapport au zoom courant
+     * @param screenX abscisse du point de référence en coordonnées écran (pixels),
+     *                -> la position X du curseur au moment du zoom
+     * @param screenY ordonnée du point de référence en coordonnées écran (pixels),
+     *                -> la position Y du curseur au moment du zoom
+     */
+    public void zoomAt(double factor, double screenX, double screenY) {
+        double oldZoom = _zoom;
+        double newZoom = _zoom * factor;
+
+        _zoom = newZoom;
+
+        double x0 = (screenX - _offsetX) / oldZoom;
+        double y0 = (screenY - _offsetY) / oldZoom;
+
+        double newOffsetX = screenX - x0 * newZoom;
+        double newOffsetY = screenY - y0 * newZoom;
+
+        setPan(newOffsetX, newOffsetY);
+    }
 }

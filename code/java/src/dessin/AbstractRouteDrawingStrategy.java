@@ -1,4 +1,4 @@
-package ui.drawing;
+package dessin;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -42,7 +42,7 @@ public abstract class AbstractRouteDrawingStrategy
         int my = (y1 + y2) / 2;
 
         g2d.setColor(new Color(80, 80, 80));
-        g2d.setFont(new Font("Arial", Font.ITALIC, 12));
+        g2d.setFont(new Font("Arial", Font.ROMAN_BASELINE, 10));
         g2d.drawString(
             String.format("%.1f km", route.getDistance()),
             mx + 2, my - 2

@@ -1,8 +1,8 @@
 package service;
 
-import io.data.RouteTypeRepository;
 import modele.RoadType;
 import modele.Ville;
+import typesRoutes.RouteTypeRepository;
 
 /**
  * Service métier qui encapsule la logique d'obtention du type de route

@@ -1,4 +1,4 @@
-package ui.drawing;
+package dessin;
 
 import java.util.EnumMap;
 import java.util.Map;

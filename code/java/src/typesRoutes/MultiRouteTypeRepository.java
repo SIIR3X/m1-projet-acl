@@ -1,4 +1,4 @@
-package io.data;
+package typesRoutes;
 
 import java.io.IOException;
 import java.nio.file.Files;

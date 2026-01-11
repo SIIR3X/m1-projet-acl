@@ -1,4 +1,4 @@
-package ui.drawing;
+package dessin;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

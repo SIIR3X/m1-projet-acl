@@ -1,4 +1,4 @@
-package io.data;
+package typesRoutes;
 
 import java.util.HashMap;
 import java.util.Map;
