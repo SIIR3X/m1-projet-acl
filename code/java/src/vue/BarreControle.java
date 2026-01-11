@@ -15,10 +15,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-public class BarreControle extends JPanel{
-	/**
-	 * 
-	 */
+/**
+ * Barre de contrôle située en bas de la fenêtre principale.
+ * 
+ * Ce panneau regroupe les contrôles permettant de configurer
+ * l’optimisation : choix du nombre de camions, mode de sélection
+ * (aléatoire ou manuel), sélection des fichiers d’entrée et
+ * déclenchement du calcul d’optimisation.
+ */
+public class BarreControle extends JPanel
+{
+	
 	private static final long serialVersionUID = 1L;
 	
 	private final JComboBox<Integer> _selectCamions;
@@ -32,7 +39,8 @@ public class BarreControle extends JPanel{
 	
 	private Runnable _listenerFichiers;
 	
-	public BarreControle(int nbVilles) {
+	public BarreControle(int nbVilles) 
+	{
 		// Layout horizontal simple
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(BorderFactory.createEtchedBorder());
@@ -80,11 +88,13 @@ public class BarreControle extends JPanel{
 		add(_boutonOptimiser);
 	}
 	
-	public List<Path> getFichiersSelectionnes() {
+	public List<Path> getFichiersSelectionnes() 
+	{
 		return List.copyOf(_fichiersSelectionnes);
 	}
 	
-	public void mettreAJourCamions(int max) {
+	public void mettreAJourCamions(int max) 
+	{
 		_selectCamions.removeAllItems();
 		
 		for (int i = 1; i <= max; ++i) {
@@ -98,31 +108,38 @@ public class BarreControle extends JPanel{
 		}
 	}
 	
-	public int getNombreCamions() {
+	public int getNombreCamions() 
+	{
 		return (Integer)_selectCamions.getSelectedItem();
 	}
 	
-	public boolean estAleatoire() {
+	public boolean estAleatoire() 
+	{
 		return _radioAleatoire.isSelected();
 	}
 	
-	public JRadioButton getRadioAleatoire() {
+	public JRadioButton getRadioAleatoire() 
+	{
 		return _radioAleatoire;
 	}
 	
-	public JRadioButton getRadioManuel() {
+	public JRadioButton getRadioManuel() 
+	{
 		return _radioManuel;
 	}
 	
-	public JButton getBoutonOptimiser() {
+	public JButton getBoutonOptimiser() 
+	{
 		return _boutonOptimiser;
 	}
 	
-	public void setListenerFichiers(Runnable listener) {
+	public void setListenerFichiers(Runnable listener) 
+	{
 		this._listenerFichiers = listener;
 	}
 	
-    private void initialiserSelectionFichiers() {
+    private void initialiserSelectionFichiers() 
+    {
         _boutonFichiers.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser("data/13_fichiers_JSON");
             chooser.setMultiSelectionEnabled(true);
@@ -146,7 +163,8 @@ public class BarreControle extends JPanel{
         });
     }
 	
-	private void mettreAJourLabelFichiers() {
+	private void mettreAJourLabelFichiers() 
+	{
         if (_fichiersSelectionnes.isEmpty()) {
             _labelFichiers.setText("Aucun fichier");
         } else {

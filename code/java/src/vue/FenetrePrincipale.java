@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -27,10 +25,18 @@ import service.ServeurClientService;
 import service.TourBuilder;
 import viewport.Viewport;
 
-public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
-	/**
-	 * 
-	 */
+/**
+ * Fenêtre principale de l’application cliente.
+ * 
+ * Cette classe assemble la vue carte, la barre de contrôle,
+ * la légende et le panneau de tournées, et orchestre les
+ * interactions avec les services d’optimisation (lanceur C,
+ * lecture des solutions, appel au serveur) ainsi que le
+ * rechargement des données de carte.
+ */
+public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame 
+{
+
 	private static final long serialVersionUID = 1L;
 	
 	private final Carte<T> _carte;
@@ -52,7 +58,8 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 			ServeurClientService serveurService,
 			ChargeurDonnees<List<T>> chargeurDonnees,
 			TourBuilder tourBuilder
-		) {
+		) 
+	{
 		super("Client Java");
 		
 		this._carte = carte;
@@ -98,13 +105,15 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	public void viderTours() {
+	public void viderTours() 
+	{
 		_vueCarte.setTours(new ArrayList<>());
 		_vueCarte.repaint();
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void initialiserInteractions() {
+	private void initialiserInteractions() 
+	{
 		// Mode aléatoire
 		_barreControle.getRadioAleatoire().addActionListener(e -> {
 			_selection.activerModeAleatoire();
@@ -205,7 +214,8 @@ public class FenetrePrincipale<T extends EntiteGeographique> extends JFrame {
 
 	}
 	
-	private void rechargerCarteDepuisFichiers() {
+	private void rechargerCarteDepuisFichiers() 
+	{
 	    try {
 	        List<T> nouveauxElements = new ArrayList<>();
 
