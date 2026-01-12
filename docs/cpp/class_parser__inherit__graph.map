@@ -1,0 +1,9 @@
+<map id="Parser" name="Parser">
+<area shape="rect" id="Node000001" title=" " alt="" coords="231,5,290,32"/>
+<area shape="rect" id="Node000002" href="$class_parser_algo_distance.html" title=" " alt="" coords="5,80,143,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,39,107,82,106,77,215,35"/>
+<area shape="rect" id="Node000003" href="$class_parseur_distance_geodesique.html" title=" " alt="" coords="167,80,354,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="263,46,263,81,258,78,259,50"/>
+<area shape="rect" id="Node000004" href="$class_parseur_ville.html" title=" " alt="" coords="379,80,470,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="304,36,399,79,393,79,303,41"/>
+</map>
