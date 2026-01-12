@@ -9,11 +9,11 @@ Doit se faire depuis la racine du projet.
 1. Lancer le serveur C++ :
 
 ```
-./executables/programme-cpp.exe
+executables\programme-cpp.exe
 ```
 
 2. Lancer le client Java :
 
 ```
-java -jar executables/programme-java.jar
+java -jar executables\programme-java.jar
 ```

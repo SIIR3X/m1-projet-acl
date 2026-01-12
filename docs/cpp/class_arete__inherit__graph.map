@@ -1,0 +1,7 @@
+<map id="Arete&lt; S, T &gt;" name="Arete&lt; S, T &gt;">
+<area shape="rect" id="Node000001" title="Arête d&#39;un graphe." alt="" coords="11,155,112,181"/>
+<area shape="rect" id="Node000002" href="$class_g_element.html" title=" " alt="" coords="5,80,118,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,121,64,155,59,154,60,124"/>
+<area shape="rect" id="Node000003" href="$class_a_element.html" title="Élément abstrait du graphe, défini uniquement par une clef unique." alt="" coords="22,5,101,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="62,45,64,80,59,79,61,50"/>
+</map>

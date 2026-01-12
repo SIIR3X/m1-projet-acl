@@ -1,0 +1,5 @@
+<map id="DistanceGeodesique" name="DistanceGeodesique">
+<area shape="rect" id="Node000001" title=" " alt="" coords="36,96,178,123"/>
+<area shape="rect" id="Node000002" href="$class_distance.html" title=" " alt="" coords="5,5,209,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,62,109,97,105,94,105,66"/>
+</map>
