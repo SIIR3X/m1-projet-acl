@@ -1,27 +1,19 @@
 # Projet d'analyse et conception de logiciels de M1
 
-## Documentation
+## Lancement
 
-La documentation du projet est accessible dans différents dossiers selon la thématique.
+Doit se faire depuis la racine du projet.
 
----
+### Windows :
 
-## Guides généraux (docs/guides/)
+1. Lancer le serveur C++ :
 
-Les guides suivants décrivent la structure du projet, les conventions et les outils utilisés :
+```
+executables\programme-cpp.exe
+```
 
-| Sujet                     | Document                                         |
-|---------------------------|--------------------------------------------------|
-| Structure du projet       | [`PROJECT_STRUCTURE.md`](docs/guides/PROJECT_STRUCTURE.md) |
-| Prérequis du projet       | [`PREREQUISITES.md`](docs/guides/PREREQUISITES.md) |
-| Conventions d’écriture    | [`CONVENTIONS.md`](docs/guides/CONVENTIONS.md) |
-| Commandes Makefile        | [`MAKEFILE_COMMANDS.md`](docs/guides/MAKEFILE_COMMANDS.md) |
+2. Lancer le client Java :
 
----
-
-## Documentation technique C++ (docs/cpp/)
-
-La documentation détaillée du serveur, du modèle, des algorithmes, des parseurs et du cycle d’une requête est disponible dans :
-
-- [`DOCUMENTATION_CPP.md`](docs/cpp/DOCUMENTATION_CPP.md)
-
+```
+java -jar executables\programme-java.jar
+```

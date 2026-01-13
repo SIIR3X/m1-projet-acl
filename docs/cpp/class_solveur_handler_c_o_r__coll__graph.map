@@ -1,0 +1,5 @@
+<map id="SolveurHandlerCOR" name="SolveurHandlerCOR">
+<area shape="rect" id="Node000001" title="Maillon abstrait de la chaîne de responsabilité." alt="" coords="5,80,146,107"/>
+<area shape="rect" id="Node000002" href="$class_solveur_handler.html" title="Interface générale d&#39;un gestionnaire capable de construire un solveur." alt="" coords="20,5,131,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,46,78,80,73,79,74,50"/>
+</map>

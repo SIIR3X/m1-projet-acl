@@ -22,38 +22,53 @@ file(GLOB_RECURSE LIB_SOURCES
     ${CPP_ROOT}/src/modele/*.cpp
     ${CPP_ROOT}/src/utils/*.cpp
     ${CPP_ROOT}/src/serveur/*.cpp
+    ${CPP_ROOT}/src/factories/*.cpp
+    ${CPP_ROOT}/src/carte/*.cpp
 )
 
 add_library(projet-lib ${LIB_SOURCES})
 target_include_directories(projet-lib PUBLIC ${CPP_ROOT}/include)
 
+if (WIN32)
+    target_link_libraries(projet-lib PUBLIC ws2_32)
+endif()
+
 ###############################################################################
 #                               Main executable
 ###############################################################################
 
-add_executable(projet-acl ${CPP_ROOT}/src/main.cpp)
-target_link_libraries(projet-acl PRIVATE projet-lib)
+add_executable(programme-cpp ${CPP_ROOT}/src/main.cpp)
+target_link_libraries(programme-cpp PRIVATE projet-lib)
 
-###############################################################################
-#                               Tests
-###############################################################################
-include(FetchContent)
+if (MINGW)
+    target_link_options(programme-cpp PRIVATE
+        -static
+        -static-libgcc
+        -static-libstdc++
+    )
+endif()
 
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-  DOWNLOAD_EXTRACT_TIMESTAMP YES
-)
 
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+# ###############################################################################
+# #                               Tests
+# ###############################################################################
+# include(FetchContent)
 
-enable_testing()
+# FetchContent_Declare(
+#   googletest
+#   URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+#   DOWNLOAD_EXTRACT_TIMESTAMP YES
+# )
 
-file(GLOB_RECURSE TEST_SOURCES ${CPP_ROOT}/tests/*.cpp)
+# set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+# FetchContent_MakeAvailable(googletest)
 
-add_executable(tests ${TEST_SOURCES})
-target_link_libraries(tests PRIVATE projet-lib gtest gtest_main)
+# enable_testing()
 
-include(GoogleTest)
-gtest_discover_tests(tests)
+# file(GLOB_RECURSE TEST_SOURCES ${CPP_ROOT}/tests/*.cpp)
+
+# add_executable(tests ${TEST_SOURCES})
+# target_link_libraries(tests PRIVATE projet-lib gtest gtest_main)
+
+# include(GoogleTest)
+# gtest_discover_tests(tests)

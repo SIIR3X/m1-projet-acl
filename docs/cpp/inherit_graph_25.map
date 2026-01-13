@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$class_requete_handler.html" title="Interface générale d&#39;un gestionnaire capable de traiter une requête." alt="" coords="5,5,121,32"/>
+<area shape="rect" id="Node000001" href="$class_requete_handler_c_o_r.html" title="Maillon abstrait de la chaîne de responsabilité." alt="" coords="169,5,314,32"/>
+<area shape="poly" id="edge17_Node000000_Node000001" title=" " alt="" coords="136,16,171,18,165,19,136,21"/>
+<area shape="rect" id="Node000002" href="$class_requete_handler_algo_distance.html" title="Maillon chargé de gérer les requêtes de types &quot;algo_distance&quot; dans la chaîne de responsabilité." alt="" coords="362,5,555,32"/>
+<area shape="poly" id="edge18_Node000001_Node000002" title=" " alt="" coords="329,16,364,19,359,19,330,21"/>
+</map>
