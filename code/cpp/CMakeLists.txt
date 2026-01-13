@@ -37,8 +37,17 @@ endif()
 #                               Main executable
 ###############################################################################
 
-add_executable(projet-acl ${CPP_ROOT}/src/main.cpp)
-target_link_libraries(projet-acl PRIVATE projet-lib)
+add_executable(programme-cpp ${CPP_ROOT}/src/main.cpp)
+target_link_libraries(programme-cpp PRIVATE projet-lib)
+
+if (MINGW)
+    target_link_options(programme-cpp PRIVATE
+        -static
+        -static-libgcc
+        -static-libstdc++
+    )
+endif()
+
 
 # ###############################################################################
 # #                               Tests
