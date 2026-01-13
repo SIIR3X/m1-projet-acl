@@ -6,7 +6,6 @@ out/
 dist/
 *.o
 *.obj
-*.exe
 *.dll
 *.so
 *.a
@@ -14,6 +13,7 @@ dist/
 *.ninja
 .cache
 .rules.ninja
+bin/
 
 # ==========================================
 #   C++ / Tools
@@ -44,7 +44,6 @@ cmake-build-*/
 #   Java
 # ==========================================
 *.class
-*.jar
 *.war
 *.ear
 target/

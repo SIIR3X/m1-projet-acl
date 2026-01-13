@@ -14,6 +14,15 @@
 # Dossiers
 BUILD_DIR     = build
 
+# C
+CC          = gcc
+C_STD       = -std=c17
+C_WARN      = -Wall -Wextra -Wpedantic
+C_OPT       = -O2
+C_INC       = -I$(C_DIR)
+C_BUILD_DIR = $(BUILD_DIR)/c
+C_TARGET    = programme-c
+
 # Cpp
 CPP_BUILD_DIR = $(BUILD_DIR)/cpp
 CPP_DIR       = code/cpp
@@ -21,19 +30,36 @@ CPP_DOC_DIR   = docs/cpp/code
 
 # Java
 JAVA_SRC_DIR    = code/java/src
-JAVA_TEST_DIR   = code/java/tests
-JAVA_LIB 	 	= code/java/lib
 JAVA_BUILD_DIR  = build/java
-JAVA_MAIN       = Main
-JAVA_DOC_DIR    = docs/java/code
-JUNIT_JAR       = $(JAVA_LIB)/junit-platform-console-standalone-1.10.1.jar
-JAVA_FORMAT 	= $(JAVA_LIB)/google-java-format-1.20.0-all-deps.jar
+JAVA_MAIN       = run.Main
+JAVA_JAR        = $(BUILD_DIR)/programme-java.jar
 
 # Commandes génériques
 CMAKE    = cmake
 MAKE_CMD = $(MAKE)
 DOXYGEN  = doxygen
 CTEST    = ctest
+
+
+###############################################################################
+###################################### C ######################################
+###############################################################################
+
+C_SOURCES := $(shell find $(C_DIR) -name "*.c")
+C_OBJECTS := $(patsubst $(C_DIR)/%.c,$(C_BUILD_DIR)/%.o,$(C_SOURCES))
+
+build-c: $(C_BUILD_DIR)/$(C_TARGET)
+
+$(C_BUILD_DIR)/$(C_TARGET): $(C_OBJECTS)
+	@mkdir -p $(C_BUILD_DIR)
+	@$(CC) $(C_STD) $(C_WARN) $(C_OPT) $^ -o $@
+
+$(C_BUILD_DIR)/%.o: $(C_DIR)/%.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(C_STD) $(C_WARN) $(C_OPT) $(C_INC) -c $< -o $@
+
+run-c: build-c
+	@$(C_BUILD_DIR)/$(C_TARGET) 2 10
 
 
 ###############################################################################
@@ -45,10 +71,10 @@ build-cpp:
 	@cd $(CPP_BUILD_DIR) && $(CMAKE) ../../$(CPP_DIR) && $(CMAKE) --build .
 
 run-cpp: build-cpp
-	@$(CPP_BUILD_DIR)/projet-acl
+	@$(CPP_BUILD_DIR)/programme-cpp
 
 run-cpp-mem: build-cpp
-	@valgrind --leak-check=full --show-leak-kinds=all $(CPP_BUILD_DIR)/projet-acl
+	@valgrind --leak-check=full --show-leak-kinds=all $(CPP_BUILD_DIR)/programme-cpp
 
 run-tests-cpp: build-cpp
 	@cd $(CPP_BUILD_DIR) && $(CTEST) --output-on-failure
@@ -64,26 +90,18 @@ doc-cpp:
 ##################################### Java ####################################
 ###############################################################################
 
+JAVA_SOURCES := $(shell find $(JAVA_SRC_DIR) -name "*.java")
+
 build-java:
 	@mkdir -p $(JAVA_BUILD_DIR)
-	@find $(JAVA_SRC_DIR) -name "*.java" > $(JAVA_BUILD_DIR)/sources_main.txt
-	@find $(JAVA_TEST_DIR) -name "*.java" >> $(JAVA_BUILD_DIR)/sources_main.txt
-	@javac -cp "$(JUNIT_JAR):$(JAVA_BUILD_DIR)" -d $(JAVA_BUILD_DIR) @$(JAVA_BUILD_DIR)/sources_main.txt
+	@javac -d $(JAVA_BUILD_DIR) $(JAVA_SOURCES)
 
-run-java:
-	@mkdir -p $(JAVA_BUILD_DIR)
-	@find $(JAVA_SRC_DIR) -name "*.java" > $(JAVA_BUILD_DIR)/sources_run.txt
-	@javac -d $(JAVA_BUILD_DIR) @$(JAVA_BUILD_DIR)/sources_run.txt
-	@java -cp $(JAVA_BUILD_DIR) Main
+run-java: build-java
+	@java -cp $(JAVA_BUILD_DIR) $(JAVA_MAIN)
 
-run-tests-java: build-java
-	@java -jar $(JUNIT_JAR) \
-		--class-path $(JAVA_BUILD_DIR) \
-		--scan-class-path
-
-doc-java:
-	@mkdir -p $(JAVA_DOC_DIR)
-	@javadoc -d $(JAVA_DOC_DIR) $(shell find $(JAVA_SRC_DIR) -name "*.java")
+build-jar: build-java
+	@mkdir -p $(BUILD_DIR)
+	@jar cfe $(JAVA_JAR) $(JAVA_MAIN) -C $(JAVA_BUILD_DIR) .
 
 
 ###############################################################################

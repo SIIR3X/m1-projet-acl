@@ -22,6 +22,7 @@ struct TSPOutputData : public OutputData
         // Chemin
         jb.beginArray("chemin");
         for (int idx : chemin) jb.addRawValue("\"" + labels[idx] + "\"");
+        jb.endArray();
 
         // Distances entre étapes
         jb.beginArray("distances");
